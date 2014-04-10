@@ -14,20 +14,26 @@
  *    limitations under the License.
  */
 
-package io.github.aritzhack.aritzh.eventBus;
+package io.github.aritzhack.aritzh.awt.render;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import com.google.common.base.Preconditions;
 
 /**
- * Annotation all event-handling methods must have in order to be treated as such.
- * If a method does not have this annotation, it will be ignored by the {@link EventBus}.
- *
  * @author Aritz Lopez
  */
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.METHOD)
-public @interface Subscribe {
+public class ParallaxBG {
+    private final Background[] backgrounds;
+
+    public ParallaxBG(Background... backgrounds) {
+        Preconditions.checkArgument(backgrounds != null, "Background list cannot be null!");
+        Preconditions.checkArgument(backgrounds.length != 0, "Background list cannot be empty!");
+
+        this.backgrounds = backgrounds;
+    }
+
+    public void render(IRender render, long deltaNS) {
+        for (Background b : this.backgrounds) {
+            b.render(render, deltaNS);
+        }
+    }
 }

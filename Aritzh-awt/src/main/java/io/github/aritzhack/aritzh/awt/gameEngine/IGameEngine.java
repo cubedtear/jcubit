@@ -14,20 +14,31 @@
  *    limitations under the License.
  */
 
-package io.github.aritzhack.aritzh.eventBus;
+package io.github.aritzhack.aritzh.awt.gameEngine;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import io.github.aritzhack.aritzh.awt.gameEngine.input.InputHandler;
 
 /**
- * Annotation all event-handling methods must have in order to be treated as such.
- * If a method does not have this annotation, it will be ignored by the {@link EventBus}.
- *
  * @author Aritz Lopez
  */
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.METHOD)
-public @interface Subscribe {
+public interface IGameEngine extends Runnable {
+
+
+    public void start();
+
+    public void stop();
+
+    public void update();
+
+    public void render();
+
+    public void updatePS();
+
+    public IGame getGame();
+
+    public int getFPS();
+
+    public int getUPS();
+
+    public InputHandler getInputHandler();
 }

@@ -14,20 +14,20 @@
  *    limitations under the License.
  */
 
-package io.github.aritzhack.aritzh.eventBus;
+package io.github.aritzhack.aritzh.awt.util;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import javax.swing.JOptionPane;
+import java.awt.Component;
+import java.awt.Window;
 
 /**
- * Annotation all event-handling methods must have in order to be treated as such.
- * If a method does not have this annotation, it will be ignored by the {@link EventBus}.
- *
  * @author Aritz Lopez
  */
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.METHOD)
-public @interface Subscribe {
+public class AwtUtil {
+
+    public static Window getWindow(Component component) {
+        if (component == null) return JOptionPane.getRootFrame();
+        else if (component instanceof Window) return (Window) component;
+        else return AwtUtil.getWindow(component.getParent());
+    }
 }

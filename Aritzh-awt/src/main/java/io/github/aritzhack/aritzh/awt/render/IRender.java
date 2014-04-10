@@ -14,20 +14,28 @@
  *    limitations under the License.
  */
 
-package io.github.aritzhack.aritzh.eventBus;
+package io.github.aritzhack.aritzh.awt.render;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.awt.image.BufferedImage;
 
 /**
- * Annotation all event-handling methods must have in order to be treated as such.
- * If a method does not have this annotation, it will be ignored by the {@link EventBus}.
- *
  * @author Aritz Lopez
  */
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.METHOD)
-public @interface Subscribe {
+public interface IRender {
+
+    void clear();
+
+    void draw(int x, int y, int width, int height, int[] colors);
+
+    void draw(int x, int y, Sprite sprite);
+
+    void draw(int x, int y, String spriteName);
+
+    void draw(int x, int y, long deltaNS, AnimatedSprite sprite);
+
+    BufferedImage getImage();
+
+    int getWidth();
+
+    int getHeight();
 }
