@@ -13,7 +13,7 @@ This is intended mostly for use in Ludum Dare, although its use is not limited.
 Using it
 --------------
 
-This library is released under the terms of the Apache license v2, a quite permisive open source license.
+This library is released under the terms of the [Apache License v2](http://choosealicense.com/licenses/apache/), a quite permisive open source license.
 
 Hey, you have a bug / this can be done better
 -----------------------
