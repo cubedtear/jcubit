@@ -48,13 +48,11 @@ public class MatrixTest {
     public void paramFuncTest() {
         Matrix<Integer> mat = MatrixTest.newMultiplicationTable(10, 10);
 
-        ParametrizedFunction<Integer, Object> pFunc = (input, args) -> {
-            int x = (int) args[0];
-            int y = (int) args[1];
-            Assert.assertEquals("For coords (" + x + ", " + y + ")", x * y, input.intValue());
+        mat.runForEach((element, args) -> {
+            int x = element.getX();
+            int y = element.getY();
+            Assert.assertEquals("For coords (" + x + ", " + y + ")", x * y, element.getE().intValue());
             return null;
-        };
-
-        mat.runForEach(pFunc);
+        });
     }
 }

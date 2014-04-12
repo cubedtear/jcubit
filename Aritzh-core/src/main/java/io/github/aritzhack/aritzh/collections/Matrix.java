@@ -100,7 +100,7 @@ public class Matrix<E> implements Collection<ArrayList<E>> {
      * @param <R>      The return value for the function. Must be the same as the return value of {@code function}
      * @return A list containing all the return values
      */
-    public <R> Matrix<R> runForEach(ParametrizedFunction<E, R> function, Object... args) {
+    public <R> Matrix<R> runForEach(ParametrizedFunction<MatrixElement<E>, R> function, Object... args) {
         Matrix<R> ret;
         try {
             ret = new Matrix<>(this.columns.size(), this.columns.get(0).size());
@@ -111,12 +111,15 @@ public class Matrix<E> implements Collection<ArrayList<E>> {
             ArrayList<E> col = this.columns.get(x);
             for (int y = 0; y < col.size(); y++) {
                 if (col.get(y) == null) continue;
-                Object[] params = CollectionUtil.prepend(args, x, y);
-                R obj = function.apply(col.get(y), params);
+                R obj = function.apply(this.getElement(x, y), args);
                 ret.set(obj, x, y);
             }
         }
         return ret;
+    }
+
+    private MatrixElement<E> getElement(int x, int y) {
+        return new MatrixElement<>(this.get(x, y), x, y);
     }
 
     /**
@@ -309,6 +312,33 @@ public class Matrix<E> implements Collection<ArrayList<E>> {
         @Override
         public void remove() {
             throw new UnsupportedOperationException();
+        }
+    }
+
+    public class MatrixElement<T extends E> {
+        private final T element;
+        private final int x, y;
+
+        public MatrixElement(T element, int x, int y) {
+            this.element = element;
+            this.x = x;
+            this.y = y;
+        }
+
+        public T getE() {
+            return element;
+        }
+
+        public int getX() {
+            return x;
+        }
+
+        public int getY() {
+            return y;
+        }
+
+        public Matrix<E> getMatrix() {
+            return Matrix.this;
         }
     }
 }
