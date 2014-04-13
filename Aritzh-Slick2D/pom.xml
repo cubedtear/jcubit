@@ -25,13 +25,24 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
+	<repositories>
+		<repository>
+			<id>aritzh-mvn-repo</id>
+			<url>https://raw.github.com/aritzhack/Aritzh/mvn-repo/</url>
+			<snapshots>
+				<enabled>true</enabled>
+				<updatePolicy>always</updatePolicy>
+			</snapshots>
+		</repository>
+	</repositories>
+
 	<artifactId>aritzh-slick2d</artifactId>
 
 	<dependencies>
 		<dependency>
 			<groupId>org.slick2d</groupId>
 			<artifactId>slick2d-core</artifactId>
-			<version>2013.04-SNAPSHOT</version>
+			<version>2013.10-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>io.github.aritzhack</groupId>
