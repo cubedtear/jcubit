@@ -22,6 +22,8 @@ import org.newdawn.slick.geom.Point;
 import org.newdawn.slick.geom.Rectangle;
 
 /**
+ * A label that can hold a String to be drawn in a GUI
+ *
  * @author Aritz Lopez
  */
 public class Label extends GUIComponent {
@@ -29,10 +31,23 @@ public class Label extends GUIComponent {
     protected final String s;
     protected final Rectangle bounds;
 
+    /**
+     * <p>Creates a Label with the specified String at the specified position</p>
+     * <p>Note: The width and the height of the Label will be determined the first time they are drawn</p>
+     *
+     * @param s   The String this Label will draw
+     * @param pos The position of this Label (the top-left corner)
+     */
     public Label(String s, Point pos) {
         this(s, new Rectangle(pos.getX(), pos.getY(), -1, 0));
     }
 
+    /**
+     * Creates a Label with the specified String and the specified bounds
+     *
+     * @param s      The String this Label will draw
+     * @param bounds The bounds of this Label
+     */
     public Label(String s, Rectangle bounds) {
         super(SlickUtil.getPos(bounds));
         this.bounds = bounds;
