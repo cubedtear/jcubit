@@ -25,6 +25,9 @@ import org.newdawn.slick.InputListener;
 import java.util.List;
 
 /**
+ * Special {@link org.newdawn.slick.InputListener} that can hold
+ * {@link io.github.aritzhack.aritzh.slick2d.gui.components.GUIComponent GUIComponents} and that can be rendered
+ *
  * @author Aritz Lopez
  */
 public abstract class GUI implements InputListener {
@@ -32,11 +35,21 @@ public abstract class GUI implements InputListener {
     protected final int width, height;
     protected final List<GUIComponent> components = Lists.newArrayList();
 
+    /**
+     * Creates a GUI with the specified size
+     *
+     * @param width  The width of the GUI
+     * @param height The height of the GUI
+     */
     public GUI(int width, int height) {
         this.width = width;
         this.height = height;
     }
 
+    /**
+     * Draws this GUI into the provided Graphics object
+     * @param g The graphic environment into which this GUI should be drawn
+     */
     public void render(Graphics g) {
         this.components.forEach(c -> c.render(g));
     }
