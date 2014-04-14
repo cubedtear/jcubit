@@ -69,6 +69,7 @@ public abstract class State extends GUI implements GameState {
 
     @Override
     public final void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
+        super.render(g);
         this.render(container, (Game) game, g);
     }
 
@@ -123,8 +124,4 @@ public abstract class State extends GUI implements GameState {
     }
 
     // endregion
-
-    public void setGame(Game game) {
-        this.game = game;
-    }
 }
