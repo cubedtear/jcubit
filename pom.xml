@@ -20,7 +20,13 @@
 
 	<groupId>io.github.aritzhack</groupId>
 	<artifactId>aritzh-parent</artifactId>
-	<version>1.0-SNAPSHOT</version>
+	<version>1.0</version>
+
+	<name>Aritzh</name>
+
+	<properties>
+		<github.global.server>github</github.global.server>
+	</properties>
 
 	<packaging>pom</packaging>
 
@@ -29,6 +35,90 @@
 		<module>Aritzh-awt</module>
 		<module>Aritzh-Slick2D</module>
 	</modules>
+
+	<licenses>
+		<license>
+			<name>Apache License v2</name>
+			<distribution>repo</distribution>
+			<url>http://www.apache.org/licenses/LICENSE-2.0</url>
+		</license>
+	</licenses>
+
+	<developers>
+		<developer>
+			<id>aritzh</id>
+			<name>Aritz Lopez</name>
+			<email>aritzhack@gmail.com</email>
+			<roles>
+				<role>developer</role>
+			</roles>
+			<timezone>+1</timezone>
+		</developer>
+	</developers>
+
+	<profiles>
+		<profile>
+			<id>Deploy</id>
+			<build>
+				<plugins>
+					<plugin>
+						<artifactId>maven-deploy-plugin</artifactId>
+						<version>2.8.1</version>
+						<configuration>
+							<altDeploymentRepository>
+								internal.repo::default::file://${session.executionRootDirectory}/mvn-repo
+							</altDeploymentRepository>
+						</configuration>
+					</plugin>
+					<plugin>
+						<groupId>com.github.github</groupId>
+						<artifactId>site-maven-plugin</artifactId>
+						<version>0.9</version>
+						<configuration>
+							<message>Maven artifacts for ${project.name} ${project.version}</message>
+							<noJekyll>true</noJekyll>
+							<outputDirectory>${session.executionRootDirectory}/mvn-repo</outputDirectory>
+							<branch>refs/heads/mvn-repo</branch>
+							<includes>
+								<include>**/*</include>
+							</includes>
+							<repositoryName>Aritzh</repositoryName>
+							<repositoryOwner>aritzhack</repositoryOwner>
+							<merge>true</merge>
+						</configuration>
+						<executions>
+							<execution>
+								<goals>
+									<goal>site</goal>
+								</goals>
+								<phase>deploy</phase>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-clean-plugin</artifactId>
+						<version>2.4.1</version>
+						<configuration>
+							<followSymLinks>false</followSymLinks>
+							<filesets>
+								<fileset>
+									<directory>${session.executionRootDirectory}/mvn-repo</directory>
+								</fileset>
+							</filesets>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+			<distributionManagement>
+				<repository>
+					<id>internal.repo</id>
+					<name>Temporary Staging Repository</name>
+					<url>file://${session.executionRootDirectory}/mvn-repo</url>
+				</repository>
+			</distributionManagement>
+		</profile>
+	</profiles>
 
 	<build>
 		<plugins>
@@ -39,15 +129,6 @@
 				<configuration>
 					<source>1.8</source>
 					<target>1.8</target>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jar-plugin</artifactId>
-				<version>2.3.1</version>
-				<configuration>
-					<outputDirectory>../build/${project.version}</outputDirectory>
-					<finalName>${project.name}</finalName>
 				</configuration>
 			</plugin>
 		</plugins>
