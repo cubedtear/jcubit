@@ -53,7 +53,7 @@
 						<artifactId>site-maven-plugin</artifactId>
 						<version>0.9</version>
 						<configuration>
-							<message>Maven artifacts for ${project.version}</message>
+							<message>Maven artifacts for ${project.artifactId} ${project.version}</message>
 							<noJekyll>true</noJekyll>
 							<outputDirectory>${session.executionRootDirectory}/mvn-repo</outputDirectory>
 							<branch>refs/heads/mvn-repo</branch>
