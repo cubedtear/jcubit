@@ -27,6 +27,7 @@ import org.newdawn.slick.util.LogSystem;
 
 /**
  * Utility class to handle all slick-related
+ *
  * @author Aritz Lopez
  */
 public class SlickUtil {
@@ -147,12 +148,15 @@ public class SlickUtil {
     }
 
     /**
+     * <p>
      * A log system that ignores everything but errors. Errors are redirected to {@link Game#LOG} through
      * {@link io.github.aritzhack.aritzh.logging.ILogger#e(String) ILogger.e(String)} and
      * {@link io.github.aritzhack.aritzh.logging.ILogger#e(String, Throwable) ILogger.e(String, Throwable)}
-     * <p/>
+     * </p>
+     * <p>
      * It is thought to be used by calling
      * {@link org.newdawn.slick.util.Log#setLogSystem(org.newdawn.slick.util.LogSystem) Log.setLogSystem(SlickUtil.nullSystem)}
+     * </p>
      */
     public static final LogSystem nullSystem = new LogSystem() {
         @Override
