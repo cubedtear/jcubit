@@ -20,7 +20,9 @@
 
 	<groupId>io.github.aritzhack</groupId>
 	<artifactId>aritzh-parent</artifactId>
-	<version>1.0-SNAPSHOT</version>
+	<version>1.0</version>
+
+	<name>Aritzh</name>
 
 	<properties>
 		<github.global.server>github</github.global.server>
@@ -33,6 +35,26 @@
 		<module>Aritzh-awt</module>
 		<module>Aritzh-Slick2D</module>
 	</modules>
+
+	<licenses>
+		<license>
+			<name>Apache License v2</name>
+			<distribution>repo</distribution>
+			<url>http://www.apache.org/licenses/LICENSE-2.0</url>
+		</license>
+	</licenses>
+
+	<developers>
+		<developer>
+			<id>aritzh</id>
+			<name>Aritz Lopez</name>
+			<email>aritzhack@gmail.com</email>
+			<roles>
+				<role>developer</role>
+			</roles>
+			<timezone>+1</timezone>
+		</developer>
+	</developers>
 
 	<profiles>
 		<profile>
@@ -53,7 +75,7 @@
 						<artifactId>site-maven-plugin</artifactId>
 						<version>0.9</version>
 						<configuration>
-							<message>Maven artifacts for ${project.artifactId} ${project.version}</message>
+							<message>Maven artifacts for ${project.name} ${project.version}</message>
 							<noJekyll>true</noJekyll>
 							<outputDirectory>${session.executionRootDirectory}/mvn-repo</outputDirectory>
 							<branch>refs/heads/mvn-repo</branch>
