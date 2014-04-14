@@ -31,7 +31,7 @@ import org.newdawn.slick.state.StateBasedGame;
  *
  * @author Aritz Lopez
  */
-public abstract class Game extends StateBasedGame {
+public abstract class AGame extends StateBasedGame {
 
     public static final ILogger LOG = new SLF4JLogger("Game");
     public static Font FNT_COMIC_SANS_18;
@@ -41,7 +41,7 @@ public abstract class Game extends StateBasedGame {
     /**
      * Create a new state based game
      */
-    public Game(String name) {
+    public AGame(String name) {
         super(name);
     }
 
@@ -62,7 +62,7 @@ public abstract class Game extends StateBasedGame {
 
     /**
      * <p>Returns the GameContainer</p>
-     * <p>WARNING: The field is initialized when the game is started, so this will be null before {@link io.github.aritzhack.aritzh.slick2d.Game#initStates()} is called</p>
+     * <p>WARNING: The field is initialized when the game is started, so this will be null before {@link AGame#initStates()} is called</p>
      *
      * @return the GameContainer
      */

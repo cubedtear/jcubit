@@ -16,7 +16,7 @@
 
 package io.github.aritzhack.aritzh.slick2d.util;
 
-import io.github.aritzhack.aritzh.slick2d.Game;
+import io.github.aritzhack.aritzh.slick2d.AGame;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
@@ -142,14 +142,14 @@ public class SlickUtil {
             g.flush();
             return img;
         } catch (SlickException e) {
-            Game.LOG.e("Error creating image", e);
+            AGame.LOG.e("Error creating image", e);
         }
         return null;
     }
 
     /**
      * <p>
-     * A log system that ignores everything but errors. Errors are redirected to {@link Game#LOG} through
+     * A log system that ignores everything but errors. Errors are redirected to {@link io.github.aritzhack.aritzh.slick2d.AGame#LOG} through
      * {@link io.github.aritzhack.aritzh.logging.ILogger#e(String) ILogger.e(String)} and
      * {@link io.github.aritzhack.aritzh.logging.ILogger#e(String, Throwable) ILogger.e(String, Throwable)}
      * </p>
@@ -161,17 +161,17 @@ public class SlickUtil {
     public static final LogSystem nullSystem = new LogSystem() {
         @Override
         public void error(String message, Throwable e) {
-            Game.LOG.e(message, e);
+            AGame.LOG.e(message, e);
         }
 
         @Override
         public void error(Throwable e) {
-            Game.LOG.e("Slick2D Error: ", e);
+            AGame.LOG.e("Slick2D Error: ", e);
         }
 
         @Override
         public void error(String message) {
-            Game.LOG.e(message);
+            AGame.LOG.e(message);
         }
 
         @Override

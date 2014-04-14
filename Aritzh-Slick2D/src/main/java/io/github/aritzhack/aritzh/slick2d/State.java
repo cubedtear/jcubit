@@ -26,19 +26,19 @@ import org.newdawn.slick.state.StateBasedGame;
 /**
  * Slightly improved version of {@link org.newdawn.slick.state.GameState}, that directly extends
  * {@link io.github.aritzhack.aritzh.slick2d.gui.GUI} and has getters for the
- * {@link io.github.aritzhack.aritzh.slick2d.Game game} and the {@link org.newdawn.slick.GameContainer container}
+ * {@link AGame game} and the {@link org.newdawn.slick.GameContainer container}
  *
  * @author Aritz Lopez
  */
 public abstract class State extends GUI implements GameState {
-    protected Game game;
+    protected AGame game;
 
     /**
      * Create a state for the specified game
      *
      * @param game The game that will hold this state
      */
-    public State(Game game) {
+    public State(AGame game) {
         super(game.getGC().getWidth(), game.getGC().getHeight());
         this.game = game;
     }
@@ -48,7 +48,7 @@ public abstract class State extends GUI implements GameState {
      *
      * @return the game that holds this state
      */
-    public Game getGame() {
+    public AGame getGame() {
         return game;
     }
 
@@ -56,7 +56,7 @@ public abstract class State extends GUI implements GameState {
      * Returns the GameContainer that holds the Game that holds this state
      *
      * @return the GameContainer that holds the Game that holds this state
-     * @see io.github.aritzhack.aritzh.slick2d.Game#getGC()
+     * @see AGame#getGC()
      */
     public GameContainer getGC() {
         return this.game.getGC();
@@ -64,18 +64,18 @@ public abstract class State extends GUI implements GameState {
 
     @Override
     public final void init(GameContainer container, StateBasedGame game) throws SlickException {
-        this.init(container, (Game) game);
+        this.init(container, (AGame) game);
     }
 
     @Override
     public final void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
         super.render(g);
-        this.render(container, (Game) game, g);
+        this.render(container, (AGame) game, g);
     }
 
     @Override
     public final void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
-        this.update(container, (Game) game, delta);
+        this.update(container, (AGame) game, delta);
     }
 
     /**
@@ -85,7 +85,7 @@ public abstract class State extends GUI implements GameState {
      * @param game      The game that holds this state
      * @throws SlickException
      */
-    public void init(GameContainer container, Game game) throws SlickException {
+    public void init(GameContainer container, AGame game) throws SlickException {
 
     }
 
@@ -97,7 +97,7 @@ public abstract class State extends GUI implements GameState {
      * @param delta     The amount of time that has passed in millisecond since last update
      * @throws SlickException
      */
-    public void update(GameContainer container, Game game, int delta) throws SlickException {
+    public void update(GameContainer container, AGame game, int delta) throws SlickException {
 
     }
 
@@ -109,7 +109,7 @@ public abstract class State extends GUI implements GameState {
      * @param g    The Graphics environment into which this state should be drawn
      * @throws SlickException
      */
-    public abstract void render(GameContainer gc, Game game, Graphics g) throws SlickException;
+    public abstract void render(GameContainer gc, AGame game, Graphics g) throws SlickException;
 
     // region ...Unused final implemented methods...
 
