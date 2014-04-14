@@ -29,7 +29,7 @@ import org.newdawn.slick.state.StateBasedGame;
  */
 public abstract class Game extends StateBasedGame {
 
-    public static final ILogger LOG = new SLF4JLogger("ShootAndLoot");
+    public static final ILogger LOG = new SLF4JLogger("Game");
     public static Font FNT_VERDANA_18;
     public static Font FNT_VERDANA_24;
     private GameContainer container;
