@@ -26,6 +26,7 @@ import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.util.LogSystem;
 
 /**
+ * Utility class to handle all slick-related
  * @author Aritz Lopez
  */
 public class SlickUtil {
@@ -93,7 +94,7 @@ public class SlickUtil {
      * it is considered as true (if the same rectangle is checked against itself it will return true)
      *
      * @param out The outer rectangle, that has to contain the inner one
-     * @param in The inner rectangle that must the outer must contain
+     * @param in  The inner rectangle that must the outer must contain
      * @return Whether the outer rectangle contains the inner one
      */
     public static boolean includesOrContains(Rectangle out, Rectangle in) {
@@ -105,6 +106,7 @@ public class SlickUtil {
 
     /**
      * Formats a rectangle as a string, with this format: {@code {xCoord, yCoord, width x height}}
+     *
      * @param r The rectangle to format
      * @return A string representing the rectangle
      */
@@ -114,6 +116,7 @@ public class SlickUtil {
 
     /**
      * Formats a point as a string, with this format: {@code {xCoord, yCoord}}
+     *
      * @param p The point to format
      * @return A string representing the point
      */
@@ -121,6 +124,14 @@ public class SlickUtil {
         return String.format("{%s, %s}", p.getX(), p.getY());
     }
 
+    /**
+     * Creates na image full of the specified color and with the given size
+     *
+     * @param width  The width of the image
+     * @param height The height of the image
+     * @param color  The color the image will be filled with
+     * @return an image full of the specified color and with the given size
+     */
     public static Image newColorImage(int width, int height, Color color) {
         try {
             Image img = new Image(width, height);
@@ -135,6 +146,14 @@ public class SlickUtil {
         return null;
     }
 
+    /**
+     * A log system that ignores everything but errors. Errors are redirected to {@link Game#LOG} through
+     * {@link io.github.aritzhack.aritzh.logging.ILogger#e(String) ILogger.e(String)} and
+     * {@link io.github.aritzhack.aritzh.logging.ILogger#e(String, Throwable) ILogger.e(String, Throwable)}
+     * <p/>
+     * It is thought to be used by calling
+     * {@link org.newdawn.slick.util.Log#setLogSystem(org.newdawn.slick.util.LogSystem) Log.setLogSystem(SlickUtil.nullSystem)}
+     */
     public static final LogSystem nullSystem = new LogSystem() {
         @Override
         public void error(String message, Throwable e) {
