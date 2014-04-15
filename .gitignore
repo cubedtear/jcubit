@@ -4,3 +4,4 @@
 build/
 mvn-repo/
 annotations.xml
+release.properties
