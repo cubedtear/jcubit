@@ -48,6 +48,17 @@
 		</developer>
 	</developers>
 
+	<repositories>
+		<repository>
+			<id>aritzh-mvn-repo</id>
+			<url>https://raw.github.com/aritzhack/Aritzh/mvn-repo/</url>
+			<snapshots>
+				<enabled>true</enabled>
+				<updatePolicy>always</updatePolicy>
+			</snapshots>
+		</repository>
+	</repositories>
+	
 	<dependencies>
 		<dependency>
 			<groupId>io.github.aritzhack</groupId>
