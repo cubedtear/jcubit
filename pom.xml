@@ -137,7 +137,6 @@
 				<version>2.4.2</version>
 				<configuration>
 					<autoVersionSubmodules>true</autoVersionSubmodules>
-					<dryRun>true</dryRun>
 				</configuration>
 			</plugin>
 		</plugins>
