@@ -24,6 +24,28 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
+	<artifactId>aritzh-slick2d</artifactId>
+
+	<licenses>
+		<license>
+			<name>Apache License v2</name>
+			<distribution>repo</distribution>
+			<url>http://www.apache.org/licenses/LICENSE-2.0</url>
+		</license>
+	</licenses>
+
+	<developers>
+		<developer>
+			<id>aritzh</id>
+			<name>Aritz Lopez</name>
+			<email>aritzhack@gmail.com</email>
+			<roles>
+				<role>developer</role>
+			</roles>
+			<timezone>+1</timezone>
+		</developer>
+	</developers>
+
 	<repositories>
 		<repository>
 			<id>aritzh-mvn-repo</id>
@@ -35,7 +57,6 @@
 		</repository>
 	</repositories>
 
-	<artifactId>aritzh-slick2d</artifactId>
 
 	<dependencies>
 		<dependency>
