@@ -18,7 +18,7 @@ package io.github.aritzhack.aritzh.awt.render;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Maps;
-import io.github.aritzhack.aritzh.util.ARGBColorUtil;
+import io.github.aritzhack.aritzh.ARGBColorUtil;
 
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;

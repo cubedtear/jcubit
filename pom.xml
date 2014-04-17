@@ -20,13 +20,12 @@
 
 	<groupId>io.github.aritzhack</groupId>
 	<artifactId>aritzh-parent</artifactId>
-	<version>${global.version}</version>
+	<version>1.1</version>
 
 	<name>Aritzh</name>
 
 	<properties>
 		<github.global.server>github</github.global.server>
-		<global.version>1.1.1</global.version>
 	</properties>
 
 	<packaging>pom</packaging>
