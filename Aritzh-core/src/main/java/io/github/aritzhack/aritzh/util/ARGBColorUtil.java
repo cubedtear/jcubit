@@ -14,7 +14,7 @@
  *    limitations under the License.
  */
 
-package io.github.aritzhack.aritzh;
+package io.github.aritzhack.aritzh.util;
 
 /**
  * Utility class to deal with ARGB color format

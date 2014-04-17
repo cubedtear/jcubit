@@ -16,7 +16,7 @@
 
 package io.github.aritzhack.aritzh.bds;
 
-import io.github.aritzhack.aritzh.IOUtil;
+import io.github.aritzhack.aritzh.util.IOUtil;
 
 import java.io.File;
 import java.io.IOException;
