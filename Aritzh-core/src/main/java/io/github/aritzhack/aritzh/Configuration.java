@@ -26,6 +26,7 @@ import java.io.*;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -55,7 +56,7 @@ public class Configuration {
     /**
      * Loads the configuration file <br>
      * If the config file did not exist, it will be created
-     * <p>
+     * <p/>
      * Equivalent to calling {@code Configuration.loadConfig(configFile, false)}
      *
      * @param configFile File to read the configuration from
@@ -93,33 +94,39 @@ public class Configuration {
         if (!configFile.exists()) {
             return Configuration.newConfig(configFile);
         }
+
         Configuration config = new Configuration(configFile, compressSpaces);
-        String currentLine;
 
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(configFile)))) {
-
-            String currentCategory = "";
-
-            while ((currentLine = reader.readLine()) != null) {
-                currentLine = compressSpaces ? currentLine.replaceAll("\\s+", " ").trim() : currentLine;
-
-                Matcher m;
-
-                if ((SKIP_REGEX.matcher(currentLine)).matches()) {
-                  // Do nothing
-                } else if ((m = CATEGORY_REGEX.matcher(currentLine)).matches()) {
-                    currentCategory = config.addCategory(m);
-                } else if ((m = PROP_REGEX.matcher(currentLine)).matches()) {
-                    config.addProperty(m, currentCategory);
-                } else if (verbose) {
-                    Configuration.logger.d("Unknown-line: {}", currentLine);
-                }
-            }
+            loadConfig(config, reader, compressSpaces, verbose);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
         return config;
+    }
+
+    public static Configuration loadConfig(final Configuration config, final BufferedReader reader, final boolean compressSpaces, final boolean verbose) {
+        reader.lines().sequential().forEachOrdered(new Consumer<String>() {
+            String currentCategory = "";
+
+            @Override
+            public void accept(String line) {
+                line = compressSpaces ? line.replaceAll("\\s+", " ").trim() : line;
+
+                Matcher m;
+
+                if ((SKIP_REGEX.matcher(line)).matches()) {
+                    // Do nothing
+                } else if ((m = CATEGORY_REGEX.matcher(line)).matches()) {
+                    currentCategory = config.addCategory(m);
+                } else if ((m = PROP_REGEX.matcher(line)).matches()) {
+                    config.addProperty(m, currentCategory);
+                } else if (verbose) {
+                    Configuration.logger.d("Unknown-line: {}", line);
+                }
+            }
+        });
     }
 
     /**
