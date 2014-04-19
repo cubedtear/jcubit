@@ -72,6 +72,34 @@ public class Configuration {
     }
 
     /**
+     * Loads the configuration from the given path <br>
+     * If the config path did not exist, it will be created
+     * <p/>
+     * Equivalent to calling {@code Configuration.loadConfig(configFile, false)}
+     *
+     * @param configFile Path to read the configuration from
+     * @return A new configuration object, already parsed from {@code configFile}
+     * @see Configuration#loadConfig(java.nio.file.Path, boolean)
+     */
+    public static Configuration loadConfig(Path configFile) {
+        return Configuration.loadConfig(configFile, false);
+    }
+
+    /**
+     * Loads the configuration from the given path, specifying if spaces should be compressed or not ({@code currentLine.replaceAll("\\s+", " ")})
+     * If the config path did not exist, it will be created
+     * Equivalent to calling {@code Configuration.loadConfig(configFile, compressedSpaces, false)}
+     *
+     * @param configFile       Path to read the configuration from
+     * @param compressedSpaces If true subsequent whitespaces will be replaced with a single one (defaults to false)
+     * @return A new configuration object, already parsed, from {@code configFile}
+     * @see Configuration#loadConfig(java.nio.file.Path, boolean, boolean)
+     */
+    private static Configuration loadConfig(Path configFile, boolean compressedSpaces) {
+        return Configuration.loadConfig(configFile, compressedSpaces, false);
+    }
+
+    /**
      * Loads the configuration file, specifying if spaces should be compressed or not ({@code currentLine.replaceAll("\\s+", " ")})
      * If the config file did not exist, it will be created
      * Equivalent to calling {@code Configuration.loadConfig(configFile, compressedSpaces, false)}
