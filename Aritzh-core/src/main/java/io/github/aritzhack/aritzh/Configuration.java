@@ -60,9 +60,9 @@ public class Configuration {
     /**
      * Loads the configuration file <br>
      * If the config file did not exist, it will be created
-     * <p/>
+     * <p>
      * Equivalent to calling {@code Configuration.loadConfig(configFile, false)}
-     *
+     * </p>
      * @param configFile File to read the configuration from
      * @return A new configuration object, already parsed from {@code configFile}
      * @see Configuration#loadConfig(java.io.File, boolean)
@@ -74,9 +74,9 @@ public class Configuration {
     /**
      * Loads the configuration from the given path <br>
      * If the config path did not exist, it will be created
-     * <p/>
+     * <p>
      * Equivalent to calling {@code Configuration.loadConfig(configFile, false)}
-     *
+     * </p>
      * @param configFile Path to read the configuration from
      * @return A new configuration object, already parsed from {@code configFile}
      * @see Configuration#loadConfig(java.nio.file.Path, boolean)
