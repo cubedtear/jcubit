@@ -20,6 +20,7 @@ import com.google.common.base.Strings;
 import com.google.common.collect.Maps;
 import io.github.aritzhack.aritzh.logging.ILogger;
 import io.github.aritzhack.aritzh.logging.SLF4JLogger;
+import io.github.aritzhack.aritzh.util.NotNull;
 import io.github.aritzhack.aritzh.util.OneOrOther;
 
 import java.io.*;
@@ -166,7 +167,7 @@ public class Configuration {
      * @param configFile the config file (doesn't need to exist)
      * @return A new empty configuration object
      */
-    public static Configuration newConfig(File configFile) {
+    public static Configuration newConfig(@NotNull File configFile) {
         return new Configuration(OneOrOther.ofOne(configFile), false);
     }
 
@@ -176,7 +177,7 @@ public class Configuration {
      * @param configFile the config file (doesn't need to exist)
      * @return A new empty configuration object
      */
-    public static Configuration newConfig(Path configFile) {
+    public static Configuration newConfig(@NotNull Path configFile) {
         return new Configuration(OneOrOther.ofOther(configFile), false);
     }
 

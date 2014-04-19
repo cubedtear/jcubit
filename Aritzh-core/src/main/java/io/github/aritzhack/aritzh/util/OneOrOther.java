@@ -32,8 +32,8 @@ public class OneOrOther<T, U> {
 
     public OneOrOther(@Nullable T one, @Nullable U other) {
         Preconditions.checkArgument(one != null && other == null || one == null && other != null, "One and only one of the two arguments must not be null!");
-        this.one = Optional.of(one);
-        this.other = Optional.of(other);
+        this.one = Optional.ofNullable(one);
+        this.other = Optional.ofNullable(other);
     }
 
     public Object getNonNull() {
