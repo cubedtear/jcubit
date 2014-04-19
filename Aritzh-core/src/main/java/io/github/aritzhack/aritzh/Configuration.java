@@ -106,7 +106,7 @@ public class Configuration {
         return config;
     }
 
-    public static Configuration loadConfig(final Configuration config, final BufferedReader reader, final boolean compressSpaces, final boolean verbose) {
+    private static void loadConfig(final Configuration config, final BufferedReader reader, final boolean compressSpaces, final boolean verbose) {
         reader.lines().sequential().forEachOrdered(new Consumer<String>() {
             String currentCategory = "";
 
