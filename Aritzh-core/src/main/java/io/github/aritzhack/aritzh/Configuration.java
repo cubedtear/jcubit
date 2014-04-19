@@ -16,13 +16,16 @@
 
 package io.github.aritzhack.aritzh;
 
-import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.Maps;
 import io.github.aritzhack.aritzh.logging.ILogger;
 import io.github.aritzhack.aritzh.logging.SLF4JLogger;
+import io.github.aritzhack.aritzh.util.OneOrOther;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -44,11 +47,11 @@ public class Configuration {
     public static final Pattern SKIP_REGEX = Pattern.compile("(^\\s*$)|(^\\s*#.*$)"); // Empty line, or: Spaces or not, followed by # and followed by anything
     public static final ILogger logger = new SLF4JLogger(Configuration.class);
 
-    private final File configFile;
+    private final OneOrOther<File, Path> configFile;
     private final boolean compressedSpaces;
     private final Map<String, LinkedHashMap<String, String>> categories = Maps.newLinkedHashMap();
 
-    private Configuration(File configFile, boolean compressedSpaces) {
+    private Configuration(OneOrOther<File, Path> configFile, boolean compressedSpaces) {
         this.configFile = configFile;
         this.compressedSpaces = compressedSpaces;
     }
@@ -92,10 +95,10 @@ public class Configuration {
      */
     public static Configuration loadConfig(File configFile, boolean compressSpaces, boolean verbose) {
         if (!configFile.exists()) {
-            return Configuration.newConfig(configFile);
+            return Configuration.newConfig(OneOrOther.ofOne(configFile));
         }
 
-        Configuration config = new Configuration(configFile, compressSpaces);
+        Configuration config = new Configuration(OneOrOther.ofOne(configFile), compressSpaces);
 
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(configFile)))) {
             loadConfig(config, reader, compressSpaces, verbose);
@@ -103,6 +106,30 @@ public class Configuration {
             e.printStackTrace();
         }
 
+        return config;
+    }
+
+    /**
+     * Loads the configuration path, specifying if spaces should be compressed or not ({@code currentLine.replaceAll("\\s+", " ")})
+     * If the config path did not exist, it will be created
+     *
+     * @param configFile     Path to read the configuration from
+     * @param compressSpaces If true subsequent whitespaces will be replaced with a single one (defaults to {@code false})
+     * @param verbose        Whether to log unrecognized lines or not (defaults to {@code false})
+     * @return A new configuration object, already parsed, from {@code configFile}
+     */
+    public static Configuration loadConfig(Path configFile, boolean compressSpaces, boolean verbose) {
+        if (Files.notExists(configFile)) {
+            return Configuration.newConfig(OneOrOther.ofOther(configFile));
+        }
+
+        Configuration config = new Configuration(OneOrOther.ofOther(configFile), compressSpaces);
+
+        try {
+            loadConfig(config, Files.newBufferedReader(configFile), compressSpaces, verbose);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return config;
     }
 
@@ -129,6 +156,10 @@ public class Configuration {
         });
     }
 
+    private static Configuration newConfig(OneOrOther<File, Path> configFile) {
+        return new Configuration(configFile, false);
+    }
+
     /**
      * Creates a new empty configuration object for the specified file
      *
@@ -136,7 +167,17 @@ public class Configuration {
      * @return A new empty configuration object
      */
     public static Configuration newConfig(File configFile) {
-        return new Configuration(configFile, false);
+        return new Configuration(OneOrOther.ofOne(configFile), false);
+    }
+
+    /**
+     * Creates a new empty configuration object for the specified file
+     *
+     * @param configFile the config file (doesn't need to exist)
+     * @return A new empty configuration object
+     */
+    public static Configuration newConfig(Path configFile) {
+        return new Configuration(OneOrOther.ofOther(configFile), false);
     }
 
     private String addCategory(Matcher m) {
@@ -292,21 +333,41 @@ public class Configuration {
      *
      * @param configFile The file to save the configuration to
      */
-    private void save(File configFile) throws IOException {
-        Preconditions.checkNotNull(configFile, "Cannot save to null file!!");
-        try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(configFile)))) {
-            writer.write("# Last edit: " + new Date());
+    private void save(OneOrOther<File, Path> configFile) throws IOException {
+        this.saveToWriter(configFile.map(Configuration::getWriter, Configuration::getWriter));
+    }
+
+    private void saveToWriter(BufferedWriter writer) throws IOException {
+        if (writer == null) return;
+        writer.write("# Last edit: " + new Date());
+        writer.newLine();
+        for (Map.Entry<String, LinkedHashMap<String, String>> e1 : this.categories.entrySet()) {
+            writer.write("[" + e1.getKey() + "]");
             writer.newLine();
-            for (Map.Entry<String, LinkedHashMap<String, String>> e1 : this.categories.entrySet()) {
-                writer.write("[" + e1.getKey() + "]");
-                writer.newLine();
-                for (Map.Entry<String, String> e2 : e1.getValue().entrySet()) {
-                    writer.write(e2.getKey() + "=" + e2.getValue());
-                    writer.newLine();
-                }
+            for (Map.Entry<String, String> e2 : e1.getValue().entrySet()) {
+                writer.write(e2.getKey() + "=" + e2.getValue());
                 writer.newLine();
             }
-            writer.flush();
+            writer.newLine();
         }
+        writer.flush();
+    }
+
+    private static BufferedWriter getWriter(File file) {
+        try {
+            return new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file)));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static BufferedWriter getWriter(Path path) {
+        try {
+            return Files.newBufferedWriter(path, StandardOpenOption.WRITE);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }
