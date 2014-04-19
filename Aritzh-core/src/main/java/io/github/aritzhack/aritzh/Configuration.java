@@ -154,8 +154,8 @@ public class Configuration {
 
         Configuration config = new Configuration(OneOrOther.ofOther(configFile), compressSpaces);
 
-        try {
-            loadConfig(config, Files.newBufferedReader(configFile), compressSpaces, verbose);
+        try (BufferedReader reader = Files.newBufferedReader(configFile)){
+            loadConfig(config, reader, compressSpaces, verbose);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -183,6 +183,11 @@ public class Configuration {
                 }
             }
         });
+        try {
+            reader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private static Configuration newConfig(OneOrOther<File, Path> configFile) {
@@ -380,6 +385,7 @@ public class Configuration {
             writer.newLine();
         }
         writer.flush();
+        writer.close();
     }
 
     private static BufferedWriter getWriter(File file) {
@@ -393,7 +399,7 @@ public class Configuration {
 
     public static BufferedWriter getWriter(Path path) {
         try {
-            return Files.newBufferedWriter(path, StandardOpenOption.WRITE);
+            return Files.newBufferedWriter(path, StandardOpenOption.CREATE, StandardOpenOption.WRITE);
         } catch (IOException e) {
             e.printStackTrace();
         }
