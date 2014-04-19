@@ -17,6 +17,7 @@
 package io.github.aritzhack.aritzh;
 
 import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
 import com.google.common.collect.Maps;
 import io.github.aritzhack.aritzh.logging.ILogger;
 import io.github.aritzhack.aritzh.logging.SLF4JLogger;
@@ -105,7 +106,7 @@ public class Configuration {
                 Matcher m;
 
                 if ((SKIP_REGEX.matcher(currentLine)).matches()) {
-                    continue;
+                  // Do nothing
                 } else if ((m = CATEGORY_REGEX.matcher(currentLine)).matches()) {
                     currentCategory = config.addCategory(m);
                 } else if ((m = PROP_REGEX.matcher(currentLine)).matches()) {
@@ -166,7 +167,7 @@ public class Configuration {
      */
     public void setProperty(String category, String key, String value) {
         category = (this.compressedSpaces ? category.replaceAll("\\s+", " ") : category).trim();
-        if (category.equals("")) category = "Main";
+        if (Strings.isNullOrEmpty(category)) category = "Main";
         key = (this.compressedSpaces ? key.replaceAll("\\s+", " ") : key).trim().replace(" ", "_");
         value = (this.compressedSpaces ? value.replaceAll("\\s+", " ") : value).trim();
 
@@ -213,7 +214,7 @@ public class Configuration {
      */
     public boolean getBoolean(String category, String key) {
         String value = this.getProperty(category, key);
-        return Boolean.parseBoolean(value) || value.equalsIgnoreCase("on");
+        return Boolean.parseBoolean(value) || "on".equalsIgnoreCase(value);
     }
 
     /**
@@ -238,7 +239,7 @@ public class Configuration {
      */
     public String getProperty(String category, String key, String defaultValue) {
         category = (this.compressedSpaces ? category.replaceAll("\\s+", " ") : category).trim();
-        if (category.equals("")) category = "Main";
+        if (Strings.isNullOrEmpty(category)) category = "Main";
         key = (this.compressedSpaces ? key.replaceAll("\\s+", " ") : key).trim().replace(" ", "_");
         try {
             return this.categories.get(category).get(key).replace("_", " ");
@@ -287,7 +288,7 @@ public class Configuration {
     private void save(File configFile) throws IOException {
         Preconditions.checkNotNull(configFile, "Cannot save to null file!!");
         try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(configFile)))) {
-            writer.write("# Last edit: " + new Date().toString());
+            writer.write("# Last edit: " + new Date());
             writer.newLine();
             for (Map.Entry<String, LinkedHashMap<String, String>> e1 : this.categories.entrySet()) {
                 writer.write("[" + e1.getKey() + "]");
