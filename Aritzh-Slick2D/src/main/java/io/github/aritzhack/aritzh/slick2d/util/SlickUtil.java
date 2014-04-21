@@ -17,13 +17,19 @@
 package io.github.aritzhack.aritzh.slick2d.util;
 
 import io.github.aritzhack.aritzh.slick2d.AGame;
+import net.java.games.input.ControllerEnvironment;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Point;
 import org.newdawn.slick.geom.Rectangle;
+import org.newdawn.slick.util.Log;
 import org.newdawn.slick.util.LogSystem;
+
+import java.util.Arrays;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Utility class to handle all slick-related
@@ -145,6 +151,20 @@ public class SlickUtil {
             AGame.LOG.e("Error creating image", e);
         }
         return null;
+    }
+
+    /**
+     * Shuts JInput logging and Slick2D's logs, apart from the errors, which are forwarded to {@link io.github.aritzhack.aritzh.slick2d.AGame#LOG}
+     */
+    public static void shutUnwantedLogs() {
+        // JInput Logging (I have a gaming keyboard and it keeps complaining about not recognising it etc.)
+
+        final Logger DCELogger = Logger.getLogger(ControllerEnvironment.getDefaultEnvironment().getClass().getName());
+        DCELogger.setLevel(Level.OFF);
+        Arrays.asList(DCELogger.getHandlers()).forEach(DCELogger::removeHandler);
+
+        // Slick2D Logging
+        Log.setLogSystem(SlickUtil.nullSystem);
     }
 
     /**
