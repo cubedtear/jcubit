@@ -30,15 +30,16 @@ import org.newdawn.slick.state.StateBasedGame;
  *
  * @author Aritz Lopez
  */
-public abstract class State extends GUI implements GameState {
-    protected AGame game;
+@SuppressWarnings("unchecked")
+public abstract class State<T extends AGame> extends GUI implements GameState {
+    protected T game;
 
     /**
      * Create a state for the specified game
      *
      * @param game The game that will hold this state
      */
-    public State(AGame game) {
+    public State(T game) {
         super(game.getGC().getWidth(), game.getGC().getHeight());
         this.game = game;
     }
@@ -48,7 +49,7 @@ public abstract class State extends GUI implements GameState {
      *
      * @return the game that holds this state
      */
-    public AGame getGame() {
+    public T getGame() {
         return game;
     }
 
@@ -64,18 +65,18 @@ public abstract class State extends GUI implements GameState {
 
     @Override
     public final void init(GameContainer container, StateBasedGame game) throws SlickException {
-        this.init(container, (AGame) game);
+        this.init(container, (T) game);
     }
 
     @Override
     public final void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
         super.render(g);
-        this.render(container, (AGame) game, g);
+        this.render(container, (T) game, g);
     }
 
     @Override
     public final void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
-        this.update(container, (AGame) game, delta);
+        this.update(container, (T) game, delta);
     }
 
     /**
@@ -85,7 +86,7 @@ public abstract class State extends GUI implements GameState {
      * @param game      The game that holds this state
      * @throws SlickException
      */
-    public void init(GameContainer container, AGame game) throws SlickException {
+    public void init(GameContainer container, T game) throws SlickException {
 
     }
 
@@ -97,7 +98,7 @@ public abstract class State extends GUI implements GameState {
      * @param delta     The amount of time that has passed in millisecond since last update
      * @throws SlickException
      */
-    public void update(GameContainer container, AGame game, int delta) throws SlickException {
+    public void update(GameContainer container, T game, int delta) throws SlickException {
 
     }
 
@@ -109,7 +110,7 @@ public abstract class State extends GUI implements GameState {
      * @param g    The Graphics environment into which this state should be drawn
      * @throws SlickException
      */
-    public abstract void render(GameContainer gc, AGame game, Graphics g) throws SlickException;
+    public abstract void render(GameContainer gc, T game, Graphics g) throws SlickException;
 
     // region ...Unused final implemented methods...
 
