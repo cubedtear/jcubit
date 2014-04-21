@@ -20,9 +20,31 @@
 	<parent>
 		<artifactId>aritzh-parent</artifactId>
 		<groupId>io.github.aritzhack</groupId>
-		<version>1.0</version>
+		<version>1.1.4</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
+
+	<artifactId>aritzh-slick2d</artifactId>
+
+	<licenses>
+		<license>
+			<name>Apache License v2</name>
+			<distribution>repo</distribution>
+			<url>http://www.apache.org/licenses/LICENSE-2.0</url>
+		</license>
+	</licenses>
+
+	<developers>
+		<developer>
+			<id>aritzh</id>
+			<name>Aritz Lopez</name>
+			<email>aritzhack@gmail.com</email>
+			<roles>
+				<role>developer</role>
+			</roles>
+			<timezone>+1</timezone>
+		</developer>
+	</developers>
 
 	<repositories>
 		<repository>
@@ -35,18 +57,16 @@
 		</repository>
 	</repositories>
 
-	<artifactId>aritzh-slick2d</artifactId>
-
 	<dependencies>
 		<dependency>
 			<groupId>org.slick2d</groupId>
 			<artifactId>slick2d-core</artifactId>
-			<version>2013.10-SNAPSHOT</version>
+			<version>1.0.0</version>
 		</dependency>
 		<dependency>
 			<groupId>io.github.aritzhack</groupId>
 			<artifactId>aritzh-core</artifactId>
-			<version>1.0</version>
+			<version>1.1.4</version>
 		</dependency>
 	</dependencies>
 

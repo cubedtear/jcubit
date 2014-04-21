@@ -14,27 +14,19 @@
  *    limitations under the License.
  */
 
-package io.github.aritzhack.aritzh;
+package io.github.aritzhack.aritzh.util;
+
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
  * @author Aritz Lopez
  */
-@SuppressWarnings("UnusedDeclaration")
-public class OSUtil {
-
-    private static EnumOS OS = null;
-
-    public static EnumOS getOs() {
-        if (OSUtil.OS != null) return OS;
-
-        String s = System.getProperty("os.name").toLowerCase();
-        return OSUtil.OS = s.contains("win") ? EnumOS.WINDOWS :
-                s.contains("mac") ? EnumOS.MACOS :
-                        s.contains("solaris") || s.contains("sunos") || s.contains("linux") || s.contains("unix") ? EnumOS.UNIX :
-                                EnumOS.UNKNOWN;
-    }
-
-    public static enum EnumOS {
-        WINDOWS, UNIX, MACOS, UNKNOWN
-    }
+@Documented
+@Retention(RetentionPolicy.CLASS)
+@Target({ElementType.FIELD, ElementType.LOCAL_VARIABLE, ElementType.PARAMETER, ElementType.METHOD})
+public @interface Nullable {
 }

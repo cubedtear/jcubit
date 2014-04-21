@@ -14,7 +14,7 @@
  *    limitations under the License.
  */
 
-package io.github.aritzhack.aritzh;
+package io.github.aritzhack.aritzh.util;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;

@@ -20,7 +20,7 @@
 	<parent>
 		<artifactId>aritzh-parent</artifactId>
 		<groupId>io.github.aritzhack</groupId>
-		<version>1.0</version>
+		<version>1.1.4</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
@@ -28,11 +28,47 @@
 
 	<artifactId>aritzh-awt</artifactId>
 
+	<licenses>
+		<license>
+			<name>Apache License v2</name>
+			<distribution>repo</distribution>
+			<url>http://www.apache.org/licenses/LICENSE-2.0</url>
+		</license>
+	</licenses>
+
+	<developers>
+		<developer>
+			<id>aritzh</id>
+			<name>Aritz Lopez</name>
+			<email>aritzhack@gmail.com</email>
+			<roles>
+				<role>developer</role>
+			</roles>
+			<timezone>+1</timezone>
+		</developer>
+	</developers>
+
+	<repositories>
+		<repository>
+			<id>aritzh-mvn-repo</id>
+			<url>https://raw.github.com/aritzhack/Aritzh/mvn-repo/</url>
+			<snapshots>
+				<enabled>true</enabled>
+				<updatePolicy>always</updatePolicy>
+			</snapshots>
+		</repository>
+	</repositories>
+	
 	<dependencies>
 		<dependency>
 			<groupId>io.github.aritzhack</groupId>
 			<artifactId>aritzh-core</artifactId>
-			<version>1.0</version>
+			<version>1.1.4</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-lang</groupId>
+			<artifactId>commons-lang</artifactId>
+			<version>2.6</version>
 		</dependency>
 	</dependencies>
 

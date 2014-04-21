@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
+<?xml version="1.0" encoding="UTF-8"?><!--
   ~ Copyright 2014 Aritz Lopez
   ~
   ~    Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,7 +21,7 @@
 	<parent>
 		<groupId>io.github.aritzhack</groupId>
 		<artifactId>aritzh-parent</artifactId>
-		<version>1.0</version>
+		<version>1.1.4</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
@@ -31,21 +30,33 @@
 	<licenses>
 		<license>
 			<name>Apache License v2</name>
-			<url>http://www.apache.org/licenses/LICENSE-2.0</url>
 			<distribution>repo</distribution>
+			<url>http://www.apache.org/licenses/LICENSE-2.0</url>
 		</license>
 	</licenses>
+
+	<developers>
+		<developer>
+			<id>aritzh</id>
+			<name>Aritz Lopez</name>
+			<email>aritzhack@gmail.com</email>
+			<roles>
+				<role>developer</role>
+			</roles>
+			<timezone>+1</timezone>
+		</developer>
+	</developers>
 
 	<dependencies>
 		<dependency>
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
-			<version>12.0</version>
+			<version>16.0</version>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.10</version>
+			<version>4.11</version>
 		</dependency>
 		<dependency>
 			<groupId>org.reflections</groupId>
@@ -55,7 +66,7 @@
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
-			<version>1.7.5</version>
+			<version>1.7.7</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>

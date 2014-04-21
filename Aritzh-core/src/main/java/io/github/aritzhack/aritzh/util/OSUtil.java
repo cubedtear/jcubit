@@ -14,24 +14,27 @@
  *    limitations under the License.
  */
 
-package io.github.aritzhack.aritzh.bds;
-
-import io.github.aritzhack.aritzh.util.IOUtil;
-
-import java.io.File;
-import java.io.IOException;
+package io.github.aritzhack.aritzh.util;
 
 /**
  * @author Aritz Lopez
  */
-public class BDSFileReader {
+@SuppressWarnings("UnusedDeclaration")
+public class OSUtil {
 
-    public static void main(String[] args) throws IOException {
-        File f = IOUtil.chooseFile("", null);
-        if (f == null) System.exit(0);
+    private static EnumOS OS = null;
 
-        BDSCompound c = new BDSCompound(f);
-        System.out.println("");
-        System.out.println(c.toString());
+    public static EnumOS getOs() {
+        if (OSUtil.OS != null) return OS;
+
+        String s = System.getProperty("os.name").toLowerCase();
+        return OSUtil.OS = s.contains("win") ? EnumOS.WINDOWS :
+                s.contains("mac") ? EnumOS.MACOS :
+                        s.contains("solaris") || s.contains("sunos") || s.contains("linux") || s.contains("unix") ? EnumOS.UNIX :
+                                EnumOS.UNKNOWN;
+    }
+
+    public static enum EnumOS {
+        WINDOWS, UNIX, MACOS, UNKNOWN
     }
 }

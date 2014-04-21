@@ -14,24 +14,26 @@
  *    limitations under the License.
  */
 
-package io.github.aritzhack.aritzh.bds;
+package io.github.aritzhack.aritzh.awt.render;
 
-import io.github.aritzhack.aritzh.util.IOUtil;
+import org.apache.commons.lang.ArrayUtils;
+import org.junit.Test;
 
-import java.io.File;
-import java.io.IOException;
+import java.util.Arrays;
 
 /**
  * @author Aritz Lopez
  */
-public class BDSFileReader {
+public class SpriteTest {
 
-    public static void main(String[] args) throws IOException {
-        File f = IOUtil.chooseFile("", null);
-        if (f == null) System.exit(0);
+    public static final int COLOR = 0xFF00FFFF;
 
-        BDSCompound c = new BDSCompound(f);
-        System.out.println("");
-        System.out.println(c.toString());
+    @Test
+    public void testColorSprite() {
+        Sprite sprite = new Sprite(500, 500, COLOR);
+        assert Arrays.asList(ArrayUtils.toObject(sprite.getPixels()))
+                .stream()
+                .allMatch(i -> i == COLOR) :
+                "One of the colors was not equal!";
     }
 }

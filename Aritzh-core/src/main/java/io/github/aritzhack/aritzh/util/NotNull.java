@@ -14,12 +14,9 @@
  *    limitations under the License.
  */
 
-package io.github.aritzhack.aritzh;
+package io.github.aritzhack.aritzh.util;
 
-import io.github.aritzhack.aritzh.util.ReflectionUtil;
-import junit.framework.Assert;
-import org.junit.Test;
-
+import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -28,21 +25,8 @@ import java.lang.annotation.Target;
 /**
  * @author Aritz Lopez
  */
-public class ReflectionUtilTest {
-
-    @Test
-    public void testClassHasAnnotation() throws Exception {
-        Assert.assertTrue("Class does not have the annotation!", ReflectionUtil.classHasAnnotation(WithAnnotation.class, Annotation.class));
-
-        Assert.assertTrue("Class does not have the annotation!", ReflectionUtil.classHasAnnotation(ToTest.class, Annotation.class));
-    }
-
-    @Target(ElementType.TYPE)
-    @Retention(RetentionPolicy.RUNTIME)
-    private static @interface Annotation {}
-
-    @Annotation
-    private static class WithAnnotation {}
-
-    private static class ToTest extends WithAnnotation {}
+@Documented
+@Retention(RetentionPolicy.CLASS)
+@Target({ElementType.FIELD, ElementType.LOCAL_VARIABLE, ElementType.PARAMETER, ElementType.METHOD})
+public @interface NotNull {
 }

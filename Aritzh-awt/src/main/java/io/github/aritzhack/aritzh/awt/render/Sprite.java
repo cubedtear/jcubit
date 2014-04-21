@@ -16,6 +16,8 @@
 
 package io.github.aritzhack.aritzh.awt.render;
 
+import com.google.common.base.Preconditions;
+
 import java.util.Arrays;
 
 /**
@@ -28,12 +30,16 @@ public class Sprite {
     private final int height;
 
     public Sprite(int width, int height, int[] pixels) {
+        Preconditions.checkArgument(width >= 0 && height >= 0, "Sprite sizes cannot be negative");
+        Preconditions.checkArgument(pixels.length == width * height, "Pixel array size does not match the given width and height");
         this.width = width;
         this.height = height;
         this.pixels = pixels;
     }
 
     public Sprite(int width, int height, int color) {
+        Preconditions.checkArgument(width >= 0 && height >= 0, "Sprite sizes cannot be negative");
+        Preconditions.checkArgument((long) width * (long) height < Integer.MAX_VALUE, "Sizes are too big (" + width + " * " + height + " > Integer.MAX_VALUE)");
         this.height = height;
         this.width = width;
         this.pixels = new int[width * height];

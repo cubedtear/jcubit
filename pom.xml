@@ -20,7 +20,7 @@
 
 	<groupId>io.github.aritzhack</groupId>
 	<artifactId>aritzh-parent</artifactId>
-	<version>1.0</version>
+	<version>1.1.4</version>
 
 	<name>Aritzh</name>
 
@@ -130,6 +130,11 @@
 					<source>1.8</source>
 					<target>1.8</target>
 				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>versions-maven-plugin</artifactId>
+				<version>2.1</version>
 			</plugin>
 		</plugins>
 	</build>

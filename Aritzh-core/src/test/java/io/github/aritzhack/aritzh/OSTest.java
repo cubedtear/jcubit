@@ -16,6 +16,7 @@
 
 package io.github.aritzhack.aritzh;
 
+import io.github.aritzhack.aritzh.util.OSUtil;
 import org.junit.Assert;
 import org.junit.Test;
 
