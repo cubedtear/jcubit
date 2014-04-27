@@ -17,8 +17,8 @@
 package io.github.aritzhack.aritzh.awt.gameEngine;
 
 import com.google.common.base.Preconditions;
-import io.github.aritzhack.aritzh.logging.ILogger;
 import io.github.aritzhack.aritzh.awt.gameEngine.input.InputHandler;
+import io.github.aritzhack.aritzh.logging.ILogger;
 import io.github.aritzhack.aritzh.logging.NullLogger;
 
 import javax.swing.JFrame;
@@ -95,7 +95,7 @@ public class CanvasGame extends Canvas implements IGameEngine {
     @Override
     public synchronized void start() {
         this.running = true;
-        this.frame.setVisible(true);
+        if (!this.noFrame) this.frame.setVisible(true);
         this.thread.start();
     }
 
