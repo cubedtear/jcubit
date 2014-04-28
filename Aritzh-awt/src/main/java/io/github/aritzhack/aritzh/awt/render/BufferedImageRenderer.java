@@ -51,7 +51,7 @@ public class BufferedImageRenderer implements IRender {
 
     @Override
     public void clear() {
-        Arrays.fill(this.pixels, 0x00_00_00_FF);
+        Arrays.fill(this.pixels, 0x000000FF);
     }
 
     @Override

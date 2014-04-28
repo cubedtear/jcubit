@@ -33,7 +33,7 @@ public class AnimatedSprite {
     private int currentSprite = 0;
 
     public AnimatedSprite(Map<String, Sprite> sprites, String name, int frameCount, long delayInMillis) {
-        this.delay = delayInMillis * 1_000_000;
+        this.delay = delayInMillis * 1000000;
 
         for (int i = 0; i < frameCount; i++) {
             Sprite s = sprites.get(name + i);

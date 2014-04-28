@@ -75,7 +75,9 @@ public class ReflectionUtil {
         for (File f : folder.listFiles(fileFilter)) {
             try {
                 method.invoke(sysURLClassLoader, f.toURI().toURL());
-            } catch (ReflectiveOperationException | IOException e) {
+            } catch (ReflectiveOperationException e) {
+                ret.put(f, e);
+            } catch (IOException e) {
                 ret.put(f, e);
             }
         }

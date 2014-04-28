@@ -39,7 +39,11 @@ public class Sound {
         try {
             this.clip = AudioSystem.getClip();
             this.clip.open(AudioSystem.getAudioInputStream(url));
-        } catch (UnsupportedAudioFileException | LineUnavailableException | IOException e) {
+        } catch (UnsupportedAudioFileException e) {
+            throw new IllegalArgumentException("Could not load sound!", e);
+        } catch (LineUnavailableException e) {
+            throw new IllegalArgumentException("Could not load sound!", e);
+        } catch (IOException e) {
             throw new IllegalArgumentException("Could not load sound!", e);
         }
     }

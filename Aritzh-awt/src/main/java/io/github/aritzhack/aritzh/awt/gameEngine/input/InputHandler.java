@@ -35,7 +35,7 @@ public class InputHandler implements KeyListener, FocusListener, MouseInputListe
 
     private final boolean[] keys = new boolean[65536];
     private final List<Integer> checked = new ArrayList<Integer>();
-    private final Stack<MouseInputEvent> mouseEvents = new Stack<>();
+    private final Stack<MouseInputEvent> mouseEvents = new Stack<MouseInputEvent>();
     private boolean focus;
     private Point lastMousePos = new Point();
 
