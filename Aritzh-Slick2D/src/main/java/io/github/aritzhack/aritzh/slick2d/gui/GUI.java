@@ -48,10 +48,13 @@ public abstract class GUI implements InputListener {
 
     /**
      * Draws this GUI into the provided Graphics object
+     *
      * @param g The graphic environment into which this GUI should be drawn
      */
     public void render(Graphics g) {
-        this.components.forEach(c -> c.render(g));
+        for (GUIComponent c : this.components) {
+            c.render(g);
+        }
     }
 
     // region ...Controller...
@@ -112,12 +115,16 @@ public abstract class GUI implements InputListener {
 
     @Override
     public void keyPressed(int key, char c) {
-        this.components.forEach(cp -> cp.keyPressed(key, c));
+        for (GUIComponent co : this.components) {
+            co.keyPressed(key, c);
+        }
     }
 
     @Override
     public void keyReleased(int key, char c) {
-        this.components.forEach(cp -> cp.keyReleased(key, c));
+        for (GUIComponent co : this.components) {
+            co.keyReleased(key, c);
+        }
     }
 
     // endregion
@@ -126,37 +133,53 @@ public abstract class GUI implements InputListener {
 
     @Override
     public void mouseWheelMoved(int change) {
-        this.components.forEach(c -> c.mouseWheelMoved(change));
+        for (GUIComponent co : this.components) {
+            co.mouseWheelMoved(change);
+        }
     }
 
     @Override
     public void mouseClicked(int button, int x, int y, int clickCount) {
-        this.components.stream().filter(c -> c.getBounds().contains(x, y)).forEach(c -> c.mouseClicked(button, x, y, clickCount));
+        for (GUIComponent c : this.components) {
+            if (c.getBounds().contains(x, y)) c.mouseClicked(button, x, y, clickCount);
+        }
     }
 
     @Override
     public void mousePressed(int button, int x, int y) {
-        this.components.stream().filter(c -> c.getBounds().contains(x, y)).forEach(c -> c.mousePressed(button, x, y));
+        for (GUIComponent c : this.components) {
+            if (c.getBounds().contains(x, y)) c.mousePressed(button, x, y);
+        }
     }
 
     @Override
     public void mouseReleased(int button, int x, int y) {
-        this.components.stream().filter(c -> c.getBounds().contains(x, y) && c.wasMousePressedHere()).forEach(c -> c.mouseClicked(button, x, y, 1));
-        this.components.stream().filter(c -> c.getBounds().contains(x, y)).forEach(c -> c.mouseReleased(button, x, y));
+        for (GUIComponent c : this.components) {
+            if (c.getBounds().contains(x, y)) {
+                if (c.wasMousePressedHere()) {
+                    c.mouseClicked(button, x, y, 1);
+                }
+                c.mouseReleased(button, x, y);
+            }
+        }
     }
 
     @Override
     public void mouseMoved(int oldx, int oldy, int newx, int newy) {
-        this.components.stream().filter(c -> !c.isHovered() && !c.getBounds().contains(oldx, oldy)).forEach(c -> c.setHovered(true));
-        this.components.stream().filter(c -> c.isHovered() && c.getBounds().contains(oldx, oldy)).forEach(c -> c.setHovered(false));
-        this.components.stream().filter(c -> c.getBounds().contains(newx, newy)).forEach(c -> c.mouseMoved(oldx, oldy, newx, newy));
+        for (GUIComponent c : this.components) {
+            if (!c.isHovered() && !c.getBounds().contains(oldx, oldy)) c.setHovered(true);
+            if (c.isHovered() && c.getBounds().contains(oldx, oldy)) c.setHovered(false);
+            if (c.getBounds().contains(newx, newy)) c.mouseMoved(oldx, oldy, newx, newy);
+        }
     }
 
     @Override
     public void mouseDragged(int oldx, int oldy, int newx, int newy) {
-        this.components.stream().filter(c -> !c.isPressed() && c.getBounds().contains(newx, newy) && c.wasMousePressedHere()).forEach(c -> c.setPressed(true));
-        this.components.stream().filter(c -> c.isPressed() && !c.getBounds().contains(newx, newy)).forEach(c -> c.setPressed(false));
-        this.components.stream().filter(c -> c.getBounds().contains(newx, newy)).forEach(c -> c.mouseDragged(oldx, oldy, newx, newy));
+        for (GUIComponent c : this.components) {
+            if (!c.isPressed() && c.getBounds().contains(newx, newy) && c.wasMousePressedHere()) c.setPressed(true);
+            if (c.isPressed() && !c.getBounds().contains(newx, newy)) c.setPressed(false);
+            if (c.getBounds().contains(newx, newy)) c.mouseDragged(oldx, oldy, newx, newy);
+        }
     }
     // endregion
 

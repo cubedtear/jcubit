@@ -18,6 +18,7 @@ package io.github.aritzhack.aritzh.bds;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
+import com.google.common.collect.Lists;
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
@@ -33,7 +34,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
@@ -222,7 +222,11 @@ public class BDSCompound extends BDS {
      * @return a list with all {@link BDSString}s inside this Compound
      */
     public List<BDSString> getAllStrings() {
-        return this.items.stream().filter(bds -> bds instanceof BDSString).map(bds -> (BDSString) bds).collect(Collectors.toList());
+        List<BDSString> list = Lists.newArrayList();
+        for (BDS bds : this.items) {
+            if (bds instanceof BDSString) list.add((BDSString) bds);
+        }
+        return list;
     }
 
     /**
@@ -241,7 +245,11 @@ public class BDSCompound extends BDS {
      * @return a list with all {@link BDSByte}s inside this Compound
      */
     public List<BDSByte> getAllBytes() {
-        return this.items.stream().filter(bds -> bds instanceof BDSByte).map(bds -> (BDSByte) bds).collect(Collectors.toList());
+        List<BDSByte> list = Lists.newArrayList();
+        for (BDS bds : this.items) {
+            if (bds instanceof BDSByte) list.add((BDSByte) bds);
+        }
+        return list;
     }
 
     /**
@@ -260,7 +268,11 @@ public class BDSCompound extends BDS {
      * @return a list with all {@link BDSShort}s inside this Compound
      */
     public List<BDSShort> getAllShorts() {
-        return this.items.stream().filter(bds -> bds instanceof BDSShort).map(bds -> (BDSShort) bds).collect(Collectors.toList());
+        List<BDSShort> list = Lists.newArrayList();
+        for (BDS bds : this.items) {
+            if (bds instanceof BDSShort) list.add((BDSShort) bds);
+        }
+        return list;
     }
 
     /**
@@ -279,7 +291,11 @@ public class BDSCompound extends BDS {
      * @return a list with all {@link BDSInt}s inside this Compound
      */
     public List<BDSInt> getAllInts() {
-        return this.items.stream().filter(bds -> bds instanceof BDSInt).map(bds -> (BDSInt) bds).collect(Collectors.toList());
+        List<BDSInt> list = Lists.newArrayList();
+        for (BDS bds : this.items) {
+            if (bds instanceof BDSInt) list.add((BDSInt) bds);
+        }
+        return list;
     }
 
     /**
@@ -298,7 +314,11 @@ public class BDSCompound extends BDS {
      * @return a list with all {@link BDSCompound}s inside this Compound
      */
     public List<BDSCompound> getAllCompounds() {
-        return this.items.stream().filter(bds -> bds instanceof BDSCompound).map(bds -> (BDSCompound) bds).collect(Collectors.toList());
+        List<BDSCompound> list = Lists.newArrayList();
+        for (BDS bds : this.items) {
+            if (bds instanceof BDSCompound) list.add((BDSCompound) bds);
+        }
+        return list;
     }
 
     /**
@@ -371,13 +391,13 @@ public class BDSCompound extends BDS {
         int cLevel = level;
 
         builder.append(Strings.repeat(" ", cLevel * 4))
-                .append("[")
-                .append(this.getType().toString())
-                .append(":")
-                .append(this.getName())
-                .append("]\n")
-                .append(Strings.repeat(" ", cLevel * 4))
-                .append("{");
+            .append("[")
+            .append(this.getType().toString())
+            .append(":")
+            .append(this.getName())
+            .append("]\n")
+            .append(Strings.repeat(" ", cLevel * 4))
+            .append("{");
         cLevel++;
         boolean some = false;
         for (BDS b : this.items) {

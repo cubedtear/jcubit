@@ -37,7 +37,7 @@ public class BufferedImageRenderer implements IRender {
     private final int[] pixels;
 
     public BufferedImageRenderer(int width, int height) {
-        this(width, height, Maps.newHashMap());
+        this(width, height, Maps.<String, Sprite>newHashMap());
     }
 
     public BufferedImageRenderer(int width, int height, Map<String, Sprite> sprites) {

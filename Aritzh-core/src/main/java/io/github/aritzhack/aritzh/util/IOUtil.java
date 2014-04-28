@@ -32,7 +32,12 @@ import java.util.List;
 @SuppressWarnings("UnusedDeclaration")
 public class IOUtil {
 
-    private static final FileFilter acceptAll = pathname -> true;
+    private static final FileFilter acceptAll = new FileFilter() {
+        @Override
+        public boolean accept(File pathname) {
+            return true;
+        }
+    };
 
     /**
      * Get all files matching the {@link java.io.FileFilter} under the specified folder, including those in sub-folders, sub-sub-folders, etc.
