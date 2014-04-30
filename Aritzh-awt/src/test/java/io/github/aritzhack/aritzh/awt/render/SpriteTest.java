@@ -16,7 +16,10 @@
 
 package io.github.aritzhack.aritzh.awt.render;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.junit.Test;
+
+import java.util.Arrays;
 
 /**
  * @author Aritz Lopez
@@ -28,8 +31,9 @@ public class SpriteTest {
     @Test
     public void testColorSprite() {
         Sprite sprite = new Sprite(500, 500, COLOR);
-        for (int c : sprite.getPixels()) {
-            assert c == COLOR : "One of the colors was not equal!";
-        }
+        assert Arrays.asList(ArrayUtils.toObject(sprite.getPixels()))
+                .stream()
+                .allMatch(i -> i == COLOR) :
+                "One of the colors was not equal!";
     }
 }

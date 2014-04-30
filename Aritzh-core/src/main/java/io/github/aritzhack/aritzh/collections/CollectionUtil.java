@@ -34,9 +34,7 @@ public class CollectionUtil {
      * @param function The function to apply.
      */
     public static <I, R> void applyToAll(Collection<I> coll, Function<I, R> function) {
-        for (I i : coll) {
-            function.apply(i);
-        }
+        coll.forEach(function::apply);
     }
 
     /**
@@ -46,9 +44,7 @@ public class CollectionUtil {
      * @param function The function to apply.
      */
     public static <I, K extends I> void applyToKeys(Map<K, ?> map, Function<I, ?> function) {
-        for (K k : map.keySet()) {
-            function.apply(k);
-        }
+        map.keySet().forEach(function::apply);
     }
 
     /**
@@ -58,9 +54,7 @@ public class CollectionUtil {
      * @param function The function to apply.
      */
     public static <I, V extends I> void applyToValues(Map<?, V> map, Function<I, ?> function) {
-        for (V v : map.values()) {
-            function.apply(v);
-        }
+        map.values().forEach(function::apply);
     }
 
     /**

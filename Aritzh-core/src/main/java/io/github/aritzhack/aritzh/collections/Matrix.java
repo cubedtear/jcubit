@@ -70,6 +70,24 @@ public class Matrix<E> implements Collection<ArrayList<E>> {
     }
 
     /**
+     * Returns the element in column {@code x} and y {@code y}
+     *
+     * @param x The column of the element
+     * @param y The row of the element
+     * @return the element at (x, y)
+     */
+    public E get(int x, int y) {
+        if (columns.size() < x) {
+            columns.set(x, new ArrayList<E>());
+        }
+        ArrayList<E> columnList = columns.get(x);
+        if (columnList.size() < y) {
+            columnList.set(y, this.defaultElement);
+        }
+        return columnList.get(y);
+    }
+
+    /**
      * Runs a {@link ParametrizedFunction} for each element of the matrix, using these arguments:
      * <ol>
      * <li>X Coordinate in the matrix</li>
@@ -118,24 +136,6 @@ public class Matrix<E> implements Collection<ArrayList<E>> {
         }
         this.columns.get(x).set(y, element);
         return this;
-    }
-
-    /**
-     * Returns the element in column {@code x} and y {@code y}
-     *
-     * @param x The column of the element
-     * @param y The row of the element
-     * @return the element at (x, y)
-     */
-    public E get(int x, int y) {
-        if (columns.size() < x) {
-            columns.set(x, new ArrayList<E>());
-        }
-        ArrayList<E> columnList = columns.get(x);
-        if (columnList.size() < y) {
-            columnList.set(y, this.defaultElement);
-        }
-        return columnList.get(y);
     }
 
     @Override
@@ -195,9 +195,7 @@ public class Matrix<E> implements Collection<ArrayList<E>> {
      */
     public ArrayList<E> toFlatArrayList() {
         ArrayList<E> ret = new ArrayList<>();
-        for (ArrayList<E> c : this.columns) {
-            ret.addAll(c);
-        }
+        this.columns.forEach(ret::addAll);
         return ret;
     }
 
