@@ -32,8 +32,8 @@ public class SpriteTest {
     public void testColorSprite() {
         Sprite sprite = new Sprite(500, 500, COLOR);
         assert Arrays.asList(ArrayUtils.toObject(sprite.getPixels()))
-                .stream()
-                .allMatch(i -> i == COLOR) :
-                "One of the colors was not equal!";
+            .stream()
+            .allMatch(i -> i == COLOR) :
+            "One of the colors was not equal!";
     }
 }

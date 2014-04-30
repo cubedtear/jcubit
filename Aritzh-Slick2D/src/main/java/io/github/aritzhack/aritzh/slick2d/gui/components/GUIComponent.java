@@ -29,9 +29,9 @@ import org.newdawn.slick.geom.Rectangle;
 public abstract class GUIComponent {
 
     protected final Point pos;
-    private Point pressedPoint = null;
     protected boolean pressed, hovered;
     protected boolean visible;
+    private Point pressedPoint = null;
 
     /**
      * Creates a GUIComponent at the specified position
@@ -48,6 +48,13 @@ public abstract class GUIComponent {
      * @param g The Graphics environment into which the component will be drawn
      */
     public abstract void render(Graphics g);
+
+    /**
+     * Returns the bounds of this GUIComponent
+     *
+     * @return the bounds of this GUIComponent
+     */
+    public abstract Rectangle getBounds();
 
     /**
      * Whether this component is visible (and therefore should be rendered)
@@ -125,13 +132,6 @@ public abstract class GUIComponent {
             this.pressedPoint = new Point(x, y);
         }
     }
-
-    /**
-     * Returns the bounds of this GUIComponent
-     *
-     * @return the bounds of this GUIComponent
-     */
-    public abstract Rectangle getBounds();
 
     /**
      * Called when the mouse is released

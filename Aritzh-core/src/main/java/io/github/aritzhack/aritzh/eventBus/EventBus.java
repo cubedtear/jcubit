@@ -79,8 +79,8 @@ public class EventBus {
 
                 if (params.length != 1)
                     throw new IllegalArgumentException("Method " + m + " has @Subscribe annotation" +
-                            "and requires " + params.length +
-                            " arguments. Event-handler methods must require just one argument");
+                        "and requires " + params.length +
+                        " arguments. Event-handler methods must require just one argument");
                 Class event = params[0];
                 EventHandler handler = new EventHandler(listener, m);
                 this.handlersByEventType.put(event, handler);

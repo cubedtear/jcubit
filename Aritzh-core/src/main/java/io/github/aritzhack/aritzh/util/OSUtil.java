@@ -29,9 +29,9 @@ public class OSUtil {
 
         String s = System.getProperty("os.name").toLowerCase();
         return OSUtil.OS = s.contains("win") ? EnumOS.WINDOWS :
-                s.contains("mac") ? EnumOS.MACOS :
-                        s.contains("solaris") || s.contains("sunos") || s.contains("linux") || s.contains("unix") ? EnumOS.UNIX :
-                                EnumOS.UNKNOWN;
+            s.contains("mac") ? EnumOS.MACOS :
+                s.contains("solaris") || s.contains("sunos") || s.contains("linux") || s.contains("unix") ? EnumOS.UNIX :
+                    EnumOS.UNKNOWN;
     }
 
     public static enum EnumOS {

@@ -39,6 +39,50 @@ import java.util.logging.Logger;
 public class SlickUtil {
 
     /**
+     * <p>
+     * A log system that ignores everything but errors. Errors are redirected to {@link io.github.aritzhack.aritzh.slick2d.AGame#LOG} through
+     * {@link io.github.aritzhack.aritzh.logging.ILogger#e(String) ILogger.e(String)} and
+     * {@link io.github.aritzhack.aritzh.logging.ILogger#e(String, Throwable) ILogger.e(String, Throwable)}
+     * </p>
+     * <p>
+     * It is thought to be used by calling
+     * {@link org.newdawn.slick.util.Log#setLogSystem(org.newdawn.slick.util.LogSystem) Log.setLogSystem(SlickUtil.nullSystem)}
+     * </p>
+     */
+    public static final LogSystem nullSystem = new LogSystem() {
+        @Override
+        public void error(String message, Throwable e) {
+            AGame.LOG.e(message, e);
+        }
+
+        @Override
+        public void error(Throwable e) {
+            AGame.LOG.e("Slick2D Error: ", e);
+        }
+
+        @Override
+        public void error(String message) {
+            AGame.LOG.e(message);
+        }
+
+        @Override
+        public void warn(String message) {
+        }
+
+        @Override
+        public void warn(String message, Throwable e) {
+        }
+
+        @Override
+        public void info(String message) {
+        }
+
+        @Override
+        public void debug(String message) {
+        }
+    };
+
+    /**
      * Gets the top-left corner of a rectangle
      *
      * @param rectangle The rectangle of which the top-left corner will be returned
@@ -106,9 +150,9 @@ public class SlickUtil {
      */
     public static boolean includesOrContains(Rectangle out, Rectangle in) {
         return (in.getMinX() >= out.getMinX()
-                && in.getMinY() >= out.getMinY()
-                && in.getMaxX() <= out.getMaxX()
-                && in.getMaxY() <= out.getMaxY());
+            && in.getMinY() >= out.getMinY()
+            && in.getMaxX() <= out.getMaxX()
+            && in.getMaxY() <= out.getMaxY());
     }
 
     /**
@@ -166,48 +210,4 @@ public class SlickUtil {
         // Slick2D Logging
         Log.setLogSystem(SlickUtil.nullSystem);
     }
-
-    /**
-     * <p>
-     * A log system that ignores everything but errors. Errors are redirected to {@link io.github.aritzhack.aritzh.slick2d.AGame#LOG} through
-     * {@link io.github.aritzhack.aritzh.logging.ILogger#e(String) ILogger.e(String)} and
-     * {@link io.github.aritzhack.aritzh.logging.ILogger#e(String, Throwable) ILogger.e(String, Throwable)}
-     * </p>
-     * <p>
-     * It is thought to be used by calling
-     * {@link org.newdawn.slick.util.Log#setLogSystem(org.newdawn.slick.util.LogSystem) Log.setLogSystem(SlickUtil.nullSystem)}
-     * </p>
-     */
-    public static final LogSystem nullSystem = new LogSystem() {
-        @Override
-        public void error(String message, Throwable e) {
-            AGame.LOG.e(message, e);
-        }
-
-        @Override
-        public void error(Throwable e) {
-            AGame.LOG.e("Slick2D Error: ", e);
-        }
-
-        @Override
-        public void error(String message) {
-            AGame.LOG.e(message);
-        }
-
-        @Override
-        public void warn(String message) {
-        }
-
-        @Override
-        public void warn(String message, Throwable e) {
-        }
-
-        @Override
-        public void info(String message) {
-        }
-
-        @Override
-        public void debug(String message) {
-        }
-    };
 }

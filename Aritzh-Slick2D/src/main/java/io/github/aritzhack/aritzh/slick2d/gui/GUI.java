@@ -48,6 +48,7 @@ public abstract class GUI implements InputListener {
 
     /**
      * Draws this GUI into the provided Graphics object
+     *
      * @param g The graphic environment into which this GUI should be drawn
      */
     public void render(Graphics g) {

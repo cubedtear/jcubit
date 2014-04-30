@@ -36,6 +36,14 @@ public class OneOrOther<T, U> {
         this.other = Optional.ofNullable(other);
     }
 
+    public static <T, U> OneOrOther<T, U> ofOne(T one) {
+        return new OneOrOther<>(one, null);
+    }
+
+    public static <T, U> OneOrOther<T, U> ofOther(U other) {
+        return new OneOrOther<>(null, other);
+    }
+
     public Object getNonNull() {
         return one.isPresent() ? one : other;
     }
@@ -51,14 +59,6 @@ public class OneOrOther<T, U> {
 
     public U getOther() {
         return other.get();
-    }
-
-    public static <T, U> OneOrOther<T, U> ofOne(T one) {
-        return new OneOrOther<>(one, null);
-    }
-
-    public static <T, U> OneOrOther<T, U> ofOther(U other) {
-        return new OneOrOther<>(null, other);
     }
 
     public <R> R map(Function<T, R> ofOne, Function<U, R> ofOther) {

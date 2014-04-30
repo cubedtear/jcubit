@@ -80,17 +80,6 @@ public abstract class State<T extends AGame> extends GUI implements GameState {
     }
 
     /**
-     * Called when the state should be initialized
-     *
-     * @param container The GameContainer
-     * @param game      The game that holds this state
-     * @throws SlickException
-     */
-    public void init(GameContainer container, T game) throws SlickException {
-
-    }
-
-    /**
      * Called on every update cycle
      *
      * @param container The GameContainer
@@ -102,6 +91,18 @@ public abstract class State<T extends AGame> extends GUI implements GameState {
 
     }
 
+    @Override
+    public final void enter(GameContainer container, StateBasedGame game) throws SlickException {
+
+    }
+
+    @Override
+    public final void leave(GameContainer container, StateBasedGame game) throws SlickException {
+
+    }
+
+    // region ...Unused final implemented methods...
+
     /**
      * Called on every render cycle, so that the state can be rendered
      *
@@ -112,15 +113,14 @@ public abstract class State<T extends AGame> extends GUI implements GameState {
      */
     public abstract void render(GameContainer gc, T game, Graphics g) throws SlickException;
 
-    // region ...Unused final implemented methods...
-
-    @Override
-    public final void enter(GameContainer container, StateBasedGame game) throws SlickException {
-
-    }
-
-    @Override
-    public final void leave(GameContainer container, StateBasedGame game) throws SlickException {
+    /**
+     * Called when the state should be initialized
+     *
+     * @param container The GameContainer
+     * @param game      The game that holds this state
+     * @throws SlickException
+     */
+    public void init(GameContainer container, T game) throws SlickException {
 
     }
 

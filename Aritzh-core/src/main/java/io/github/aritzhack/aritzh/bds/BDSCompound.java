@@ -371,13 +371,13 @@ public class BDSCompound extends BDS {
         int cLevel = level;
 
         builder.append(Strings.repeat(" ", cLevel * 4))
-                .append("[")
-                .append(this.getType().toString())
-                .append(":")
-                .append(this.getName())
-                .append("]\n")
-                .append(Strings.repeat(" ", cLevel * 4))
-                .append("{");
+            .append("[")
+            .append(this.getType().toString())
+            .append(":")
+            .append(this.getName())
+            .append("]\n")
+            .append(Strings.repeat(" ", cLevel * 4))
+            .append("{");
         cLevel++;
         boolean some = false;
         for (BDS b : this.items) {
