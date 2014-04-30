@@ -83,11 +83,7 @@ public class Extensions {
         if (instance == null) {
             try {
                 instance = extensionClass.newInstance();
-            } catch (InstantiationException e) {
-                if (logger != null)
-                    logger.e("Exception when instantiating extension class", new IllegalArgumentException(e));
-                else throw e;
-            } catch (IllegalAccessException e) {
+            } catch (InstantiationException | IllegalAccessException e) {
                 if (logger != null)
                     logger.e("Exception when instantiating extension class", new IllegalArgumentException(e));
                 else throw e;

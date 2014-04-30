@@ -102,18 +102,11 @@ public class Configuration {
         }
 
         Configuration config = new Configuration(OneOrOther.<File, Path>ofOne(configFile), compressSpaces);
-        BufferedReader reader = null;
-        try {
-            reader = new BufferedReader(new InputStreamReader(new FileInputStream(configFile)));
+
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(configFile)))) {
             loadConfig(config, reader, compressSpaces, verbose);
         } catch (IOException e) {
             e.printStackTrace();
-        } finally {
-            if (reader != null) try {
-                reader.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
         }
 
         return config;
@@ -210,9 +203,8 @@ public class Configuration {
         }
 
         Configuration config = new Configuration(OneOrOther.<File, Path>ofOther(configFile), compressSpaces);
-        BufferedReader reader = null;
-        try {
-            reader = Files.newBufferedReader(configFile);
+
+        try (BufferedReader reader = Files.newBufferedReader(configFile)) {
             loadConfig(config, reader, compressSpaces, verbose);
         } catch (IOException e) {
             e.printStackTrace();

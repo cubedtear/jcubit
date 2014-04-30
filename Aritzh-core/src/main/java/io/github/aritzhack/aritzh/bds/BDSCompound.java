@@ -47,7 +47,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 @SuppressWarnings("UnusedDeclaration")
 public class BDSCompound extends BDS {
 
-    private final List<BDS> items = new ArrayList<BDS>();
+    private final List<BDS> items = new ArrayList<>();
 
     /**
      * Creates an empty BDSCompound
@@ -367,12 +367,8 @@ public class BDSCompound extends BDS {
             if (!f.createNewFile()) {
                 throw new IOException("Could not write BDSCompound to file " + f.getAbsolutePath());
             }
-        FileOutputStream fos = null;
-        try {
-            fos = new FileOutputStream(f);
+        try (FileOutputStream fos = new FileOutputStream(f)) {
             this.writeToStream(fos);
-        } finally {
-            if(fos != null) fos.close();
         }
     }
 

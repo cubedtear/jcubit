@@ -54,11 +54,11 @@ public class OneOrOther<T, U> {
     }
 
     public static <T, U> OneOrOther<T, U> ofOne(T one) {
-        return new OneOrOther<T, U>(one, null);
+        return new OneOrOther<>(one, null);
     }
 
     public static <T, U> OneOrOther<T, U> ofOther(U other) {
-        return new OneOrOther<T, U>(null, other);
+        return new OneOrOther<>(null, other);
     }
 
     public <R> R map(Function<T, R> ofOne, Function<U, R> ofOther) {
@@ -66,7 +66,7 @@ public class OneOrOther<T, U> {
     }
 
     public OneOrOther<U, T> flip() {
-        return new OneOrOther<U, T>(other.get(), one.get());
+        return new OneOrOther<>(other.get(), one.get());
     }
 
 }

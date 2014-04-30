@@ -60,7 +60,7 @@ public class Matrix<E> implements Collection<ArrayList<E>> {
     }
 
     private void init(int startWidth, int startHeight) {
-        this.columns = new ArrayList<ArrayList<E>>();
+        this.columns = new ArrayList<>();
         for (int x = 0; x < startWidth; x++) {
             this.columns.add(new ArrayList<E>(startHeight));
             for (int y = 0; y < startHeight; y++) {
@@ -85,9 +85,9 @@ public class Matrix<E> implements Collection<ArrayList<E>> {
     public <R> Matrix<R> runForEach(ParametrizedFunction<MatrixElement<E>, R> function, Object... args) {
         Matrix<R> ret;
         try {
-            ret = new Matrix<R>(this.columns.size(), this.columns.get(0).size());
+            ret = new Matrix<>(this.columns.size(), this.columns.get(0).size());
         } catch (Exception ignored) {
-            ret = new Matrix<R>();
+            ret = new Matrix<>();
         }
         for (int x = 0; x < this.columns.size(); x++) {
             ArrayList<E> col = this.columns.get(x);
@@ -101,7 +101,7 @@ public class Matrix<E> implements Collection<ArrayList<E>> {
     }
 
     private MatrixElement<E> getElement(int x, int y) {
-        return new MatrixElement<E>(this.get(x, y), x, y);
+        return new MatrixElement<>(this.get(x, y), x, y);
     }
 
     /**
@@ -194,7 +194,7 @@ public class Matrix<E> implements Collection<ArrayList<E>> {
      * be used as a common collection
      */
     public ArrayList<E> toFlatArrayList() {
-        ArrayList<E> ret = new ArrayList<E>();
+        ArrayList<E> ret = new ArrayList<>();
         for (ArrayList<E> c : this.columns) {
             ret.addAll(c);
         }
@@ -218,7 +218,7 @@ public class Matrix<E> implements Collection<ArrayList<E>> {
 
     @Override
     public boolean containsAll(Collection<?> c) {
-        List<?> missing = new ArrayList<Object>(c);
+        List<?> missing = new ArrayList<>(c);
 
         A:
         for (Object o : missing) {
@@ -243,7 +243,7 @@ public class Matrix<E> implements Collection<ArrayList<E>> {
 
     @Override
     public boolean removeAll(Collection<?> c) {
-        List<?> missing = new ArrayList<Object>(c);
+        List<?> missing = new ArrayList<>(c);
         A:
         for (Object o : missing) {
             if (columns.contains(o)) {

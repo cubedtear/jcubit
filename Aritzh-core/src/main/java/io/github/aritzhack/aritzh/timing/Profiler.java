@@ -37,7 +37,7 @@ public class Profiler {
 
     private Map<String, Long> startTime = Maps.newHashMap();
     private Map<String, Long> elapsedTime = Maps.newHashMap();
-    private Stack<String> trace = new Stack<String>();
+    private Stack<String> trace = new Stack<>();
     private boolean verbose;
 
     private Profiler(boolean verbose) {

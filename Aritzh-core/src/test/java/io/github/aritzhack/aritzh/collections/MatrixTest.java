@@ -35,7 +35,7 @@ public class MatrixTest {
     }
 
     public static Matrix<Integer> newMultiplicationTable(int x, int y) {
-        Matrix<Integer> ret = new Matrix<Integer>(x, y, 0);
+        Matrix<Integer> ret = new Matrix<>(x, y, 0);
         for (int ix = 0; ix < x; ix++) {
             for (int iy = 0; iy < y; iy++) {
                 ret.set(ix * iy, ix, iy);
