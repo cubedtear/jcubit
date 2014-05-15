@@ -24,13 +24,13 @@ package io.github.aritzhack.aritzh.extensions;
 public class Extension {
     public final String name;
     public final String version;
-    public final String waywiaVersion;
+    public final String appVersion;
     public final Object extensionInstance;
 
-    protected Extension(String name, String version, String waywiaVersion, Object extensionInstance) {
+    protected Extension(String name, String version, String appVersion, Object extensionInstance) {
         this.name = name;
         this.version = version;
-        this.waywiaVersion = waywiaVersion;
+        this.appVersion = appVersion;
         this.extensionInstance = extensionInstance;
     }
 

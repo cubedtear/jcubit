@@ -34,7 +34,7 @@ public class CollectionUtil {
      * @param function The function to apply.
      */
     public static <I, R> void applyToAll(Collection<I> coll, Function<I, R> function) {
-        coll.forEach(function::apply);
+        for (I input : coll) function.apply(input);
     }
 
     /**
@@ -44,7 +44,7 @@ public class CollectionUtil {
      * @param function The function to apply.
      */
     public static <I, K extends I> void applyToKeys(Map<K, ?> map, Function<I, ?> function) {
-        map.keySet().forEach(function::apply);
+        for (K key : map.keySet()) function.apply(key);
     }
 
     /**
@@ -54,7 +54,7 @@ public class CollectionUtil {
      * @param function The function to apply.
      */
     public static <I, V extends I> void applyToValues(Map<?, V> map, Function<I, ?> function) {
-        map.values().forEach(function::apply);
+        for (V value : map.values()) function.apply(value);
     }
 
     /**
@@ -82,7 +82,6 @@ public class CollectionUtil {
      */
     @SafeVarargs
     @SuppressWarnings("unchecked")
-
     public static <T> T[] prepend(T[] arr, T... firstElements) {
         T[] ret = (T[]) new Object[arr.length + firstElements.length];
         System.arraycopy(firstElements, 0, ret, 0, firstElements.length);

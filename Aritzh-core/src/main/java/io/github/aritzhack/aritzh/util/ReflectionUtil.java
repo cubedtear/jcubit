@@ -36,7 +36,10 @@ import java.util.Set;
 @SuppressWarnings({"unused", "ThrowableResultOfMethodCallIgnored"})
 public class ReflectionUtil {
 
-    private static final FileFilter jarAndZips = f -> f.isFile() && (f.getName().endsWith(".jar") || f.getName().endsWith(".zip"));
+    private static final FileFilter jarAndZips = new FileFilter() {
+        @Override
+        public boolean accept(File f) {return f.isFile() && (f.getName().endsWith(".jar") || f.getName().endsWith(".zip"));}
+    };
 
     /**
      * Adds all jars and zips in the folder to the classpath

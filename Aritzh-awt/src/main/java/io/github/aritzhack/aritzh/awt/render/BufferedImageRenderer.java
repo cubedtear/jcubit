@@ -17,12 +17,12 @@
 package io.github.aritzhack.aritzh.awt.render;
 
 import com.google.common.base.Preconditions;
-import com.google.common.collect.Maps;
 import io.github.aritzhack.aritzh.util.ARGBColorUtil;
 
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -37,7 +37,7 @@ public class BufferedImageRenderer implements IRender {
     private final int[] pixels;
 
     public BufferedImageRenderer(int width, int height) {
-        this(width, height, Maps.newHashMap());
+        this(width, height, new HashMap<String, Sprite>());
     }
 
     public BufferedImageRenderer(int width, int height, Map<String, Sprite> sprites) {

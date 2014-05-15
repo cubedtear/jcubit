@@ -27,7 +27,7 @@ import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.util.Log;
 import org.newdawn.slick.util.LogSystem;
 
-import java.util.Arrays;
+import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -205,7 +205,10 @@ public class SlickUtil {
 
         final Logger DCELogger = Logger.getLogger(ControllerEnvironment.getDefaultEnvironment().getClass().getName());
         DCELogger.setLevel(Level.OFF);
-        Arrays.asList(DCELogger.getHandlers()).forEach(DCELogger::removeHandler);
+
+        for (Handler h : DCELogger.getHandlers()) {
+            DCELogger.removeHandler(h);
+        }
 
         // Slick2D Logging
         Log.setLogSystem(SlickUtil.nullSystem);

@@ -18,22 +18,18 @@ package io.github.aritzhack.aritzh.util;
 
 import com.google.common.base.Preconditions;
 
-import java.util.Optional;
-import java.util.function.Consumer;
-import java.util.function.Function;
-
 /**
  * @author Aritz Lopez
  */
 public class OneOrOther<T, U> {
 
-    private final Optional<T> one;
-    private final Optional<U> other;
+    private final T one;
+    private final U other;
 
     public OneOrOther(@Nullable T one, @Nullable U other) {
         Preconditions.checkArgument(one != null && other == null || one == null && other != null, "One and only one of the two arguments must not be null!");
-        this.one = Optional.ofNullable(one);
-        this.other = Optional.ofNullable(other);
+        this.one = one;
+        this.other = other;
     }
 
     public static <T, U> OneOrOther<T, U> ofOne(T one) {
@@ -45,28 +41,27 @@ public class OneOrOther<T, U> {
     }
 
     public Object getNonNull() {
-        return one.isPresent() ? one : other;
+        return this.isOne() ? one : other;
     }
 
-    public void consume(Consumer<? super T> consumeOne, Consumer<? super U> consumeOther) {
-        one.ifPresent(consumeOne);
-        other.ifPresent(consumeOther);
+    public boolean isOne() {
+        return this.one != null;
     }
 
     public T getOne() {
-        return one.get();
+        return one;
     }
 
     public U getOther() {
-        return other.get();
+        return other;
     }
 
-    public <R> R map(Function<T, R> ofOne, Function<U, R> ofOther) {
-        return one.isPresent() ? one.map(ofOne).get() : other.map(ofOther).get();
+    public boolean isOther() {
+        return this.other != null;
     }
 
     public OneOrOther<U, T> flip() {
-        return new OneOrOther<>(other.get(), one.get());
+        return new OneOrOther<>(other, one);
     }
 
 }

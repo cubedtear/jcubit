@@ -24,13 +24,13 @@ import io.github.aritzhack.aritzh.util.NotNull;
 import io.github.aritzhack.aritzh.util.OneOrOther;
 
 import java.io.*;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -97,10 +97,10 @@ public class Configuration {
      */
     public static Configuration loadConfig(File configFile, boolean compressSpaces, boolean verbose) {
         if (!configFile.exists()) {
-            return Configuration.newConfig(OneOrOther.ofOne(configFile));
+            return Configuration.newConfig(OneOrOther.<File, Path>ofOne(configFile));
         }
 
-        Configuration config = new Configuration(OneOrOther.ofOne(configFile), compressSpaces);
+        Configuration config = new Configuration(OneOrOther.<File, Path>ofOne(configFile), compressSpaces);
 
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(configFile)))) {
             loadConfig(config, reader, compressSpaces, verbose);
@@ -116,11 +116,10 @@ public class Configuration {
     }
 
     private static void loadConfig(final Configuration config, final BufferedReader reader, final boolean compressSpaces, final boolean verbose) {
-        reader.lines().sequential().forEachOrdered(new Consumer<String>() {
-            String currentCategory = "";
-
-            @Override
-            public void accept(String line) {
+        String line;
+        String currentCategory = "";
+        try {
+            while ((line = reader.readLine()) != null) {
                 line = compressSpaces ? line.replaceAll("\\s+", " ").trim() : line;
 
                 Matcher m;
@@ -135,9 +134,6 @@ public class Configuration {
                     Configuration.logger.d("Unknown-line: {}", line);
                 }
             }
-        });
-        try {
-            reader.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -198,12 +194,12 @@ public class Configuration {
      */
     public static Configuration loadConfig(Path configFile, boolean compressSpaces, boolean verbose) {
         if (Files.notExists(configFile)) {
-            return Configuration.newConfig(OneOrOther.ofOther(configFile));
+            return Configuration.newConfig(OneOrOther.<File, Path>ofOther(configFile));
         }
 
-        Configuration config = new Configuration(OneOrOther.ofOther(configFile), compressSpaces);
+        Configuration config = new Configuration(OneOrOther.<File, Path>ofOther(configFile), compressSpaces);
 
-        try (BufferedReader reader = Files.newBufferedReader(configFile)) {
+        try (BufferedReader reader = Files.newBufferedReader(configFile, Charset.defaultCharset())) {
             loadConfig(config, reader, compressSpaces, verbose);
         } catch (IOException e) {
             e.printStackTrace();
@@ -218,7 +214,7 @@ public class Configuration {
      * @return A new empty configuration object
      */
     public static Configuration newConfig(@NotNull File configFile) {
-        return new Configuration(OneOrOther.ofOne(configFile), false);
+        return new Configuration(OneOrOther.<File, Path>ofOne(configFile), false);
     }
 
     /**
@@ -228,25 +224,7 @@ public class Configuration {
      * @return A new empty configuration object
      */
     public static Configuration newConfig(@NotNull Path configFile) {
-        return new Configuration(OneOrOther.ofOther(configFile), false);
-    }
-
-    private static BufferedWriter getWriter(File file) {
-        try {
-            return new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file)));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    public static BufferedWriter getWriter(Path path) {
-        try {
-            return Files.newBufferedWriter(path, StandardOpenOption.CREATE, StandardOpenOption.WRITE);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
+        return new Configuration(OneOrOther.<File, Path>ofOther(configFile), false);
     }
 
     /**
@@ -388,7 +366,13 @@ public class Configuration {
      * @param configFile The file to save the configuration to
      */
     private void save(OneOrOther<File, Path> configFile) throws IOException {
-        this.saveToWriter(configFile.map(Configuration::getWriter, Configuration::getWriter));
+        if (configFile.isOne()) {
+            File config = configFile.getOne();
+            this.saveToWriter(getFileWriter(config));
+        } else {
+            Path config = configFile.getOther();
+            this.saveToWriter(getPathWriter(config));
+        }
     }
 
     private void saveToWriter(BufferedWriter writer) throws IOException {
@@ -406,5 +390,23 @@ public class Configuration {
         }
         writer.flush();
         writer.close();
+    }
+
+    private static BufferedWriter getFileWriter(File file) {
+        try {
+            return new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file)));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static BufferedWriter getPathWriter(Path path) {
+        try {
+            return Files.newBufferedWriter(path, Charset.defaultCharset(), StandardOpenOption.CREATE, StandardOpenOption.WRITE);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }
