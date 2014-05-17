@@ -14,7 +14,7 @@
  *    limitations under the License.
  */
 
-package io.github.aritzhack.aritzh;
+package io.github.aritzhack.aritzh.config;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Maps;
@@ -117,31 +117,36 @@ public class Configuration {
 
     private static void loadConfig(final Configuration config, final BufferedReader reader, final boolean compressSpaces, final boolean verbose) {
         String line;
-        String currentCategory = "";
+        String currCategory = "";
         try {
             while ((line = reader.readLine()) != null) {
                 line = compressSpaces ? line.replaceAll("\\s+", " ").trim() : line;
 
+                currCategory = (compressSpaces ? currCategory.replaceAll("\\s+", " ") : currCategory).trim();
+                if (Strings.isNullOrEmpty(currCategory)) {
+                    currCategory = "Main";
+                    if (!config.categories.containsKey(currCategory)) config.addCategory(currCategory);
+                }
+
                 Matcher m;
 
-                if ((SKIP_REGEX.matcher(line)).matches()) {
-                    // Do nothing
-                } else if ((m = CATEGORY_REGEX.matcher(line)).matches()) {
-                    currentCategory = config.addCategory(m);
+                if ((SKIP_REGEX.matcher(line)).matches()) continue;
+
+                if ((m = CATEGORY_REGEX.matcher(line)).matches()) {
+                    currCategory = config.addCategory(m.group(1));
                 } else if ((m = PROP_REGEX.matcher(line)).matches()) {
-                    config.addProperty(m, currentCategory);
+                    config.addProperty(m, currCategory);
                 } else if (verbose) {
                     Configuration.logger.d("Unknown-line: {}", line);
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new ParseException("Error parsing config", e);
         }
     }
 
-    private String addCategory(Matcher m) {
-        String cat = m.group(1);
-        this.categories.put(cat, Maps.<String, String>newLinkedHashMap());
+    private String addCategory(String cat) {
+        if (!this.categories.containsKey(cat)) this.categories.put(cat, Maps.<String, String>newLinkedHashMap());
         return cat;
     }
 

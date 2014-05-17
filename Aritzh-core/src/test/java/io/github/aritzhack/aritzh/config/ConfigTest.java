@@ -14,8 +14,9 @@
  *    limitations under the License.
  */
 
-package io.github.aritzhack.aritzh;
+package io.github.aritzhack.aritzh.config;
 
+import io.github.aritzhack.aritzh.config.Configuration;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Test;
