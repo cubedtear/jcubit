@@ -16,12 +16,25 @@
 
 package io.github.aritzhack.aritzh.logging;
 
+import io.github.aritzhack.aritzh.util.NotNull;
+import io.github.aritzhack.aritzh.util.Nullable;
 import org.slf4j.Marker;
 
 /**
  * @author Aritz Lopez
  */
 public class NullLogger implements ILogger {
+
+    /**
+     * If the provided logger is not null, it is returned, otherwise a new {@link io.github.aritzhack.aritzh.logging.NullLogger} is returned
+     *
+     * @param logger A logger, or null
+     * @return Either the provided logger if it is not null, or a new {@link io.github.aritzhack.aritzh.logging.NullLogger}
+     */
+    @NotNull
+    public static ILogger getLogger(@Nullable ILogger logger) {
+        return logger == null ? new NullLogger() : logger;
+    }
 
     @Override
     public boolean isTraceEnabled() {
