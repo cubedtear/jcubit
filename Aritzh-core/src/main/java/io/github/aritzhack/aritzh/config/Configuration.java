@@ -43,7 +43,7 @@ import java.util.regex.Pattern;
 @SuppressWarnings({"UnusedDeclaration", "JavaDoc"})
 public class Configuration {
 
-    public static final Pattern CATEGORY_REGEX = Pattern.compile("^\\s*\\[(?:\\s*(?=\\w+))(.+)\\s*\\]\\s*$");// Category is trimmed, but keeps spaces in between
+    public static final Pattern CATEGORY_REGEX = Pattern.compile("^\\s*\\[(?:\\s*(?=[a-zA-Z_0-9{}]+))(.+)\\s*\\]\\s*$");// Category is trimmed, but keeps spaces in between
     public static final Pattern PROP_REGEX = Pattern.compile("^\\s*(\\w+)\\s*=(?:\\s*(?=\\w+))(.*)\\s*$");
     public static final Pattern SKIP_REGEX = Pattern.compile("(^\\s*$)|(^\\s*#.*$)"); // Empty line, or: Spaces or not, followed by # and followed by anything
     public static final ILogger logger = new SLF4JLogger(Configuration.class);

@@ -5,3 +5,4 @@ build/
 mvn-repo/
 annotations.xml
 release.properties
+target/

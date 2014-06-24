@@ -52,12 +52,12 @@ public class Extensions {
     public void loadAllExtensions(File extensionsFolder) throws ReflectiveOperationException, IOException {
         try {
             if (!extensionsFolder.exists() && !extensionsFolder.mkdirs())
-                throw new IOException("Could not create extensions' folder");
+                throw new IOException("Extensions' folder did not exist an could not be created");
 
             ReflectionUtil.addFolderToClasspath(extensionsFolder);
 
             for (Class c : app.getReflections().getTypesAnnotatedWith(ExtensionData.class)) {
-                if (logger != null) logger.d("Found mod class: {}", c.getName());
+                if (logger != null) logger.d("Found extension class: {}", c.getName());
                 this.register(c);
             }
         } catch (IOException e) {
