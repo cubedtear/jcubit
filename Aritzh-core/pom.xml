@@ -21,7 +21,7 @@
 	<parent>
 		<groupId>io.github.aritzhack</groupId>
 		<artifactId>aritzh-parent</artifactId>
-		<version>1.3.5</version>
+		<version>1.3.6</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
@@ -82,7 +82,7 @@
 
 	<profiles>
 		<profile>
-			<id>Deploy</id>
+			<id>Release</id>
 			<build>
 				<plugins>
 					<plugin>
