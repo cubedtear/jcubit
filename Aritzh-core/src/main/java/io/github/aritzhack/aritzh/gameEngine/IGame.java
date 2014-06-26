@@ -14,9 +14,7 @@
  *    limitations under the License.
  */
 
-package io.github.aritzhack.aritzh.awt.gameEngine;
-
-import java.awt.Graphics;
+package io.github.aritzhack.aritzh.gameEngine;
 
 /**
  * @author Aritz Lopez
@@ -27,7 +25,7 @@ public interface IGame {
 
     public void onStop();
 
-    public void onRender(Graphics g);
+    public void onRender();
 
     public void onUpdate();
 

@@ -14,15 +14,12 @@
  *    limitations under the License.
  */
 
-package io.github.aritzhack.aritzh.awt.gameEngine;
-
-import io.github.aritzhack.aritzh.awt.gameEngine.input.InputHandler;
+package io.github.aritzhack.aritzh.gameEngine;
 
 /**
  * @author Aritz Lopez
  */
 public interface IGameEngine extends Runnable {
-
 
     public void start();
 
@@ -39,6 +36,4 @@ public interface IGameEngine extends Runnable {
     public int getFPS();
 
     public int getUPS();
-
-    public InputHandler getInputHandler();
 }

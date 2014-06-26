@@ -18,6 +18,8 @@ package io.github.aritzhack.aritzh.awt.gameEngine;
 
 import com.google.common.base.Preconditions;
 import io.github.aritzhack.aritzh.awt.gameEngine.input.InputHandler;
+import io.github.aritzhack.aritzh.gameEngine.BasicGame;
+import io.github.aritzhack.aritzh.gameEngine.IGame;
 import io.github.aritzhack.aritzh.logging.ILogger;
 import io.github.aritzhack.aritzh.logging.NullLogger;
 
@@ -34,39 +36,39 @@ import java.awt.image.BufferStrategy;
 /**
  * @author Aritz Lopez
  */
-public class CanvasGame extends Canvas implements IGameEngine {
+public class CanvasEngine extends BasicGame {
 
     private final InputHandler inputHandler;
     private final IGame gameHandler;
     private final Thread thread;
     private final Dimension size;
     private final ILogger logger;
+    private final Canvas canvas = new Canvas();
     private JFrame frame;
     private boolean running;
     private boolean noFrame;
-    private int ups, fps;
+    private Graphics graphics;
 
-    public CanvasGame(IGame game, int width, int height) {
+
+    public CanvasEngine(IGame game, int width, int height) {
         this(game, width, height, false, null);
     }
 
-    public CanvasGame(IGame game, int width, int height, boolean noFrame, ILogger logger) {
-        Preconditions.checkArgument(game != null, "Game cannot be null!");
+    public CanvasEngine(IGame game, int width, int height, boolean noFrame, ILogger logger) {
+        super(game);
         Preconditions.checkArgument(width > 0 && height > 0, "Game sizes canot be negative!");
-
-        if (logger == null) logger = new NullLogger();
 
         this.noFrame = noFrame;
         this.gameHandler = game;
         this.size = new Dimension(width, height);
         this.thread = new Thread(this, game.getGameName() + "-Thread");
         this.inputHandler = new InputHandler();
-        this.logger = logger;
+        this.logger = NullLogger.getLogger(logger);
 
-        this.addKeyListener(this.inputHandler);
-        this.addFocusListener(this.inputHandler);
-        this.addMouseListener(this.inputHandler);
-        this.addMouseMotionListener(this.inputHandler);
+        canvas.addKeyListener(this.inputHandler);
+        canvas.addFocusListener(this.inputHandler);
+        canvas.addMouseListener(this.inputHandler);
+        canvas.addMouseMotionListener(this.inputHandler);
         if (!this.noFrame) this.createFrame();
     }
 
@@ -79,7 +81,7 @@ public class CanvasGame extends Canvas implements IGameEngine {
         this.frame.getContentPane().setPreferredSize(this.size);
         this.frame.getContentPane().setSize(this.size);
         this.frame.getContentPane().setMaximumSize(this.size);
-        this.frame.add(this);
+        this.frame.add(canvas);
         this.frame.pack();
 
         this.frame.setLocationRelativeTo(null);
@@ -87,7 +89,7 @@ public class CanvasGame extends Canvas implements IGameEngine {
         this.frame.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                CanvasGame.this.stop();
+                CanvasEngine.this.stop();
             }
         });
     }
@@ -116,19 +118,13 @@ public class CanvasGame extends Canvas implements IGameEngine {
     }
 
     @Override
-    public void update() {
-        this.gameHandler.onUpdate();
-        //this.inputHandler.clearMouseEvents();
-    }
-
-    @Override
     public void render() {
 
         if (!running) return;
 
-        BufferStrategy bs = this.getBufferStrategy();
+        BufferStrategy bs = canvas.getBufferStrategy();
         if (bs == null) {
-            this.createBufferStrategy(3);
+            canvas.createBufferStrategy(3);
             return;
         }
         Graphics g = bs.getDrawGraphics();
@@ -136,68 +132,21 @@ public class CanvasGame extends Canvas implements IGameEngine {
         g.setColor(Color.BLACK);
         g.fillRect(0, 0, this.size.width, this.size.height);
 
-        this.gameHandler.onRender(g);
+        this.graphics = g;
+
+        this.getGame().onRender();
+
+        this.graphics = null;
 
         g.dispose();
         bs.show();
     }
 
-    @Override
-    public void updatePS() {
-        this.gameHandler.onUpdatePS();
+    public Graphics getGraphics() {
+        return graphics;
     }
 
-    @Override
-    public IGame getGame() {
-        return this.gameHandler;
-    }
-
-    @Override
-    public int getFPS() {
-        return fps;
-    }
-
-    @Override
-    public int getUPS() {
-        return ups;
-    }
-
-    @Override
     public InputHandler getInputHandler() {
         return inputHandler;
-    }
-
-    @Override
-    public void run() {
-
-        final double NSPerTick = 1000000000.0 / 60.0;
-
-        double delta = 0;
-
-        long lastNano = System.nanoTime();
-        long lastMillis = System.currentTimeMillis();
-
-        this.gameHandler.onStart();
-
-        while (this.running) {
-            long now = System.nanoTime();
-            delta += (now - lastNano) / NSPerTick;
-            lastNano = now;
-
-            if (delta >= 1) {
-                this.update();
-                this.ups++;
-                delta--;
-            }
-
-            this.render();
-            this.fps++;
-
-            if (System.currentTimeMillis() - lastMillis >= 1000) {
-                lastMillis += 1000;
-                this.updatePS();
-                this.fps = this.ups = 0;
-            }
-        }
     }
 }
