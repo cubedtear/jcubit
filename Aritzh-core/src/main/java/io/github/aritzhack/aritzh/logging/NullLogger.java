@@ -35,4 +35,50 @@ public class NullLogger extends ALogger {
         return logger == null ? new NullLogger() : logger;
     }
 
+    @Override
+    public boolean isTraceEnabled() { return false; }
+
+    @Override
+    public void t(String msg) {}
+
+    @Override
+    public void t(String msg, Throwable t) {}
+
+    @Override
+    public boolean isDebugEnabled() { return false; }
+
+    @Override
+    public void d(String msg) {}
+
+    @Override
+    public void d(String msg, Throwable t) {}
+
+    @Override
+    public boolean isInfoEnabled() { return false; }
+
+    @Override
+    public void i(String msg) {}
+
+    @Override
+    public void i(String msg, Throwable t) {}
+
+    @Override
+    public boolean isWarnEnabled() { return false; }
+
+    @Override
+    public void w(String msg) {}
+
+    @Override
+    public void w(String msg, Throwable t) {}
+
+    @Override
+    public boolean isErrorEnabled() { return false; }
+
+    @Override
+    public void e(String msg) {}
+
+    @Override
+    public void e(String msg, Throwable t) {}
+
+
 }

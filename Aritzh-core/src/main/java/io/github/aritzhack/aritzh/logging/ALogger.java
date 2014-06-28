@@ -16,6 +16,7 @@
 
 package io.github.aritzhack.aritzh.logging;
 
+import org.apache.logging.log4j.message.ParameterizedMessage;
 import org.slf4j.Marker;
 
 /**
@@ -25,153 +26,159 @@ import org.slf4j.Marker;
  */
 public abstract class ALogger implements ILogger {
 
-    @Override
-    public boolean isTraceEnabled() { return false; }
+    private String format(String format, Object... args) {
+        return new ParameterizedMessage(format, args).getFormattedMessage();
+    }
 
     @Override
-    public boolean isTraceEnabled(Marker marker) { return false; }
+    public abstract boolean isTraceEnabled();
 
     @Override
-    public void t(String msg) {}
+    public boolean isTraceEnabled(Marker marker) { return isTraceEnabled(); }
 
     @Override
-    public void t(Marker marker, String msg) {}
+    public abstract void t(String msg);
 
     @Override
-    public void t(String format, Object... arguments) {}
+    public void t(Marker marker, String msg) { this.t(msg); }
 
     @Override
-    public void t(Marker marker, String format, Object... arguments) {}
+    public void t(String format, Object... arguments) { this.t(format(format, arguments)); }
 
     @Override
-    public void t(String msg, Throwable t) {}
+    public void t(Marker marker, String format, Object... arguments) { this.t(format(format, arguments)); }
 
     @Override
-    public void t(String msg, Object arg, Throwable t) {}
+    public abstract void t(String msg, Throwable t);
 
     @Override
-    public void t(Marker marker, String msg, Throwable t) {}
+    public void t(String msg, Object arg, Throwable t) { this.t(format(msg, arg), t); }
 
     @Override
-    public void t(Marker marker, String msg, Object arg, Throwable t) {}
+    public void t(Marker marker, String msg, Throwable t) { this.t(msg, t); }
 
     @Override
-    public boolean isDebugEnabled() { return false; }
+    public void t(Marker marker, String msg, Object arg, Throwable t) { this.t(format(msg, arg), t); }
 
     @Override
-    public boolean isDebugEnabled(Marker marker) { return false; }
+    public abstract boolean isDebugEnabled();
 
     @Override
-    public void d(String msg) {}
+    public boolean isDebugEnabled(Marker marker) { return isDebugEnabled(); }
 
     @Override
-    public void d(Marker marker, String msg) {}
+    public abstract void d(String msg);
 
     @Override
-    public void d(String format, Object... arguments) {}
+    public void d(Marker marker, String msg) { this.d(msg); }
 
     @Override
-    public void d(Marker marker, String format, Object... arguments) {}
+    public void d(String format, Object... arguments) { this.d(format(format, arguments)); }
 
     @Override
-    public void d(String msg, Throwable t) {}
+    public void d(Marker marker, String format, Object... arguments) { this.d(format(format, arguments)); }
 
     @Override
-    public void d(String msg, Object arg, Throwable t) {}
+    public abstract void d(String msg, Throwable t);
 
     @Override
-    public void d(Marker marker, String msg, Throwable t) {}
+    public void d(String msg, Object arg, Throwable t) { this.d(format(msg, arg), t); }
 
     @Override
-    public void d(Marker marker, String msg, Object arg, Throwable t) {}
+    public void d(Marker marker, String msg, Throwable t) { this.d(msg, t); }
 
     @Override
-    public boolean isInfoEnabled() { return false; }
+    public void d(Marker marker, String msg, Object arg, Throwable t) { this.d(format(msg, arg), t); }
 
     @Override
-    public boolean isInfoEnabled(Marker marker) { return false; }
+    public abstract boolean isInfoEnabled();
 
     @Override
-    public void i(String msg) {}
+    public boolean isInfoEnabled(Marker marker) { return isInfoEnabled(); }
 
     @Override
-    public void i(Marker marker, String msg) {}
+    public abstract void i(String msg);
 
     @Override
-    public void i(String format, Object... arguments) {}
+    public void i(Marker marker, String msg) { this.i(msg); }
 
     @Override
-    public void i(Marker marker, String format, Object... arguments) {}
+    public void i(String format, Object... arguments) { this.i(format(format, arguments)); }
 
     @Override
-    public void i(String msg, Throwable t) {}
+    public void i(Marker marker, String format, Object... arguments) { this.i(format(format, arguments)); }
 
     @Override
-    public void i(String msg, Object arg, Throwable t) {}
+    public abstract void i(String msg, Throwable t);
 
     @Override
-    public void i(Marker marker, String msg, Throwable t) {}
+    public void i(String msg, Object arg, Throwable t) { this.i(format(msg, arg), t); }
 
     @Override
-    public void i(Marker marker, String msg, Object arg, Throwable t) {}
+    public void i(Marker marker, String msg, Throwable t) { this.i(msg, t); }
 
     @Override
-    public boolean isWarnEnabled() { return false; }
+    public void i(Marker marker, String msg, Object arg, Throwable t) { this.i(format(msg, arg), t); }
 
     @Override
-    public boolean isWarnEnabled(Marker marker) { return false; }
+    public abstract boolean isWarnEnabled();
 
     @Override
-    public void w(String msg) {}
+    public boolean isWarnEnabled(Marker marker) { return isWarnEnabled(); }
 
     @Override
-    public void w(Marker marker, String msg) {}
+    public abstract void w(String msg);
 
     @Override
-    public void w(String format, Object... arguments) {}
+    public void w(Marker marker, String msg) { this.w(msg); }
 
     @Override
-    public void w(Marker marker, String format, Object... arguments) {}
+    public void w(String format, Object... arguments) { this.w(format(format, arguments)); }
 
     @Override
-    public void w(String msg, Throwable t) {}
+    public void w(Marker marker, String format, Object... arguments) { this.w(format(format, arguments)); }
 
     @Override
-    public void w(String msg, Object arg, Throwable t) {}
+    public abstract void w(String msg, Throwable t);
 
     @Override
-    public void w(Marker marker, String msg, Throwable t) {}
+    public void w(String msg, Object arg, Throwable t) { this.w(format(msg, arg), t); }
 
     @Override
-    public void w(Marker marker, String msg, Object arg, Throwable t) {}
+    public void w(Marker marker, String msg, Throwable t) { this.w(msg, t); }
 
     @Override
-    public boolean isErrorEnabled() { return false; }
+    public void w(Marker marker, String msg, Object arg, Throwable t) { this.w(format(msg, arg), t); }
 
     @Override
-    public boolean isErrorEnabled(Marker marker) { return false; }
+    public abstract boolean isErrorEnabled();
 
     @Override
-    public void e(String msg) {}
+    public boolean isErrorEnabled(Marker marker) { return isErrorEnabled(); }
 
     @Override
-    public void e(Marker marker, String msg) {}
+    public abstract void e(String msg);
 
     @Override
-    public void e(String format, Object... arguments) {}
+    public void e(Marker marker, String msg) { this.e(msg); }
 
     @Override
-    public void e(Marker marker, String format, Object... arguments) {}
+    public void e(String format, Object... arguments) { this.e(format(format, arguments)); }
 
     @Override
-    public void e(String msg, Throwable t) {}
+    public void e(Marker marker, String format, Object... arguments) { this.e(format(format, arguments)); }
 
     @Override
-    public void e(String msg, Object arg, Throwable t) {}
+    public abstract void e(String msg, Throwable t);
 
     @Override
-    public void e(Marker marker, String msg, Throwable t) {}
+    public void e(String msg, Object arg, Throwable t) { this.e(format(msg, arg), t); }
 
     @Override
-    public void e(Marker marker, String msg, Object arg, Throwable t) {}
+    public void e(Marker marker, String msg, Throwable t) { this.e(msg, t); }
+
+    @Override
+    public void e(Marker marker, String msg, Object arg, Throwable t) { this.e(format(msg, arg), t); }
+
+
 }
