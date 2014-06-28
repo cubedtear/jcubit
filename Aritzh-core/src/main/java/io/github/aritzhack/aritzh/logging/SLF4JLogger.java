@@ -21,6 +21,7 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.Marker;
 
 /**
+ * Wrapper for the {@link org.slf4j.Logger SLF4J Logger}
  * @author Aritz Lopez
  */
 public class SLF4JLogger implements ILogger {

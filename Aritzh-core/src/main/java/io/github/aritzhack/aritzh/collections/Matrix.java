@@ -25,7 +25,7 @@ import java.util.NoSuchElementException;
 
 /**
  * Bidimensional resizable array (Internally {@code ArrayList<ArrayList<E>>}) <br>
- * which also adds some useful methods e.g. {@link Matrix#runForEach(ParametrizedFunction, Object...)}
+ * which also adds some useful methods e.g. {@link Matrix#runForEach(ParameterizedFunction, Object...)}
  *
  * @author Aritz Lopez
  */
@@ -70,7 +70,7 @@ public class Matrix<E> implements Collection<ArrayList<E>> {
     }
 
     /**
-     * Runs a {@link ParametrizedFunction} for each element of the matrix, using these arguments:
+     * Runs a {@link ParameterizedFunction} for each element of the matrix, using these arguments:
      * <ol>
      * <li>X Coordinate in the matrix</li>
      * <li>Y Coordinate in the matrix</li>
@@ -82,7 +82,7 @@ public class Matrix<E> implements Collection<ArrayList<E>> {
      * @param <R>      The return value for the function. Must be the same as the return value of {@code function}
      * @return A list containing all the return values
      */
-    public <R> Matrix<R> runForEach(ParametrizedFunction<MatrixElement<E>, R> function, Object... args) {
+    public <R> Matrix<R> runForEach(ParameterizedFunction<MatrixElement<E>, R> function, Object... args) {
         Matrix<R> ret;
         try {
             ret = new Matrix<>(this.columns.size(), this.columns.get(0).size());
