@@ -153,9 +153,9 @@ public class InputHandler implements KeyListener, FocusListener, MouseInputListe
                 case MouseEvent.BUTTON1:
                     return LEFT;
                 case MouseEvent.BUTTON2:
-                    return RIGHT;
-                case MouseEvent.BUTTON3:
                     return MIDDLE;
+                case MouseEvent.BUTTON3:
+                    return RIGHT;
                 default:
                     return NONE;
             }

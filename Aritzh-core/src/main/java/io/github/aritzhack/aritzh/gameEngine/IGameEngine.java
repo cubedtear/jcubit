@@ -14,24 +14,26 @@
  *    limitations under the License.
  */
 
-package io.github.aritzhack.aritzh.extensions;
+package io.github.aritzhack.aritzh.gameEngine;
 
 /**
- * This class should not be the extended by mods, it's just used to store the mods' data on runtime
- *
  * @author Aritz Lopez
  */
-public class Extension {
-    public final String name;
-    public final String version;
-    public final String appVersion;
-    public final Object extensionInstance;
+public interface IGameEngine extends Runnable {
 
-    protected Extension(String name, String version, String appVersion, Object extensionInstance) {
-        this.name = name;
-        this.version = version;
-        this.appVersion = appVersion;
-        this.extensionInstance = extensionInstance;
-    }
+    public void start();
 
+    public void stop();
+
+    public void update();
+
+    public void render();
+
+    public void updatePS();
+
+    public IGame getGame();
+
+    public int getFPS();
+
+    public int getUPS();
 }

@@ -14,31 +14,14 @@
  *    limitations under the License.
  */
 
-package io.github.aritzhack.aritzh.awt.gameEngine;
-
-import io.github.aritzhack.aritzh.awt.gameEngine.input.InputHandler;
+package io.github.aritzhack.aritzh.config;
 
 /**
  * @author Aritz Lopez
  */
-public interface IGameEngine extends Runnable {
+public class ParseException extends RuntimeException {
 
-
-    public void start();
-
-    public void stop();
-
-    public void update();
-
-    public void render();
-
-    public void updatePS();
-
-    public IGame getGame();
-
-    public int getFPS();
-
-    public int getUPS();
-
-    public InputHandler getInputHandler();
+    public ParseException(String message, Throwable e) {
+        super(message, e);
+    }
 }

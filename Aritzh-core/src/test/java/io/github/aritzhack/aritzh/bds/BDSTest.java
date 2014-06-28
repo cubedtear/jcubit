@@ -79,16 +79,16 @@ public class BDSTest {
         BDSInt beforeIntBDS = new BDSInt(beforeInt, "int");
         BDSShort beforeShortBDS = new BDSShort(beforeShort, "short");
         BDSCompound beforeNestedBDS = new BDSCompound("nestedComp").add(beforeStringBDS)
-                .add(beforeByteBDS)
-                .add(beforeShortBDS)
-                .add(beforeIntBDS);
+            .add(beforeByteBDS)
+            .add(beforeShortBDS)
+            .add(beforeIntBDS);
 
         BDSCompound beforeComp = new BDSCompound("compound");
         beforeComp.add(beforeStringBDS)
-                .add(beforeNestedBDS)
-                .add(beforeByteBDS)
-                .add(beforeShortBDS)
-                .add(beforeIntBDS);
+            .add(beforeNestedBDS)
+            .add(beforeByteBDS)
+            .add(beforeShortBDS)
+            .add(beforeIntBDS);
 
 
         BDSCompound afterComp = new BDSCompound(beforeComp.getBytes());

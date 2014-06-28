@@ -31,7 +31,7 @@ public class BDSFileReader {
         if (f == null) System.exit(0);
 
         BDSCompound c = new BDSCompound(f);
-        System.out.println("");
-        System.out.println(c.toString());
+        System.out.println();
+        System.out.println(c);
     }
 }

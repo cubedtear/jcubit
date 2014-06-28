@@ -25,7 +25,7 @@ import java.util.NoSuchElementException;
 
 /**
  * Bidimensional resizable array (Internally {@code ArrayList<ArrayList<E>>}) <br>
- * which also adds some useful methods e.g. {@link Matrix#runForEach(ParametrizedFunction, Object...)}
+ * which also adds some useful methods e.g. {@link Matrix#runForEach(ParameterizedFunction, Object...)}
  *
  * @author Aritz Lopez
  */
@@ -70,25 +70,7 @@ public class Matrix<E> implements Collection<ArrayList<E>> {
     }
 
     /**
-     * Returns the element in column {@code x} and y {@code y}
-     *
-     * @param x The column of the element
-     * @param y The row of the element
-     * @return the element at (x, y)
-     */
-    public E get(int x, int y) {
-        if (columns.size() < x) {
-            columns.set(x, new ArrayList<E>());
-        }
-        ArrayList<E> columnList = columns.get(x);
-        if (columnList.size() < y) {
-            columnList.set(y, this.defaultElement);
-        }
-        return columnList.get(y);
-    }
-
-    /**
-     * Runs a {@link ParametrizedFunction} for each element of the matrix, using these arguments:
+     * Runs a {@link ParameterizedFunction} for each element of the matrix, using these arguments:
      * <ol>
      * <li>X Coordinate in the matrix</li>
      * <li>Y Coordinate in the matrix</li>
@@ -100,7 +82,7 @@ public class Matrix<E> implements Collection<ArrayList<E>> {
      * @param <R>      The return value for the function. Must be the same as the return value of {@code function}
      * @return A list containing all the return values
      */
-    public <R> Matrix<R> runForEach(ParametrizedFunction<MatrixElement<E>, R> function, Object... args) {
+    public <R> Matrix<R> runForEach(ParameterizedFunction<MatrixElement<E>, R> function, Object... args) {
         Matrix<R> ret;
         try {
             ret = new Matrix<>(this.columns.size(), this.columns.get(0).size());
@@ -136,6 +118,24 @@ public class Matrix<E> implements Collection<ArrayList<E>> {
         }
         this.columns.get(x).set(y, element);
         return this;
+    }
+
+    /**
+     * Returns the element in column {@code x} and y {@code y}
+     *
+     * @param x The column of the element
+     * @param y The row of the element
+     * @return the element at (x, y)
+     */
+    public E get(int x, int y) {
+        if (columns.size() < x) {
+            columns.set(x, new ArrayList<E>());
+        }
+        ArrayList<E> columnList = columns.get(x);
+        if (columnList.size() < y) {
+            columnList.set(y, this.defaultElement);
+        }
+        return columnList.get(y);
     }
 
     @Override
@@ -195,7 +195,9 @@ public class Matrix<E> implements Collection<ArrayList<E>> {
      */
     public ArrayList<E> toFlatArrayList() {
         ArrayList<E> ret = new ArrayList<>();
-        this.columns.forEach(ret::addAll);
+        for (ArrayList<E> col : this.columns) {
+            ret.addAll(col);
+        }
         return ret;
     }
 

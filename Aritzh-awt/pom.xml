@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
+<?xml version="1.0" encoding="UTF-8"?><!--
   ~ Copyright 2014 Aritz Lopez
   ~
   ~    Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,12 +14,12 @@
   ~    limitations under the License.
   -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<parent>
 		<artifactId>aritzh-parent</artifactId>
 		<groupId>io.github.aritzhack</groupId>
-		<version>1.1.4</version>
+		<version>1.4.1</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
@@ -58,12 +57,12 @@
 			</snapshots>
 		</repository>
 	</repositories>
-	
+
 	<dependencies>
 		<dependency>
 			<groupId>io.github.aritzhack</groupId>
 			<artifactId>aritzh-core</artifactId>
-			<version>1.1.4</version>
+			<version>1.4.1</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-lang</groupId>
@@ -74,7 +73,7 @@
 
 	<profiles>
 		<profile>
-			<id>Deploy</id>
+			<id>Release</id>
 			<build>
 				<plugins>
 					<plugin>
@@ -90,7 +89,7 @@
 							</execution>
 						</executions>
 						<configuration>
-							<additionalparam>-Xdoclint:html</additionalparam>
+							<!--<additionalparam>-Xdoclint:html</additionalparam>-->
 						</configuration>
 					</plugin>
 					<plugin>

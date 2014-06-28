@@ -23,6 +23,7 @@ import org.newdawn.slick.geom.Rectangle;
 
 /**
  * A {@link io.github.aritzhack.aritzh.slick2d.gui.components.Label Label} with a background and that can be clicked
+ *
  * @author Aritz Lopez
  */
 public class Button extends Label {
@@ -37,7 +38,8 @@ public class Button extends Label {
 
     /**
      * Creates a Button with the specified bounds and click-listener, and with no text
-     * @param bounds The bounds of this button
+     *
+     * @param bounds    The bounds of this button
      * @param onClicked The click-listener
      */
     public Button(Rectangle bounds, Runnable onClicked) {
@@ -46,8 +48,9 @@ public class Button extends Label {
 
     /**
      * Creates a button with the specified text, bounds and click-listener
-     * @param s The text to show in the button
-     * @param bounds The bounds of this button
+     *
+     * @param s         The text to show in the button
+     * @param bounds    The bounds of this button
      * @param onClicked The click-listener
      */
     public Button(String s, Rectangle bounds, Runnable onClicked) {

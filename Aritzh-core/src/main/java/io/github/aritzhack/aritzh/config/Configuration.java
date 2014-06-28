@@ -14,7 +14,7 @@
  *    limitations under the License.
  */
 
-package io.github.aritzhack.aritzh;
+package io.github.aritzhack.aritzh.config;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Maps;
@@ -24,13 +24,13 @@ import io.github.aritzhack.aritzh.util.NotNull;
 import io.github.aritzhack.aritzh.util.OneOrOther;
 
 import java.io.*;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -43,7 +43,7 @@ import java.util.regex.Pattern;
 @SuppressWarnings({"UnusedDeclaration", "JavaDoc"})
 public class Configuration {
 
-    public static final Pattern CATEGORY_REGEX = Pattern.compile("^\\s*\\[(?:\\s*(?=\\w+))(.+)\\s*\\]\\s*$");// Category is trimmed, but keeps spaces in between
+    public static final Pattern CATEGORY_REGEX = Pattern.compile("^\\s*\\[(?:\\s*(?=[a-zA-Z_0-9{}]+))(.+)\\s*\\]\\s*$");// Category is trimmed, but keeps spaces in between
     public static final Pattern PROP_REGEX = Pattern.compile("^\\s*(\\w+)\\s*=(?:\\s*(?=\\w+))(.*)\\s*$");
     public static final Pattern SKIP_REGEX = Pattern.compile("(^\\s*$)|(^\\s*#.*$)"); // Empty line, or: Spaces or not, followed by # and followed by anything
     public static final ILogger logger = new SLF4JLogger(Configuration.class);
@@ -63,40 +63,13 @@ public class Configuration {
      * <p>
      * Equivalent to calling {@code Configuration.loadConfig(configFile, false)}
      * </p>
+     *
      * @param configFile File to read the configuration from
      * @return A new configuration object, already parsed from {@code configFile}
      * @see Configuration#loadConfig(java.io.File, boolean)
      */
     public static Configuration loadConfig(File configFile) {
         return Configuration.loadConfig(configFile, false);
-    }
-
-    /**
-     * Loads the configuration from the given path <br>
-     * If the config path did not exist, it will be created
-     * <p>
-     * Equivalent to calling {@code Configuration.loadConfig(configFile, false)}
-     * </p>
-     * @param configFile Path to read the configuration from
-     * @return A new configuration object, already parsed from {@code configFile}
-     * @see Configuration#loadConfig(java.nio.file.Path, boolean)
-     */
-    public static Configuration loadConfig(Path configFile) {
-        return Configuration.loadConfig(configFile, false);
-    }
-
-    /**
-     * Loads the configuration from the given path, specifying if spaces should be compressed or not ({@code currentLine.replaceAll("\\s+", " ")})
-     * If the config path did not exist, it will be created
-     * Equivalent to calling {@code Configuration.loadConfig(configFile, compressedSpaces, false)}
-     *
-     * @param configFile       Path to read the configuration from
-     * @param compressedSpaces If true subsequent whitespaces will be replaced with a single one (defaults to false)
-     * @return A new configuration object, already parsed, from {@code configFile}
-     * @see Configuration#loadConfig(java.nio.file.Path, boolean, boolean)
-     */
-    private static Configuration loadConfig(Path configFile, boolean compressedSpaces) {
-        return Configuration.loadConfig(configFile, compressedSpaces, false);
     }
 
     /**
@@ -124,10 +97,10 @@ public class Configuration {
      */
     public static Configuration loadConfig(File configFile, boolean compressSpaces, boolean verbose) {
         if (!configFile.exists()) {
-            return Configuration.newConfig(OneOrOther.ofOne(configFile));
+            return Configuration.newConfig(OneOrOther.<File, Path>ofOne(configFile));
         }
 
-        Configuration config = new Configuration(OneOrOther.ofOne(configFile), compressSpaces);
+        Configuration config = new Configuration(OneOrOther.<File, Path>ofOne(configFile), compressSpaces);
 
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(configFile)))) {
             loadConfig(config, reader, compressSpaces, verbose);
@@ -136,6 +109,83 @@ public class Configuration {
         }
 
         return config;
+    }
+
+    private static Configuration newConfig(OneOrOther<File, Path> configFile) {
+        return new Configuration(configFile, false);
+    }
+
+    private static void loadConfig(final Configuration config, final BufferedReader reader, final boolean compressSpaces, final boolean verbose) {
+        String line;
+        String currCategory = "";
+        try {
+            while ((line = reader.readLine()) != null) {
+                line = compressSpaces ? line.replaceAll("\\s+", " ").trim() : line;
+
+                currCategory = (compressSpaces ? currCategory.replaceAll("\\s+", " ") : currCategory).trim();
+                if (Strings.isNullOrEmpty(currCategory)) {
+                    currCategory = "Main";
+                    if (!config.categories.containsKey(currCategory)) config.addCategory(currCategory);
+                }
+
+                Matcher m;
+
+                if ((SKIP_REGEX.matcher(line)).matches()) continue;
+
+                if ((m = CATEGORY_REGEX.matcher(line)).matches()) {
+                    currCategory = config.addCategory(m.group(1));
+                } else if ((m = PROP_REGEX.matcher(line)).matches()) {
+                    config.addProperty(m, currCategory);
+                } else if (verbose) {
+                    Configuration.logger.d("Unknown-line: {}", line);
+                }
+            }
+        } catch (IOException e) {
+            throw new ParseException("Error parsing config", e);
+        }
+    }
+
+    private String addCategory(String cat) {
+        if (!this.categories.containsKey(cat)) this.categories.put(cat, Maps.<String, String>newLinkedHashMap());
+        return cat;
+    }
+
+    private void addProperty(Matcher m, String category) {
+        String key = m.group(1);
+        String val = m.group(2);
+
+        LinkedHashMap<String, String> currCat = this.categories.get(category);
+        currCat.put(key, val);
+        this.categories.put(category, currCat);
+    }
+
+    /**
+     * Loads the configuration from the given path <br>
+     * If the config path did not exist, it will be created
+     * <p>
+     * Equivalent to calling {@code Configuration.loadConfig(configFile, false)}
+     * </p>
+     *
+     * @param configFile Path to read the configuration from
+     * @return A new configuration object, already parsed from {@code configFile}
+     * @see Configuration#loadConfig(java.nio.file.Path, boolean)
+     */
+    public static Configuration loadConfig(Path configFile) {
+        return Configuration.loadConfig(configFile, false);
+    }
+
+    /**
+     * Loads the configuration from the given path, specifying if spaces should be compressed or not ({@code currentLine.replaceAll("\\s+", " ")})
+     * If the config path did not exist, it will be created
+     * Equivalent to calling {@code Configuration.loadConfig(configFile, compressedSpaces, false)}
+     *
+     * @param configFile       Path to read the configuration from
+     * @param compressedSpaces If true subsequent whitespaces will be replaced with a single one (defaults to false)
+     * @return A new configuration object, already parsed, from {@code configFile}
+     * @see Configuration#loadConfig(java.nio.file.Path, boolean, boolean)
+     */
+    private static Configuration loadConfig(Path configFile, boolean compressedSpaces) {
+        return Configuration.loadConfig(configFile, compressedSpaces, false);
     }
 
     /**
@@ -149,49 +199,17 @@ public class Configuration {
      */
     public static Configuration loadConfig(Path configFile, boolean compressSpaces, boolean verbose) {
         if (Files.notExists(configFile)) {
-            return Configuration.newConfig(OneOrOther.ofOther(configFile));
+            return Configuration.newConfig(OneOrOther.<File, Path>ofOther(configFile));
         }
 
-        Configuration config = new Configuration(OneOrOther.ofOther(configFile), compressSpaces);
+        Configuration config = new Configuration(OneOrOther.<File, Path>ofOther(configFile), compressSpaces);
 
-        try (BufferedReader reader = Files.newBufferedReader(configFile)){
+        try (BufferedReader reader = Files.newBufferedReader(configFile, Charset.defaultCharset())) {
             loadConfig(config, reader, compressSpaces, verbose);
         } catch (IOException e) {
             e.printStackTrace();
         }
         return config;
-    }
-
-    private static void loadConfig(final Configuration config, final BufferedReader reader, final boolean compressSpaces, final boolean verbose) {
-        reader.lines().sequential().forEachOrdered(new Consumer<String>() {
-            String currentCategory = "";
-
-            @Override
-            public void accept(String line) {
-                line = compressSpaces ? line.replaceAll("\\s+", " ").trim() : line;
-
-                Matcher m;
-
-                if ((SKIP_REGEX.matcher(line)).matches()) {
-                    // Do nothing
-                } else if ((m = CATEGORY_REGEX.matcher(line)).matches()) {
-                    currentCategory = config.addCategory(m);
-                } else if ((m = PROP_REGEX.matcher(line)).matches()) {
-                    config.addProperty(m, currentCategory);
-                } else if (verbose) {
-                    Configuration.logger.d("Unknown-line: {}", line);
-                }
-            }
-        });
-        try {
-            reader.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private static Configuration newConfig(OneOrOther<File, Path> configFile) {
-        return new Configuration(configFile, false);
     }
 
     /**
@@ -201,7 +219,7 @@ public class Configuration {
      * @return A new empty configuration object
      */
     public static Configuration newConfig(@NotNull File configFile) {
-        return new Configuration(OneOrOther.ofOne(configFile), false);
+        return new Configuration(OneOrOther.<File, Path>ofOne(configFile), false);
     }
 
     /**
@@ -211,22 +229,7 @@ public class Configuration {
      * @return A new empty configuration object
      */
     public static Configuration newConfig(@NotNull Path configFile) {
-        return new Configuration(OneOrOther.ofOther(configFile), false);
-    }
-
-    private String addCategory(Matcher m) {
-        String cat = m.group(1);
-        this.categories.put(cat, Maps.<String, String>newLinkedHashMap());
-        return cat;
-    }
-
-    private void addProperty(Matcher m, String category) {
-        String key = m.group(1);
-        String val = m.group(2);
-
-        LinkedHashMap<String, String> currCat = this.categories.get(category);
-        currCat.put(key, val);
-        this.categories.put(category, currCat);
+        return new Configuration(OneOrOther.<File, Path>ofOther(configFile), false);
     }
 
     /**
@@ -368,7 +371,13 @@ public class Configuration {
      * @param configFile The file to save the configuration to
      */
     private void save(OneOrOther<File, Path> configFile) throws IOException {
-        this.saveToWriter(configFile.map(Configuration::getWriter, Configuration::getWriter));
+        if (configFile.isOne()) {
+            File config = configFile.getOne();
+            this.saveToWriter(getFileWriter(config));
+        } else {
+            Path config = configFile.getOther();
+            this.saveToWriter(getPathWriter(config));
+        }
     }
 
     private void saveToWriter(BufferedWriter writer) throws IOException {
@@ -388,7 +397,7 @@ public class Configuration {
         writer.close();
     }
 
-    private static BufferedWriter getWriter(File file) {
+    private static BufferedWriter getFileWriter(File file) {
         try {
             return new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file)));
         } catch (FileNotFoundException e) {
@@ -397,9 +406,9 @@ public class Configuration {
         return null;
     }
 
-    public static BufferedWriter getWriter(Path path) {
+    public static BufferedWriter getPathWriter(Path path) {
         try {
-            return Files.newBufferedWriter(path, StandardOpenOption.CREATE, StandardOpenOption.WRITE);
+            return Files.newBufferedWriter(path, Charset.defaultCharset(), StandardOpenOption.CREATE, StandardOpenOption.WRITE);
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -14,8 +14,9 @@
  *    limitations under the License.
  */
 
-package io.github.aritzhack.aritzh;
+package io.github.aritzhack.aritzh.config;
 
+import io.github.aritzhack.aritzh.config.Configuration;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Test;
@@ -40,6 +41,12 @@ public class ConfigTest {
 
     private static final Path configPath = Paths.get("testPathConfig.cfg");
     private static final File configFile = new File("testFileConfig.cfg");
+
+    @AfterClass
+    public static void after() throws IOException {
+        Files.deleteIfExists(configFile.toPath());
+        Files.deleteIfExists(configPath);
+    }
 
     @Test
     public void regexTest() {
@@ -75,14 +82,14 @@ public class ConfigTest {
         String cat1 = "Category1";
 
         String key11 = "Key11", value11 = "Val11",
-                key12 = "Key 12", value12 = "Val 12",
-                key13 = "   Key13   ", value13 = "  Val13  ";
+            key12 = "Key 12", value12 = "Val 12",
+            key13 = "   Key13   ", value13 = "  Val13  ";
 
         String cat2 = "Category 2";
 
         String key21 = "Key21", value21 = "Val21",
-                key22 = "Key 22", value22 = "Val 22",
-                key23 = "   Key23   ", value23 = "  Val23  ";
+            key22 = "Key 22", value22 = "Val 22",
+            key23 = "   Key23   ", value23 = "  Val23  ";
 
         c.setProperty(cat1, key11, value11);
         c.setProperty(cat1, key12, value12);
@@ -97,11 +104,11 @@ public class ConfigTest {
         c = Configuration.loadConfig(configFile);
 
         String afterValue11 = c.getProperty(cat1, key11),
-                afterValue12 = c.getProperty(cat1, key12),
-                afterValue13 = c.getProperty(cat1, key13),
-                afterValue21 = c.getProperty(cat2, key21),
-                afterValue22 = c.getProperty(cat2, key22),
-                afterValue23 = c.getProperty(cat2, key23);
+            afterValue12 = c.getProperty(cat1, key12),
+            afterValue13 = c.getProperty(cat1, key13),
+            afterValue21 = c.getProperty(cat2, key21),
+            afterValue22 = c.getProperty(cat2, key22),
+            afterValue23 = c.getProperty(cat2, key23);
 
 
         Assert.assertEquals(value11, afterValue11);
@@ -119,14 +126,14 @@ public class ConfigTest {
         String cat1 = "Category1";
 
         String key11 = "Key11", value11 = "Val11",
-                key12 = "Key 12", value12 = "Val 12",
-                key13 = "   Key13   ", value13 = "  Val13  ";
+            key12 = "Key 12", value12 = "Val 12",
+            key13 = "   Key13   ", value13 = "  Val13  ";
 
         String cat2 = "Category 2";
 
         String key21 = "Key21", value21 = "Val21",
-                key22 = "Key 22", value22 = "Val 22",
-                key23 = "   Key23   ", value23 = "  Val23  ";
+            key22 = "Key 22", value22 = "Val 22",
+            key23 = "   Key23   ", value23 = "  Val23  ";
 
         c.setProperty(cat1, key11, value11);
         c.setProperty(cat1, key12, value12);
@@ -141,11 +148,11 @@ public class ConfigTest {
         c = Configuration.loadConfig(configPath);
 
         String afterValue11 = c.getProperty(cat1, key11),
-                afterValue12 = c.getProperty(cat1, key12),
-                afterValue13 = c.getProperty(cat1, key13),
-                afterValue21 = c.getProperty(cat2, key21),
-                afterValue22 = c.getProperty(cat2, key22),
-                afterValue23 = c.getProperty(cat2, key23);
+            afterValue12 = c.getProperty(cat1, key12),
+            afterValue13 = c.getProperty(cat1, key13),
+            afterValue21 = c.getProperty(cat2, key21),
+            afterValue22 = c.getProperty(cat2, key22),
+            afterValue23 = c.getProperty(cat2, key23);
 
 
         Assert.assertEquals(value11, afterValue11);
@@ -154,11 +161,5 @@ public class ConfigTest {
         Assert.assertEquals(value21, afterValue21);
         Assert.assertEquals(value22, afterValue22);
         Assert.assertEquals(value23.trim(), afterValue23);
-    }
-
-    @AfterClass
-    public static void after() throws IOException {
-        Files.deleteIfExists(configFile.toPath());
-        Files.deleteIfExists(configPath);
     }
 }

@@ -17,13 +17,19 @@
 package io.github.aritzhack.aritzh.slick2d.util;
 
 import io.github.aritzhack.aritzh.slick2d.AGame;
+import net.java.games.input.ControllerEnvironment;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Point;
 import org.newdawn.slick.geom.Rectangle;
+import org.newdawn.slick.util.Log;
 import org.newdawn.slick.util.LogSystem;
+
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Utility class to handle all slick-related
@@ -31,6 +37,50 @@ import org.newdawn.slick.util.LogSystem;
  * @author Aritz Lopez
  */
 public class SlickUtil {
+
+    /**
+     * <p>
+     * A log system that ignores everything but errors. Errors are redirected to {@link io.github.aritzhack.aritzh.slick2d.AGame#LOG} through
+     * {@link io.github.aritzhack.aritzh.logging.ILogger#e(String) ILogger.e(String)} and
+     * {@link io.github.aritzhack.aritzh.logging.ILogger#e(String, Throwable) ILogger.e(String, Throwable)}
+     * </p>
+     * <p>
+     * It is thought to be used by calling
+     * {@link org.newdawn.slick.util.Log#setLogSystem(org.newdawn.slick.util.LogSystem) Log.setLogSystem(SlickUtil.nullSystem)}
+     * </p>
+     */
+    public static final LogSystem nullSystem = new LogSystem() {
+        @Override
+        public void error(String message, Throwable e) {
+            AGame.LOG.e(message, e);
+        }
+
+        @Override
+        public void error(Throwable e) {
+            AGame.LOG.e("Slick2D Error: ", e);
+        }
+
+        @Override
+        public void error(String message) {
+            AGame.LOG.e(message);
+        }
+
+        @Override
+        public void warn(String message) {
+        }
+
+        @Override
+        public void warn(String message, Throwable e) {
+        }
+
+        @Override
+        public void info(String message) {
+        }
+
+        @Override
+        public void debug(String message) {
+        }
+    };
 
     /**
      * Gets the top-left corner of a rectangle
@@ -100,9 +150,9 @@ public class SlickUtil {
      */
     public static boolean includesOrContains(Rectangle out, Rectangle in) {
         return (in.getMinX() >= out.getMinX()
-                && in.getMinY() >= out.getMinY()
-                && in.getMaxX() <= out.getMaxX()
-                && in.getMaxY() <= out.getMaxY());
+            && in.getMinY() >= out.getMinY()
+            && in.getMaxX() <= out.getMaxX()
+            && in.getMaxY() <= out.getMaxY());
     }
 
     /**
@@ -148,46 +198,19 @@ public class SlickUtil {
     }
 
     /**
-     * <p>
-     * A log system that ignores everything but errors. Errors are redirected to {@link io.github.aritzhack.aritzh.slick2d.AGame#LOG} through
-     * {@link io.github.aritzhack.aritzh.logging.ILogger#e(String) ILogger.e(String)} and
-     * {@link io.github.aritzhack.aritzh.logging.ILogger#e(String, Throwable) ILogger.e(String, Throwable)}
-     * </p>
-     * <p>
-     * It is thought to be used by calling
-     * {@link org.newdawn.slick.util.Log#setLogSystem(org.newdawn.slick.util.LogSystem) Log.setLogSystem(SlickUtil.nullSystem)}
-     * </p>
+     * Shuts JInput logging and Slick2D's logs, apart from the errors, which are forwarded to {@link io.github.aritzhack.aritzh.slick2d.AGame#LOG}
      */
-    public static final LogSystem nullSystem = new LogSystem() {
-        @Override
-        public void error(String message, Throwable e) {
-            AGame.LOG.e(message, e);
+    public static void shutUnwantedLogs() {
+        // JInput Logging (I have a gaming keyboard and it keeps complaining about not recognising it etc.)
+
+        final Logger DCELogger = Logger.getLogger(ControllerEnvironment.getDefaultEnvironment().getClass().getName());
+        DCELogger.setLevel(Level.OFF);
+
+        for (Handler h : DCELogger.getHandlers()) {
+            DCELogger.removeHandler(h);
         }
 
-        @Override
-        public void error(Throwable e) {
-            AGame.LOG.e("Slick2D Error: ", e);
-        }
-
-        @Override
-        public void error(String message) {
-            AGame.LOG.e(message);
-        }
-
-        @Override
-        public void warn(String message) {
-        }
-
-        @Override
-        public void warn(String message, Throwable e) {
-        }
-
-        @Override
-        public void info(String message) {
-        }
-
-        @Override
-        public void debug(String message) {
-        }
-    };
+        // Slick2D Logging
+        Log.setLogSystem(SlickUtil.nullSystem);
+    }
 }

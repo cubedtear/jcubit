@@ -23,9 +23,16 @@ import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.nio.file.FileVisitResult;
+import java.nio.file.FileVisitor;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Set;
@@ -36,7 +43,10 @@ import java.util.Set;
 @SuppressWarnings({"unused", "ThrowableResultOfMethodCallIgnored"})
 public class ReflectionUtil {
 
-    private static final FileFilter jarAndZips = f -> f.isFile() && (f.getName().endsWith(".jar") || f.getName().endsWith(".zip"));
+    private static final FileFilter jarAndZips = new FileFilter() {
+        @Override
+        public boolean accept(File f) {return f.isFile() && (f.getName().endsWith(".jar") || f.getName().endsWith(".zip"));}
+    };
 
     /**
      * Adds all jars and zips in the folder to the classpath
@@ -51,7 +61,7 @@ public class ReflectionUtil {
     }
 
     /**
-     * Adds all files in the folder that the filefilter accepts to the classpath
+     * Adds all files in the folder that the FileFilter accepts to the classpath
      *
      * @param folder     The folder into which the files to add are
      * @param fileFilter The filter that tells what files should be added and which not
@@ -73,6 +83,41 @@ public class ReflectionUtil {
             } catch (ReflectiveOperationException | IOException e) {
                 ret.put(f, e);
             }
+        }
+        return ret;
+    }
+
+    public static Map<Path, Exception> addFolderToClasspath(Path folder) throws ReflectiveOperationException {
+        return ReflectionUtil.addFolderToClasspath(folder, jarAndZips);
+    }
+
+    public static Map<Path, Exception> addFolderToClasspath(Path folder, final FileFilter fileFilter) throws ReflectiveOperationException {
+        final Map<Path, Exception> ret = Maps.newHashMap();
+
+        final URLClassLoader sysURLClassLoader = (URLClassLoader) ClassLoader.getSystemClassLoader();
+        Class<? extends URLClassLoader> classLoaderClass = URLClassLoader.class;
+
+        final Method method = classLoaderClass.getDeclaredMethod("addURL", URL.class);
+        method.setAccessible(true);
+
+        FileVisitor<Path> visitor = new SimpleFileVisitor<Path>() {
+            @Override
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                if (!fileFilter.accept(file.toFile())) return FileVisitResult.CONTINUE;
+
+                try {
+                    method.invoke(sysURLClassLoader, file.toUri().toURL());
+                } catch (IllegalAccessException | InvocationTargetException e) {
+                    ret.put(file, e);
+                }
+                return FileVisitResult.CONTINUE;
+            }
+        };
+
+        try {
+            Files.walkFileTree(folder, visitor);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
         return ret;
     }

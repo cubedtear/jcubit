@@ -23,21 +23,22 @@ import javax.sound.sampled.Clip;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 import java.io.IOException;
-import java.io.InputStream;
+import java.net.URL;
 
 /**
  * Binder for WAV sound files
+ *
  * @author Aritz Lopez
  */
 public class Sound {
 
     private final Clip clip;
 
-    public Sound(InputStream audioStream) {
-        Preconditions.checkArgument(audioStream != null, "Audio Stream cannot be null!");
+    public Sound(URL url) {
+        Preconditions.checkArgument(url != null, "Audio Stream cannot be null!");
         try {
             this.clip = AudioSystem.getClip();
-            this.clip.open(AudioSystem.getAudioInputStream(audioStream));
+            this.clip.open(AudioSystem.getAudioInputStream(url));
         } catch (UnsupportedAudioFileException | LineUnavailableException | IOException e) {
             throw new IllegalArgumentException("Could not load sound!", e);
         }

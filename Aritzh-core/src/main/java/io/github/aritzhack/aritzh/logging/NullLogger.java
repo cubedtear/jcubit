@@ -16,260 +16,69 @@
 
 package io.github.aritzhack.aritzh.logging;
 
-import org.slf4j.Marker;
+import io.github.aritzhack.aritzh.util.NotNull;
+import io.github.aritzhack.aritzh.util.Nullable;
 
 /**
  * @author Aritz Lopez
  */
-public class NullLogger implements ILogger {
+public class NullLogger extends ALogger {
 
-    @Override
-    public boolean isTraceEnabled() {
-        return false;
+    /**
+     * If the provided logger is not null, it is returned, otherwise a new {@link io.github.aritzhack.aritzh.logging.NullLogger} is returned
+     *
+     * @param logger A logger, or null
+     * @return Either the provided logger if it is not null, or a new {@link io.github.aritzhack.aritzh.logging.NullLogger}
+     */
+    @NotNull
+    public static ILogger getLogger(@Nullable ILogger logger) {
+        return logger == null ? new NullLogger() : logger;
     }
 
     @Override
-    public boolean isTraceEnabled(Marker marker) {
-        return false;
-    }
+    public boolean isTraceEnabled() { return false; }
 
     @Override
-    public void t(String msg) {
-
-    }
+    public void t(String msg) {}
 
     @Override
-    public void t(Marker marker, String msg) {
-
-    }
+    public void t(String msg, Throwable t) {}
 
     @Override
-    public void t(String format, Object... arguments) {
-
-    }
+    public boolean isDebugEnabled() { return false; }
 
     @Override
-    public void t(Marker marker, String format, Object... arguments) {
-
-    }
+    public void d(String msg) {}
 
     @Override
-    public void t(String msg, Throwable t) {
-
-    }
+    public void d(String msg, Throwable t) {}
 
     @Override
-    public void t(String msg, Object arg, Throwable t) {
-
-    }
+    public boolean isInfoEnabled() { return false; }
 
     @Override
-    public void t(Marker marker, String msg, Throwable t) {
-
-    }
+    public void i(String msg) {}
 
     @Override
-    public void t(Marker marker, String msg, Object arg, Throwable t) {
-
-    }
+    public void i(String msg, Throwable t) {}
 
     @Override
-    public boolean isDebugEnabled() {
-        return false;
-    }
+    public boolean isWarnEnabled() { return false; }
 
     @Override
-    public boolean isDebugEnabled(Marker marker) {
-        return false;
-    }
+    public void w(String msg) {}
 
     @Override
-    public void d(String msg) {
-
-    }
+    public void w(String msg, Throwable t) {}
 
     @Override
-    public void d(Marker marker, String msg) {
-
-    }
+    public boolean isErrorEnabled() { return false; }
 
     @Override
-    public void d(String format, Object... arguments) {
-
-    }
+    public void e(String msg) {}
 
     @Override
-    public void d(Marker marker, String format, Object... arguments) {
+    public void e(String msg, Throwable t) {}
 
-    }
 
-    @Override
-    public void d(String msg, Throwable t) {
-
-    }
-
-    @Override
-    public void d(String msg, Object arg, Throwable t) {
-
-    }
-
-    @Override
-    public void d(Marker marker, String msg, Throwable t) {
-
-    }
-
-    @Override
-    public void d(Marker marker, String msg, Object arg, Throwable t) {
-
-    }
-
-    @Override
-    public boolean isInfoEnabled() {
-        return false;
-    }
-
-    @Override
-    public boolean isInfoEnabled(Marker marker) {
-        return false;
-    }
-
-    @Override
-    public void i(String msg) {
-
-    }
-
-    @Override
-    public void i(Marker marker, String msg) {
-
-    }
-
-    @Override
-    public void i(String format, Object... arguments) {
-
-    }
-
-    @Override
-    public void i(Marker marker, String format, Object... arguments) {
-
-    }
-
-    @Override
-    public void i(String msg, Throwable t) {
-
-    }
-
-    @Override
-    public void i(String msg, Object arg, Throwable t) {
-
-    }
-
-    @Override
-    public void i(Marker marker, String msg, Throwable t) {
-
-    }
-
-    @Override
-    public void i(Marker marker, String msg, Object arg, Throwable t) {
-
-    }
-
-    @Override
-    public boolean isWarnEnabled() {
-        return false;
-    }
-
-    @Override
-    public boolean isWarnEnabled(Marker marker) {
-        return false;
-    }
-
-    @Override
-    public void w(String msg) {
-
-    }
-
-    @Override
-    public void w(Marker marker, String msg) {
-
-    }
-
-    @Override
-    public void w(String format, Object... arguments) {
-
-    }
-
-    @Override
-    public void w(Marker marker, String format, Object... arguments) {
-
-    }
-
-    @Override
-    public void w(String msg, Throwable t) {
-
-    }
-
-    @Override
-    public void w(String msg, Object arg, Throwable t) {
-
-    }
-
-    @Override
-    public void w(Marker marker, String msg, Throwable t) {
-
-    }
-
-    @Override
-    public void w(Marker marker, String msg, Object arg, Throwable t) {
-
-    }
-
-    @Override
-    public boolean isErrorEnabled() {
-        return false;
-    }
-
-    @Override
-    public boolean isErrorEnabled(Marker marker) {
-        return false;
-    }
-
-    @Override
-    public void e(String msg) {
-
-    }
-
-    @Override
-    public void e(Marker marker, String msg) {
-
-    }
-
-    @Override
-    public void e(String format, Object... arguments) {
-
-    }
-
-    @Override
-    public void e(Marker marker, String format, Object... arguments) {
-
-    }
-
-    @Override
-    public void e(String msg, Throwable t) {
-
-    }
-
-    @Override
-    public void e(String msg, Object arg, Throwable t) {
-
-    }
-
-    @Override
-    public void e(Marker marker, String msg, Throwable t) {
-
-    }
-
-    @Override
-    public void e(Marker marker, String msg, Object arg, Throwable t) {
-
-    }
 }
