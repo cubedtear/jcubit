@@ -22,7 +22,13 @@ package io.github.aritzhack.aritzh.bds;
  * @author Aritz Lopez
  */
 public enum BDSType {
-    BDS_BYTE, BDS_SHORT, BDS_INT, BDS_STRING, BDS_COMPOUND, BDS_COMPEND;
+    BDS_BYTE(0), BDS_SHORT(1), BDS_INT(2), BDS_STRING(3), BDS_COMPOUND(4), BDS_COMPEND(5);
+
+    private final byte ordinal;
+
+    BDSType(int ordinal) {
+        this.ordinal = (byte) ordinal;
+    }
 
     /**
      * Why cast if you have a method for that?
@@ -30,6 +36,6 @@ public enum BDSType {
      * @return {@code (byte) this.ordinal();}
      */
     public byte toByte() {
-        return (byte) this.ordinal();
+        return this.ordinal;
     }
 }
