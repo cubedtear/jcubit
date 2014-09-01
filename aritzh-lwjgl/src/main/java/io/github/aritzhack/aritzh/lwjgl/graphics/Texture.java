@@ -1,7 +1,7 @@
 package io.github.aritzhack.aritzh.lwjgl.graphics;
 
-import io.github.aritzhack.flappy.util.BufferUtils;
-import io.github.aritzhack.flappy.util.GraphicsUtils;
+import io.github.aritzhack.aritzh.lwjgl.util.BufferUtils;
+import io.github.aritzhack.aritzh.lwjgl.util.GraphicsUtils;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
