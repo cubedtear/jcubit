@@ -42,9 +42,9 @@
 	<packaging>pom</packaging>
 
 	<modules>
-		<module>Aritzh-core</module>
-		<module>Aritzh-awt</module>
-		<module>Aritzh-Slick2D</module>
+		<module>aritzh-core</module>
+		<module>aritzh-awt</module>
+		<module>aritzh-Slick2D</module>
 	</modules>
 
 	<licenses>
