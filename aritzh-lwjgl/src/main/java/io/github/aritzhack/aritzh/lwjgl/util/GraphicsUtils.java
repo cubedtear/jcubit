@@ -14,33 +14,17 @@
  *    limitations under the License.
  */
 
-package io.github.aritzhack.aritzh.lwjgl.math.util;
-
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+package io.github.aritzhack.aritzh.lwjgl.util;
 
 /**
  * @author Aritz Lopez
  */
-public class FileUtils {
+public class GraphicsUtils {
 
-    private FileUtils() {}
-
-    public static String loadAsString(String file) {
-        String result = "";
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(file));
-            String line;
-            while ((line = reader.readLine()) != null) {
-                result += line + "\n";
-            }
-            reader.close();
-            return result;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
+    public static int ARGBtoRGBA(int argb) {
+        int a = (argb & 0xFF000000) >>> 24;
+        System.out.println(Integer.toHexString(a));
+        int ret = argb << 8;
+        return ret | a;
     }
-
 }

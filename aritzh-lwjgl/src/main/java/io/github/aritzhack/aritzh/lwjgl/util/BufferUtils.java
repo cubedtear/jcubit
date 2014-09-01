@@ -14,7 +14,7 @@
  *    limitations under the License.
  */
 
-package io.github.aritzhack.aritzh.lwjgl.math.util;
+package io.github.aritzhack.aritzh.lwjgl.util;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
