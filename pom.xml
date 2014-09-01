@@ -44,7 +44,7 @@
 	<modules>
 		<module>aritzh-core</module>
 		<module>aritzh-awt</module>
-		<module>aritzh-Slick2D</module>
+		<module>aritzh-slick2d</module>
 	</modules>
 
 	<licenses>
