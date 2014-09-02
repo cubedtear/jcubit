@@ -56,7 +56,7 @@ public class CanvasEngine extends BasicGame {
 
     public CanvasEngine(IGame game, int width, int height, boolean noFrame, ILogger logger) {
         super(game);
-        Preconditions.checkArgument(width > 0 && height > 0, "Game sizes canot be negative!");
+        Preconditions.checkArgument(width > 0 && height > 0, "Game sizes cannot be negative!");
 
         this.noFrame = noFrame;
         this.gameHandler = game;
