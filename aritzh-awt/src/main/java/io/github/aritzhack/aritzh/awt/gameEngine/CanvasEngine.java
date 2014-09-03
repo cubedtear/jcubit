@@ -148,4 +148,8 @@ public class CanvasEngine extends BasicGame {
     public InputHandler getInputHandler() {
         return inputHandler;
     }
+
+    public Dimension getSize() {
+        return size;
+    }
 }
