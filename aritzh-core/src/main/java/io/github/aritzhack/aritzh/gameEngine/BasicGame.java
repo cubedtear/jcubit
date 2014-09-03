@@ -23,7 +23,7 @@ import com.google.common.base.Preconditions;
  */
 public class BasicGame implements IGameEngine {
 
-    private final IGame gameHandler;
+    protected final IGame gameHandler;
     protected boolean running = false;
     protected int fps, ups;
 
@@ -43,6 +43,8 @@ public class BasicGame implements IGameEngine {
         long lastMillis = System.currentTimeMillis();
 
         this.getGame().onStart();
+
+        this.running = true;
 
         while (this.running) {
             long now = System.nanoTime();
