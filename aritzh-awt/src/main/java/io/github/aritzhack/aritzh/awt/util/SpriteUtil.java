@@ -20,11 +20,21 @@ import io.github.aritzhack.aritzh.awt.render.Sprite;
 import io.github.aritzhack.aritzh.util.ARGBColorUtil;
 
 /**
+ * Utility class to handle things related to Sprites, such as scaling
+ *
  * @author Aritz Lopez
  */
 public class SpriteUtil {
 
-    public static Sprite scale(Sprite original, float scale, ResizeMethod method) {
+    /**
+     * Scales an image by a factor, using the given method
+     *
+     * @param original The sprite to scale
+     * @param scale    The factor by which the sprite should be scaled
+     * @param method   The scaling method
+     * @return The scaled sprite
+     */
+    public static Sprite scale(Sprite original, float scale, ScalingMethod method) {
         if (scale == 1.0f) return original.copy();
 
         switch (method) {
@@ -123,8 +133,18 @@ public class SpriteUtil {
         return ARGBColorUtil.getColor(a3, r3, g3, b3);
     }
 
-    public static enum ResizeMethod {
-        NEAREST, BILINEAR
+    /**
+     * Available scaling methods (<a href="http://en.wikipedia.org/wiki/Image_scaling#Scaling_methods">Wikipedia page</a>)
+     */
+    public static enum ScalingMethod {
+        /**
+         * Nearest neighbor interpolation (<a href="http://en.wikipedia.org/wiki/Nearest-neighbor_interpolation">Wikipedia page</a>)
+         */
+        NEAREST,
+        /**
+         * Bilinear interpolation (<a href="http://en.wikipedia.org/wiki/Bilinear_interpolation">Wikipedia page</a>)
+         */
+        BILINEAR
 
     }
 }
