@@ -39,7 +39,6 @@ import java.awt.image.BufferStrategy;
 public class CanvasEngine extends BasicGame {
 
     private final InputHandler inputHandler;
-    private final IGame gameHandler;
     private final Thread thread;
     private final Dimension size;
     private final ILogger logger;
@@ -59,7 +58,6 @@ public class CanvasEngine extends BasicGame {
         Preconditions.checkArgument(width > 0 && height > 0, "Game sizes cannot be negative!");
 
         this.noFrame = noFrame;
-        this.gameHandler = game;
         this.size = new Dimension(width, height);
         this.thread = new Thread(this, game.getGameName() + "-Thread");
         this.inputHandler = new InputHandler();
@@ -73,7 +71,7 @@ public class CanvasEngine extends BasicGame {
     }
 
     private void createFrame() {
-        this.frame = new JFrame(this.gameHandler.getGameName());
+        this.frame = new JFrame(this.getGame().getGameName());
 
         this.frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         this.frame.setResizable(false);
@@ -96,6 +94,7 @@ public class CanvasEngine extends BasicGame {
 
     @Override
     public synchronized void start() {
+        super.start();
         this.running = true;
         if (!this.noFrame) this.frame.setVisible(true);
         this.thread.start();
@@ -104,7 +103,7 @@ public class CanvasEngine extends BasicGame {
     @Override
     public synchronized void stop() {
         this.logger.d("Stopping...");
-        this.gameHandler.onStop();
+        this.getGame().onStop();
         this.running = false;
         if (!this.noFrame) this.frame.dispose();
         try {
