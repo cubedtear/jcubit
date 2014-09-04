@@ -114,6 +114,47 @@ public class SpriteUtil {
 
     }
 
+    public static Sprite rotate90(Sprite original, Rotation rotation) {
+        int newWidth = rotation == Rotation._180 ? original.getWidth() : original.getHeight();
+        int newHeight = rotation == Rotation._180 ? original.getHeight() : original.getWidth();
+        int[] newPix = new int[original.getPixels().length];
+
+        for (int x = 0; x < original.getWidth(); x++) {
+            for (int y = 0; y < original.getHeight(); y++) {
+                int newY = rotation == Rotation._90 ? x : rotation == Rotation._180 ? original.getHeight() - y - 1 : original.getWidth() - x - 1;
+                int newX = rotation == Rotation._90 ? original.getHeight() - y - 1 : rotation == Rotation._180 ? original.getWidth() - x - 1 : y;
+
+                newPix[newX + newY * newWidth] = original.getPixels()[x + y * original.getWidth()];
+            }
+        }
+        return new Sprite(newWidth, newHeight, newPix);
+    }
+
+    public static Sprite flipH(Sprite original) {
+        int[] newPix = new int[original.getPixels().length];
+
+        for (int y = 0; y < original.getHeight(); y++) {
+            int newY = original.getHeight() - y - 1;
+            for (int x = 0; x < original.getWidth(); x++) {
+                newPix[x + newY * original.getWidth()] = original.getPixels()[x + y * original.getWidth()];
+            }
+        }
+        return new Sprite(original.getWidth(), original.getHeight(), newPix);
+    }
+
+    public static Sprite flipV(Sprite original) {
+        int[] newPix = new int[original.getPixels().length];
+
+        for (int x = 0; x < original.getWidth(); x++) {
+            int newX = (original.getWidth() - x - 1);
+            for (int y = 0; y < original.getHeight(); y++) {
+                newPix[newX + y * original.getWidth()] = original.getPixels()[x + y * original.getWidth()];
+            }
+        }
+        return new Sprite(original.getWidth(), original.getHeight(), newPix);
+    }
+
+
     private static int interpolate(int color1, int color2, int L, float l) {
         int a1 = ARGBColorUtil.getAlpha(color1);
         int r1 = ARGBColorUtil.getRed(color1);
@@ -131,6 +172,10 @@ public class SpriteUtil {
         int b3 = (int) (b1 + l * (b2 - b1) / (float) L);
 
         return ARGBColorUtil.getColor(a3, r3, g3, b3);
+    }
+
+    public static enum Rotation {
+        _90, _180, _270
     }
 
     /**
