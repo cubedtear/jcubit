@@ -19,6 +19,8 @@ package io.github.aritzhack.aritzh.awt.util;
 import io.github.aritzhack.aritzh.awt.render.Sprite;
 import io.github.aritzhack.aritzh.util.ARGBColorUtil;
 
+import java.util.Arrays;
+
 /**
  * Utility class to handle things related to Sprites, such as scaling
  *
@@ -114,22 +116,12 @@ public class SpriteUtil {
 
     }
 
-    public static Sprite rotate90(Sprite original, Rotation rotation) {
-        int newWidth = rotation == Rotation._180 ? original.getWidth() : original.getHeight();
-        int newHeight = rotation == Rotation._180 ? original.getHeight() : original.getWidth();
-        int[] newPix = new int[original.getPixels().length];
-
-        for (int x = 0; x < original.getWidth(); x++) {
-            for (int y = 0; y < original.getHeight(); y++) {
-                int newY = rotation == Rotation._90 ? x : rotation == Rotation._180 ? original.getHeight() - y - 1 : original.getWidth() - x - 1;
-                int newX = rotation == Rotation._90 ? original.getHeight() - y - 1 : rotation == Rotation._180 ? original.getWidth() - x - 1 : y;
-
-                newPix[newX + newY * newWidth] = original.getPixels()[x + y * original.getWidth()];
-            }
-        }
-        return new Sprite(newWidth, newHeight, newPix);
-    }
-
+    /**
+     * Flips a Sprite horizontally (as if it was seen in a mirror above or below it)
+     *
+     * @param original The sprite to flip horizontally
+     * @return The Sprite flipped
+     */
     public static Sprite flipH(Sprite original) {
         int[] newPix = new int[original.getPixels().length];
 
@@ -142,18 +134,23 @@ public class SpriteUtil {
         return new Sprite(original.getWidth(), original.getHeight(), newPix);
     }
 
+    /**
+     * Flips a Sprite vertically (as if it was seen in a mirror to the left or right)
+     *
+     * @param original The sprite to flip vertically
+     * @return The Sprite flipped
+     */
     public static Sprite flipV(Sprite original) {
         int[] newPix = new int[original.getPixels().length];
 
         for (int x = 0; x < original.getWidth(); x++) {
-            int newX = (original.getWidth() - x - 1);
+            int newX = original.getWidth() - x - 1;
             for (int y = 0; y < original.getHeight(); y++) {
                 newPix[newX + y * original.getWidth()] = original.getPixels()[x + y * original.getWidth()];
             }
         }
         return new Sprite(original.getWidth(), original.getHeight(), newPix);
     }
-
 
     private static int interpolate(int color1, int color2, int L, float l) {
         int a1 = ARGBColorUtil.getAlpha(color1);
@@ -174,6 +171,99 @@ public class SpriteUtil {
         return ARGBColorUtil.getColor(a3, r3, g3, b3);
     }
 
+    /**
+     * <p>Rotates a Sprite</p>
+     * Note: If the angle is either 90, 180, 270 or -90,
+     * {@link io.github.aritzhack.aritzh.awt.util.SpriteUtil#rotate90(io.github.aritzhack.aritzh.awt.render.Sprite, io.github.aritzhack.aritzh.awt.util.SpriteUtil.Rotation) SpriteUtil.rotate90(Sprite, Rotation)}
+     * will be used instead, since it is much faster
+     *
+     * @param original The sprite to rotate
+     * @param angle    The rotation angle, in degrees
+     * @return The rotated image
+     */
+    public static Sprite rotate(Sprite original, double angle) {
+
+        if (angle == 90.0) return SpriteUtil.rotate90(original, Rotation._90);
+        else if (angle == 180.0) return SpriteUtil.rotate90(original, Rotation._180);
+        else if (angle == 270.0 || angle == -90.0) return SpriteUtil.rotate90(original, Rotation._270);
+
+        final double radians = Math.toRadians(angle);
+        final double cos = Math.cos(radians);
+        final double sin = Math.sin(radians);
+
+        int newWidth = (int) (cos * original.getWidth() + sin * original.getHeight());
+        int newHeight = (int) (cos * original.getHeight() + sin * original.getWidth());
+
+        int xDelta = (newWidth - original.getWidth()) / 2;
+        int yDelta = (newHeight - original.getHeight()) / 2;
+
+
+        final int[] pixels2 = new int[newWidth * newHeight];
+
+        int centerX = original.getWidth() / 2;
+        int centerY = original.getHeight() / 2;
+
+        for (int x = -xDelta; x < newWidth - xDelta; x++)
+            for (int y = -yDelta; y < newHeight - yDelta; y++) {
+                int m = x - centerX;
+                int n = y - centerY;
+                int j = (int) (m * cos + n * sin + centerX);
+                int k = (int) (n * cos - m * sin + centerY);
+
+                if (j >= 0 && j < original.getWidth() && k >= 0 && k < original.getHeight()) {
+                    pixels2[(y + yDelta) * newWidth + x + xDelta] = original.getPixels()[k * original.getWidth() + j];
+                }
+            }
+        return new Sprite(newWidth, newHeight, pixels2);
+    }
+
+    /**
+     * Rotates an image by multiples of 90 degrees
+     * This is a much faster version of
+     * {@link io.github.aritzhack.aritzh.awt.util.SpriteUtil#rotate(io.github.aritzhack.aritzh.awt.render.Sprite, double) SpriteUtil.rotate(Sprite, double)}
+     *
+     * @param original The sprite to rotate
+     * @param angle    The rotation angle
+     * @return The rotated sprite
+     */
+    public static Sprite rotate90(Sprite original, Rotation angle) {
+        int newWidth = angle == Rotation._180 ? original.getWidth() : original.getHeight();
+        int newHeight = angle == Rotation._180 ? original.getHeight() : original.getWidth();
+        int[] newPix = new int[original.getPixels().length];
+
+        for (int x = 0; x < original.getWidth(); x++) {
+            for (int y = 0; y < original.getHeight(); y++) {
+                int newY = angle == Rotation._90 ? x : angle == Rotation._180 ? original.getHeight() - y - 1 : original.getWidth() - x - 1;
+                int newX = angle == Rotation._90 ? original.getHeight() - y - 1 : angle == Rotation._180 ? original.getWidth() - x - 1 : y;
+
+                newPix[newX + newY * newWidth] = original.getPixels()[x + y * original.getWidth()];
+            }
+        }
+        return new Sprite(newWidth, newHeight, newPix);
+    }
+
+    /**
+     * Adds a border to a Sprite (the border is added inside, so part of the sprite will be covered)
+     * @param original The sprite to which the border will be added
+     * @param color The color of the border (in ARGB format: 0xAARRGGBB)
+     * @param size The sice of the border, in pixels
+     * @return The sprite with the border
+     */
+    public static Sprite addBorder(Sprite original, int color, int size) {
+        int[] newPix = Arrays.copyOf(original.getPixels(), original.getPixels().length);
+        for (int x = 0; x < original.getWidth(); x++) {
+            for (int y = 0; y < original.getHeight(); y++) {
+                if (x < size || x >= original.getWidth() - size || y < size || y >= original.getHeight() - size) {
+                    newPix[x + y * original.getWidth()] = color;
+                }
+            }
+        }
+        return new Sprite(original.getWidth(), original.getHeight(), newPix);
+    }
+
+    /**
+     * Multiples of 90 for exact rotations
+     */
     public static enum Rotation {
         _90, _180, _270
     }
