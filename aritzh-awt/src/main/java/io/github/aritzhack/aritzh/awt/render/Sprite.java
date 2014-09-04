@@ -57,4 +57,9 @@ public class Sprite {
     public int getHeight() {
         return height;
     }
+
+    public Sprite copy() {
+        int[] newPix = Arrays.copyOf(this.pixels, this.pixels.length);
+        return new Sprite(this.width, this.height, newPix);
+    }
 }

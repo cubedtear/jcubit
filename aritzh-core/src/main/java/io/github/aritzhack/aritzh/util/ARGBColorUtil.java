@@ -151,4 +151,29 @@ public class ARGBColorUtil {
         return (color >> ALPHA_SHIFT) & MASK;
     }
 
+    public static class Color {
+        public final int a;
+        public final int r;
+        public final int g;
+        public final int b;
+        public final int color;
+
+        public Color(int argbColor) {
+            this.color = argbColor;
+
+            this.a = getAlpha(color);
+            this.r = getRed(color);
+            this.g = getGreen(color);
+            this.b = getBlue(color);
+        }
+
+        public Color(int a, int r, int g, int b) {
+            this.a = a;
+            this.r = r;
+            this.g = g;
+            this.b = b;
+            this.color = ARGBColorUtil.getColor(a, r, g, b);
+        }
+    }
+
 }
