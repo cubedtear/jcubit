@@ -29,6 +29,53 @@ import java.util.Arrays;
 public class SpriteUtil {
 
     /**
+     * Creates a new Sprite with a cicle drawn onto it
+     * @param diameter The diameter of the circle (will be the width and height of the sprite)
+     * @param color The color of the circle (in ARGB format: 0xAARRGGBB)
+     * @param lineWidth The thickness of the circle. <span style="color:Aqua; font-weight:bold">Warning: if thickness is bigger than 1, it will not draw a perfectly filled circle</span>
+     * @return A new Sprite with a circle drawn onto it
+     */
+    public static Sprite circle(int diameter, int color, int lineWidth) {
+
+        int[] pix = new int[diameter * diameter];
+
+        for (int i = 0; i < lineWidth; i++) {
+            drawCircle(pix, diameter - i, diameter, color);
+        }
+
+        return new Sprite(diameter, diameter, pix);
+    }
+
+    private static void drawCircle(int[] pix, int diameter, int width, int color) {
+
+        int center = width / 2;
+        int radius = diameter / 2 - 1;
+
+        int d = (5 - (radius * 4)) / 4;
+        int x = 0;
+        int y = radius;
+
+        do {
+            pix[center + x + (center + y) * width] = color;
+            pix[center + x + (center - y) * width] = color;
+            pix[center - x + (center + y) * width] = color;
+            pix[center - x + (center - y) * width] = color;
+            pix[center + y + (center + x) * width] = color;
+            pix[center + y + (center - x) * width] = color;
+            pix[center - y + (center + x) * width] = color;
+            pix[center - y + (center - x) * width] = color;
+
+            if (d < 0) {
+                d += 2 * x + 1;
+            } else {
+                d += 2 * (x - y) + 1;
+                y--;
+            }
+            x++;
+        } while (x <= y);
+    }
+
+    /**
      * Scales an image by a factor, using the given method
      *
      * @param original The sprite to scale
@@ -244,9 +291,10 @@ public class SpriteUtil {
 
     /**
      * Adds a border to a Sprite (the border is added inside, so part of the sprite will be covered)
+     *
      * @param original The sprite to which the border will be added
-     * @param color The color of the border (in ARGB format: 0xAARRGGBB)
-     * @param size The sice of the border, in pixels
+     * @param color    The color of the border (in ARGB format: 0xAARRGGBB)
+     * @param size     The sice of the border, in pixels
      * @return The sprite with the border
      */
     public static Sprite addBorder(Sprite original, int color, int size) {
