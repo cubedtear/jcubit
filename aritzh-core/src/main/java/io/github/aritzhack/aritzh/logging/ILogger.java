@@ -16,110 +16,48 @@
 
 package io.github.aritzhack.aritzh.logging;
 
-import org.slf4j.Marker;
-
 /**
  * @author Aritz Lopez
  */
 public interface ILogger {
 
-    boolean isTraceEnabled();
-
-    boolean isTraceEnabled(Marker marker);
-
     void t(String msg);
-
-    void t(Marker marker, String msg);
 
     void t(String format, Object... arguments);
 
-    void t(Marker marker, String format, Object... arguments);
-
     void t(String msg, Throwable t);
 
-    void t(String msg, Object arg, Throwable t);
-
-    void t(Marker marker, String msg, Throwable t);
-
-    void t(Marker marker, String msg, Object arg, Throwable t);
-
-    boolean isDebugEnabled();
-
-    boolean isDebugEnabled(Marker marker);
+    void t(String msg, Throwable t, Object... args);
 
     void d(String msg);
 
-    void d(Marker marker, String msg);
-
     void d(String format, Object... arguments);
-
-    void d(Marker marker, String format, Object... arguments);
 
     void d(String msg, Throwable t);
 
-    void d(String msg, Object arg, Throwable t);
-
-    void d(Marker marker, String msg, Throwable t);
-
-    void d(Marker marker, String msg, Object arg, Throwable t);
-
-    boolean isInfoEnabled();
-
-    boolean isInfoEnabled(Marker marker);
+    void d(String msg, Throwable t, Object... args);
 
     void i(String msg);
 
-    void i(Marker marker, String msg);
-
     void i(String format, Object... arguments);
-
-    void i(Marker marker, String format, Object... arguments);
 
     void i(String msg, Throwable t);
 
-    void i(String msg, Object arg, Throwable t);
-
-    void i(Marker marker, String msg, Throwable t);
-
-    void i(Marker marker, String msg, Object arg, Throwable t);
-
-    boolean isWarnEnabled();
-
-    boolean isWarnEnabled(Marker marker);
+    void i(String msg, Throwable t, Object... args);
 
     void w(String msg);
 
-    void w(Marker marker, String msg);
-
     void w(String format, Object... arguments);
-
-    void w(Marker marker, String format, Object... arguments);
 
     void w(String msg, Throwable t);
 
-    void w(String msg, Object arg, Throwable t);
-
-    void w(Marker marker, String msg, Throwable t);
-
-    void w(Marker marker, String msg, Object arg, Throwable t);
-
-    boolean isErrorEnabled();
-
-    boolean isErrorEnabled(Marker marker);
+    void w(String msg, Throwable t, Object... args);
 
     void e(String msg);
 
-    void e(Marker marker, String msg);
-
     void e(String format, Object... arguments);
-
-    void e(Marker marker, String format, Object... arguments);
 
     void e(String msg, Throwable t);
 
-    void e(String msg, Object arg, Throwable t);
-
-    void e(Marker marker, String msg, Throwable t);
-
-    void e(Marker marker, String msg, Object arg, Throwable t);
+    void e(String msg, Throwable t, Object... args);
 }

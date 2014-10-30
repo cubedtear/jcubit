@@ -22,6 +22,7 @@ import org.slf4j.Marker;
 
 /**
  * Wrapper for the {@link org.slf4j.Logger SLF4J Logger}
+ *
  * @author Aritz Lopez
  */
 public class SLF4JLogger implements ILogger {
@@ -40,14 +41,10 @@ public class SLF4JLogger implements ILogger {
         this.logger = logger;
     }
 
-    //region ...Trace...
-
-    @Override
     public boolean isTraceEnabled() {
         return this.logger.isTraceEnabled();
     }
 
-    @Override
     public boolean isTraceEnabled(Marker marker) {
         return this.logger.isTraceEnabled(marker);
     }
@@ -58,18 +55,8 @@ public class SLF4JLogger implements ILogger {
     }
 
     @Override
-    public void t(Marker marker, String msg) {
-        this.logger.trace(marker, msg);
-    }
-
-    @Override
     public void t(String format, Object... arguments) {
         this.logger.trace(format, arguments);
-    }
-
-    @Override
-    public void t(Marker marker, String format, Object... arguments) {
-        this.logger.trace(marker, format, arguments);
     }
 
     @Override
@@ -78,32 +65,8 @@ public class SLF4JLogger implements ILogger {
     }
 
     @Override
-    public void t(String msg, Object arg, Throwable t) {
-        this.logger.trace(msg, arg, t);
-    }
-
-    @Override
-    public void t(Marker marker, String msg, Throwable t) {
-        this.logger.trace(marker, msg, t);
-    }
-
-    @Override
-    public void t(Marker marker, String msg, Object arg, Throwable t) {
-        this.logger.trace(marker, msg, arg, t);
-    }
-
-    //endregion
-
-    //region ...Debug...
-
-    @Override
-    public boolean isDebugEnabled() {
-        return this.logger.isDebugEnabled();
-    }
-
-    @Override
-    public boolean isDebugEnabled(Marker marker) {
-        return this.logger.isDebugEnabled(marker);
+    public void t(String msg, Throwable t, Object... args) {
+        this.logger.trace(msg, args, t);
     }
 
     @Override
@@ -112,18 +75,8 @@ public class SLF4JLogger implements ILogger {
     }
 
     @Override
-    public void d(Marker marker, String msg) {
-        this.logger.debug(marker, msg);
-    }
-
-    @Override
     public void d(String format, Object... arguments) {
         this.logger.debug(format, arguments);
-    }
-
-    @Override
-    public void d(Marker marker, String format, Object... arguments) {
-        this.logger.debug(marker, format, arguments);
     }
 
     @Override
@@ -132,32 +85,8 @@ public class SLF4JLogger implements ILogger {
     }
 
     @Override
-    public void d(String msg, Object arg, Throwable t) {
-        this.logger.debug(msg, arg, t);
-    }
-
-    @Override
-    public void d(Marker marker, String msg, Throwable t) {
-        this.logger.debug(marker, msg, t);
-    }
-
-    @Override
-    public void d(Marker marker, String msg, Object arg, Throwable t) {
-        this.logger.debug(marker, msg, arg, t);
-    }
-
-    //endregion
-
-    //region ...Info...
-
-    @Override
-    public boolean isInfoEnabled() {
-        return this.logger.isInfoEnabled();
-    }
-
-    @Override
-    public boolean isInfoEnabled(Marker marker) {
-        return this.logger.isInfoEnabled(marker);
+    public void d(String msg, Throwable t, Object... args) {
+        this.logger.debug(msg, args, t);
     }
 
     @Override
@@ -166,18 +95,8 @@ public class SLF4JLogger implements ILogger {
     }
 
     @Override
-    public void i(Marker marker, String msg) {
-        this.logger.info(marker, msg);
-    }
-
-    @Override
     public void i(String format, Object... arguments) {
         this.logger.info(format, arguments);
-    }
-
-    @Override
-    public void i(Marker marker, String format, Object... arguments) {
-        this.logger.info(marker, format, arguments);
     }
 
     @Override
@@ -186,32 +105,8 @@ public class SLF4JLogger implements ILogger {
     }
 
     @Override
-    public void i(String msg, Object arg, Throwable t) {
-        this.logger.info(msg, arg, t);
-    }
-
-    @Override
-    public void i(Marker marker, String msg, Throwable t) {
-        this.logger.info(marker, msg, t);
-    }
-
-    @Override
-    public void i(Marker marker, String msg, Object arg, Throwable t) {
-        this.logger.info(marker, msg, arg, t);
-    }
-
-    //endregion
-
-    //region ...Warn...
-
-    @Override
-    public boolean isWarnEnabled() {
-        return this.logger.isWarnEnabled();
-    }
-
-    @Override
-    public boolean isWarnEnabled(Marker marker) {
-        return this.logger.isWarnEnabled(marker);
+    public void i(String msg, Throwable t, Object... args) {
+        this.logger.info(msg, args, t);
     }
 
     @Override
@@ -220,18 +115,8 @@ public class SLF4JLogger implements ILogger {
     }
 
     @Override
-    public void w(Marker marker, String msg) {
-        this.logger.warn(marker, msg);
-    }
-
-    @Override
     public void w(String format, Object... arguments) {
         this.logger.warn(format, arguments);
-    }
-
-    @Override
-    public void w(Marker marker, String format, Object... arguments) {
-        this.logger.warn(marker, format, arguments);
     }
 
     @Override
@@ -240,32 +125,8 @@ public class SLF4JLogger implements ILogger {
     }
 
     @Override
-    public void w(String msg, Object arg, Throwable t) {
-        this.logger.warn(msg, arg, t);
-    }
-
-    @Override
-    public void w(Marker marker, String msg, Throwable t) {
-        this.logger.warn(marker, msg, t);
-    }
-
-    @Override
-    public void w(Marker marker, String msg, Object arg, Throwable t) {
-        this.logger.warn(marker, msg, arg, t);
-    }
-
-    //endregion
-
-    //region ...Error..
-
-    @Override
-    public boolean isErrorEnabled() {
-        return this.logger.isErrorEnabled();
-    }
-
-    @Override
-    public boolean isErrorEnabled(Marker marker) {
-        return this.logger.isErrorEnabled(marker);
+    public void w(String msg, Throwable t, Object... args) {
+        this.logger.warn(msg, args, t);
     }
 
     @Override
@@ -274,18 +135,8 @@ public class SLF4JLogger implements ILogger {
     }
 
     @Override
-    public void e(Marker marker, String msg) {
-        this.logger.error(marker, msg);
-    }
-
-    @Override
     public void e(String format, Object... arguments) {
         this.logger.error(format, arguments);
-    }
-
-    @Override
-    public void e(Marker marker, String format, Object... arguments) {
-        this.logger.error(marker, format, arguments);
     }
 
     @Override
@@ -294,22 +145,121 @@ public class SLF4JLogger implements ILogger {
     }
 
     @Override
-    public void e(String msg, Object arg, Throwable t) {
-        this.logger.error(msg, arg, t);
+    public void e(String msg, Throwable t, Object... args) {
+        this.logger.error(msg, args, t);
     }
 
-    @Override
+    public void t(Marker marker, String msg) {
+        this.logger.trace(marker, msg);
+    }
+
+    public void t(Marker marker, String format, Object... arguments) {
+        this.logger.trace(marker, format, arguments);
+    }
+
+    public void t(Marker marker, String msg, Throwable t) {
+        this.logger.trace(marker, msg, t);
+    }
+
+    public void t(Marker marker, String msg, Object arg, Throwable t) {
+        this.logger.trace(marker, msg, arg, t);
+    }
+
+    public boolean isDebugEnabled() {
+        return this.logger.isDebugEnabled();
+    }
+
+    public boolean isDebugEnabled(Marker marker) {
+        return this.logger.isDebugEnabled(marker);
+    }
+
+    public void d(Marker marker, String msg) {
+        this.logger.debug(marker, msg);
+    }
+
+    public void d(Marker marker, String format, Object... arguments) {
+        this.logger.debug(marker, format, arguments);
+    }
+
+    public void d(Marker marker, String msg, Throwable t) {
+        this.logger.debug(marker, msg, t);
+    }
+
+    public void d(Marker marker, String msg, Object arg, Throwable t) {
+        this.logger.debug(marker, msg, arg, t);
+    }
+
+    public boolean isInfoEnabled() {
+        return this.logger.isInfoEnabled();
+    }
+
+    public boolean isInfoEnabled(Marker marker) {
+        return this.logger.isInfoEnabled(marker);
+    }
+
+    public void i(Marker marker, String msg) {
+        this.logger.info(marker, msg);
+    }
+
+    public void i(Marker marker, String format, Object... arguments) {
+        this.logger.info(marker, format, arguments);
+    }
+
+    public void i(Marker marker, String msg, Throwable t) {
+        this.logger.info(marker, msg, t);
+    }
+
+    public void i(Marker marker, String msg, Object arg, Throwable t) {
+        this.logger.info(marker, msg, arg, t);
+    }
+
+    public boolean isWarnEnabled() {
+        return this.logger.isWarnEnabled();
+    }
+
+    public boolean isWarnEnabled(Marker marker) {
+        return this.logger.isWarnEnabled(marker);
+    }
+
+    public void w(Marker marker, String msg) {
+        this.logger.warn(marker, msg);
+    }
+
+    public void w(Marker marker, String format, Object... arguments) {
+        this.logger.warn(marker, format, arguments);
+    }
+
+    public void w(Marker marker, String msg, Throwable t) {
+        this.logger.warn(marker, msg, t);
+    }
+
+    public void w(Marker marker, String msg, Object arg, Throwable t) {
+        this.logger.warn(marker, msg, arg, t);
+    }
+
+    public boolean isErrorEnabled() {
+        return this.logger.isErrorEnabled();
+    }
+
+    public boolean isErrorEnabled(Marker marker) {
+        return this.logger.isErrorEnabled(marker);
+    }
+
+    public void e(Marker marker, String msg) {
+        this.logger.error(marker, msg);
+    }
+
+    public void e(Marker marker, String format, Object... arguments) {
+        this.logger.error(marker, format, arguments);
+    }
+
     public void e(Marker marker, String msg, Throwable t) {
         this.logger.error(marker, msg, t);
     }
 
-    @Override
     public void e(Marker marker, String msg, Object arg, Throwable t) {
         this.logger.error(marker, msg, arg, t);
     }
-
-
-    //endregion
 
     public String toString() {
         return this.logger.toString();

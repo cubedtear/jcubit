@@ -18,8 +18,6 @@ package io.github.aritzhack.aritzh.logging;
 
 import io.github.aritzhack.aritzh.eventBus.EventBus;
 
-import static io.github.aritzhack.aritzh.logging.LogEvent.LogLevel.*;
-
 /**
  * @author Aritz Lopez
  */
@@ -36,67 +34,52 @@ public class EventLogger extends ALogger {
     }
 
     @Override
-    public boolean isTraceEnabled() { return true; }
-
-    @Override
     public void t(String msg) {
-        this.bus.post(new LogEvent(TRACE, msg));
+        this.bus.post(new LogEvent(LogLevel.TRACE, msg));
     }
 
     @Override
     public void t(String msg, Throwable t) {
-        this.bus.post(new LogEvent(TRACE, msg, t));
+        this.bus.post(new LogEvent(LogLevel.TRACE, msg, t));
     }
 
     @Override
-    public boolean isDebugEnabled() { return true; }
-
-    @Override
     public void d(String msg) {
-        this.bus.post(new LogEvent(DEBUG, msg));
+        this.bus.post(new LogEvent(LogLevel.DEBUG, msg));
     }
 
     @Override
     public void d(String msg, Throwable t) {
-        this.bus.post(new LogEvent(DEBUG, msg, t));
+        this.bus.post(new LogEvent(LogLevel.DEBUG, msg, t));
     }
 
     @Override
-    public boolean isInfoEnabled() { return true; }
-
-    @Override
     public void i(String msg) {
-        this.bus.post(new LogEvent(INFO, msg));
+        this.bus.post(new LogEvent(LogLevel.INFO, msg));
     }
 
     @Override
     public void i(String msg, Throwable t) {
-        this.bus.post(new LogEvent(INFO, msg, t));
+        this.bus.post(new LogEvent(LogLevel.INFO, msg, t));
     }
 
     @Override
-    public boolean isWarnEnabled() { return true; }
-
-    @Override
     public void w(String msg) {
-        this.bus.post(new LogEvent(WARN, msg));
+        this.bus.post(new LogEvent(LogLevel.WARN, msg));
     }
 
     @Override
     public void w(String msg, Throwable t) {
-        this.bus.post(new LogEvent(WARN, msg, t));
+        this.bus.post(new LogEvent(LogLevel.WARN, msg, t));
     }
 
     @Override
-    public boolean isErrorEnabled() { return true; }
-
-    @Override
     public void e(String msg) {
-        this.bus.post(new LogEvent(ERROR, msg));
+        this.bus.post(new LogEvent(LogLevel.ERROR, msg));
     }
 
     @Override
     public void e(String msg, Throwable t) {
-        this.bus.post(new LogEvent(ERROR, msg, t));
+        this.bus.post(new LogEvent(LogLevel.ERROR, msg, t));
     }
 }

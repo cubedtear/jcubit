@@ -16,6 +16,7 @@
 
 package io.github.aritzhack.aritzh.logging;
 
+import io.github.aritzhack.aritzh.util.Nullable;
 import org.apache.logging.log4j.message.ParameterizedMessage;
 
 /**
@@ -32,30 +33,18 @@ public class LogEvent {
     }
 
     public LogEvent(LogLevel level, String message) {
-        this(level, null, message);
+        this(level, message, (Throwable) null);
     }
 
-    public LogEvent(LogLevel level, Throwable throwable, String message) {
+    public LogEvent(LogLevel level, String message, @Nullable Throwable throwable) {
         this.level = level;
         this.throwable = throwable;
         this.message = message;
     }
 
-    public LogEvent(LogLevel level, Throwable throwable, String format, Object... args) {
-        this(level, throwable, new ParameterizedMessage(format, args).getFormattedMessage());
-    }
-
-    public static enum LogLevel {
-        TRACE, DEBUG, INFO, WARN, ERROR;
-
-        private final String tag;
-
-        LogLevel() {
-            this.tag = "[" + this.name() + "]";
-        }
-
-        public String getTag() {
-            return this.tag;
-        }
+    public LogEvent(LogLevel level, String format, @Nullable Throwable throwable, Object... args) {
+        this(level, new ParameterizedMessage(format, args).getFormattedMessage(), throwable);
     }
 }
+
+
