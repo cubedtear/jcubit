@@ -56,6 +56,10 @@ public class TestEngine implements IGame {
         this.engine.start();
     }
 
+    public void start() {
+        this.engine.start();
+    }
+
     public int getWidth() {
         return width;
     }
