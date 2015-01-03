@@ -52,7 +52,7 @@ public class Sound {
      * Start playing the sound.
      *
      * Note: Starts from the beginning each time. In order to keep playing from where it stopped, use {@link Sound#keepGoing()}.
-     * @see Sound#keepGoing().
+     * @see Sound#keepGoing()
      */
     public void play() {
         this.clip.setMicrosecondPosition(0);
