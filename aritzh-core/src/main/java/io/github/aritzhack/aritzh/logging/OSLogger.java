@@ -10,7 +10,7 @@ import java.io.PrintWriter;
  */
 public class OSLogger extends ALogger {
 
-    private static final String DEFAULT_FORMAT = "%t - [%l] %m";
+    private static final String DEFAULT_FORMAT = "%d - %L %m?t{\n%t}";
 
     final PrintWriter pw;
     final String format;
