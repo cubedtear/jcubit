@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Aritz Lopez
+ * Copyright 2015 Aritz Lopez
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -16,70 +16,88 @@
 
 package io.github.aritzhack.aritzh.logging;
 
-import io.github.aritzhack.aritzh.eventBus.EventBus;
+import com.google.common.collect.Sets;
+
+import java.util.Set;
 
 /**
  * @author Aritz Lopez
  */
-public class EventLogger extends ALogger {
+public class MultiLogger extends ALogger {
 
-    private final EventBus bus;
+    private final Set<ILogger> loggers;
 
-    public EventLogger(EventBus bus) {
-        this.bus = bus;
-    }
-
-    public EventBus getEventBus() {
-        return bus;
+    public MultiLogger(ILogger... loggers) {
+        this.loggers = Sets.newHashSet(loggers);
     }
 
     @Override
     public void t(String msg) {
-        this.bus.post(new LogEvent(LogLevel.TRACE, msg));
+        for(ILogger l : this.loggers) {
+            l.t(msg);
+        }
     }
 
     @Override
     public void t(String msg, Throwable t) {
-        this.bus.post(new LogEvent(LogLevel.TRACE, msg, t));
+        for(ILogger l : this.loggers) {
+            l.t(msg, t);
+        }
     }
 
     @Override
     public void d(String msg) {
-        this.bus.post(new LogEvent(LogLevel.DEBUG, msg));
+        for(ILogger l : this.loggers) {
+            l.d(msg);
+        }
     }
 
     @Override
     public void d(String msg, Throwable t) {
-        this.bus.post(new LogEvent(LogLevel.DEBUG, msg, t));
+        for(ILogger l : this.loggers) {
+            l.d(msg, t);
+        }
     }
 
     @Override
     public void i(String msg) {
-        this.bus.post(new LogEvent(LogLevel.INFO, msg));
+        for(ILogger l : this.loggers) {
+            l.i(msg);
+        }
     }
 
     @Override
     public void i(String msg, Throwable t) {
-        this.bus.post(new LogEvent(LogLevel.INFO, msg, t));
+        for(ILogger l : this.loggers) {
+            l.i(msg, t);
+        }
     }
 
     @Override
     public void w(String msg) {
-        this.bus.post(new LogEvent(LogLevel.WARN, msg));
+        for(ILogger l : this.loggers) {
+            l.w(msg);
+        }
     }
 
     @Override
     public void w(String msg, Throwable t) {
-        this.bus.post(new LogEvent(LogLevel.WARN, msg, t));
+        for(ILogger l : this.loggers) {
+            l.w(msg, t);
+        }
     }
 
     @Override
     public void e(String msg) {
-        this.bus.post(new LogEvent(LogLevel.ERROR, msg));
+        for(ILogger l : this.loggers) {
+            l.e(msg);
+        }
     }
 
     @Override
     public void e(String msg, Throwable t) {
-        this.bus.post(new LogEvent(LogLevel.ERROR, msg, t));
+        for(ILogger l : this.loggers) {
+            l.e(msg, t);
+        }
     }
 }

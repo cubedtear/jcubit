@@ -25,26 +25,38 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.Stack;
+import java.util.Queue;
 
 /**
+ * Input handler for the {@link io.github.aritzhack.aritzh.awt.gameEngine.CanvasEngine} class.
  * @author Aritz Lopez
  */
 public class InputHandler implements KeyListener, FocusListener, MouseInputListener {
 
     private final boolean[] keys = new boolean[65536];
     private final List<Integer> checked = new ArrayList<Integer>();
-    private final Stack<MouseInputEvent> mouseEvents = new Stack<>();
+    private final Queue<MouseInputEvent> mouseEvents = new LinkedList<>();
     private boolean focus;
     private Point lastMousePos = new Point();
 
     // region ... "Getter" methods...
 
+    /**
+     * True if the canvas is focused
+     * @return True if the canvas is focused
+     */
     public boolean hasFocus() {
         return focus;
     }
 
+    /**
+     * True if the key was pressed, but hadn't been previously checked. Subsequent calls to this method will,
+     * therefore, return always false, as long as the key hasn't been released and pressed again.
+     * @param keyCode The code that corresponds to the key, according to {@link java.awt.event.KeyEvent}
+     * @return True if the key was pressed, but hadn't been previously checked.
+     */
     public boolean wasKeyTyped(int keyCode) {
         if (this.isKeyDown(keyCode) && !this.checked.contains(keyCode)) {
             this.checked.add(keyCode);
@@ -53,15 +65,29 @@ public class InputHandler implements KeyListener, FocusListener, MouseInputListe
         return false;
     }
 
+    /**
+     * Returns true if the key is being pressed.
+     * @param keyCode The code that corresponds to the key, according to {@link java.awt.event.KeyEvent}
+     * @return true if the key is being pressed.
+     */
     public boolean isKeyDown(int keyCode) {
         return this.keys[keyCode];
     }
 
+    /**
+     * Returns the position of the mouse.
+     * @return the position of the mouse.
+     */
     public Point getMousePos() {
         return this.lastMousePos;
     }
 
-    public Stack<MouseInputEvent> getMouseEvents() {
+    /**
+     * Returns a stack of {@link io.github.aritzhack.aritzh.awt.gameEngine.input.InputHandler.MouseInputEvent MouseInputEvents}
+     * that represent the events the mouse had since it was last pressed.
+     * @return a stack of mouse events
+     */
+    public Queue<MouseInputEvent> getMouseEvents() {
         return this.mouseEvents;
     }
 
@@ -105,13 +131,13 @@ public class InputHandler implements KeyListener, FocusListener, MouseInputListe
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        mouseEvents.push(MouseInputEvent.fromMouseEvent(MouseAction.CLICKED, e));
+        mouseEvents.add(MouseInputEvent.fromMouseEvent(MouseAction.CLICKED, e));
     }
 
     @Override
     public void mousePressed(MouseEvent e) {
         this.clearMouseEvents();
-        mouseEvents.push(MouseInputEvent.fromMouseEvent(MouseAction.PRESSED, e));
+        mouseEvents.add(MouseInputEvent.fromMouseEvent(MouseAction.PRESSED, e));
     }
 
     public void clearMouseEvents() {
@@ -120,7 +146,7 @@ public class InputHandler implements KeyListener, FocusListener, MouseInputListe
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        mouseEvents.push(MouseInputEvent.fromMouseEvent(MouseAction.RELEASED, e));
+        mouseEvents.add(MouseInputEvent.fromMouseEvent(MouseAction.RELEASED, e));
     }
 
     @Override
@@ -135,7 +161,7 @@ public class InputHandler implements KeyListener, FocusListener, MouseInputListe
 
     @Override
     public void mouseDragged(MouseEvent e) {
-        mouseEvents.push(MouseInputEvent.fromMouseEvent(MouseAction.DRAGGED, e));
+        mouseEvents.add(MouseInputEvent.fromMouseEvent(MouseAction.DRAGGED, e));
     }
 
     @Override

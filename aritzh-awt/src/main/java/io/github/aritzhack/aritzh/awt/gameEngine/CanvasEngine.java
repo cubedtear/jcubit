@@ -22,6 +22,7 @@ import io.github.aritzhack.aritzh.gameEngine.BasicGame;
 import io.github.aritzhack.aritzh.gameEngine.IGame;
 import io.github.aritzhack.aritzh.logging.ILogger;
 import io.github.aritzhack.aritzh.logging.NullLogger;
+import io.github.aritzhack.aritzh.util.Nullable;
 
 import javax.swing.JFrame;
 import javax.swing.WindowConstants;
@@ -34,6 +35,7 @@ import java.awt.event.WindowEvent;
 import java.awt.image.BufferStrategy;
 
 /**
+ * Game engine based on AWT and the Canvas component
  * @author Aritz Lopez
  */
 public class CanvasEngine extends BasicGame {
@@ -48,12 +50,27 @@ public class CanvasEngine extends BasicGame {
     private boolean noFrame;
     private Graphics graphics;
 
-
+    /**
+     * Create a canvas engine with the specified game and size. A {@link javax.swing.JFrame} that holds the canvas
+     * will be created.
+     * @param game The implementation of the game.
+     * @param width The width of the game
+     * @param height The height of the game
+     */
     public CanvasEngine(IGame game, int width, int height) {
         this(game, width, height, false, null);
     }
 
-    public CanvasEngine(IGame game, int width, int height, boolean noFrame, ILogger logger) {
+    /**
+     * Create a canvas engine with the specified game and size. Can be specified whether the {@link javax.swing.JFrame}
+     * should be created or not.
+     * @param game The implementation of the game.
+     * @param width The width of the game
+     * @param height The height of the game
+     * @param noFrame If true, no {@link javax.swing.JFrame} will be created.
+     * @param logger The logger to use. If null, nothing will be logged.
+     */
+    public CanvasEngine(IGame game, int width, int height, boolean noFrame, @Nullable ILogger logger) {
         super(game);
         Preconditions.checkArgument(width > 0 && height > 0, "Game sizes cannot be negative!");
 
@@ -92,6 +109,9 @@ public class CanvasEngine extends BasicGame {
         });
     }
 
+    /**
+     * This method must be called to start the engine (and therefore the game).
+     */
     @Override
     public synchronized void start() {
         super.start();
@@ -100,6 +120,9 @@ public class CanvasEngine extends BasicGame {
         this.thread.start();
     }
 
+    /**
+     * This method must be called to stop the engine (and therefore the game).
+     */
     @Override
     public synchronized void stop() {
         this.logger.d("Stopping...");
@@ -118,7 +141,6 @@ public class CanvasEngine extends BasicGame {
 
     @Override
     public void render() {
-
         if (!running) return;
 
         BufferStrategy bs = canvas.getBufferStrategy();
@@ -141,14 +163,27 @@ public class CanvasEngine extends BasicGame {
         bs.show();
     }
 
+    /**
+     * Returns the {@link java.awt.Graphics} object into which the game is being rendered.
+     * @return the {@link java.awt.Graphics} object into which the game is being rendered.
+     */
     public Graphics getGraphics() {
         return graphics;
     }
 
+    /**
+     * Returns the {@link io.github.aritzhack.aritzh.awt.gameEngine.input.InputHandler} used by this game.
+     * @return the {@link io.github.aritzhack.aritzh.awt.gameEngine.input.InputHandler} used by this game.
+     */
     public InputHandler getInputHandler() {
         return inputHandler;
     }
 
+    /**
+     *
+     * Returns the size of the game.
+     * @return the size of the game.
+     */
     public Dimension getSize() {
         return size;
     }

@@ -34,6 +34,10 @@ public class Sound {
 
     private final Clip clip;
 
+    /**
+     * Load a Sound from a URL.
+     * @param url The URL from which the sound will be loaded.
+     */
     public Sound(URL url) {
         Preconditions.checkArgument(url != null, "Audio Stream cannot be null!");
         try {
@@ -44,19 +48,36 @@ public class Sound {
         }
     }
 
+    /**
+     * Start playing the sound.
+     *
+     * Note: Starts from the beginning each time. In order to keep playing from where it stopped, use {@link Sound#keepGoing()}.
+     * @see Sound#keepGoing()
+     */
     public void play() {
         this.clip.setMicrosecondPosition(0);
         this.clip.start();
     }
 
+    /**
+     * True iff it is playing.
+     * @return true if it is playing.
+     */
     public boolean isPlaying() {
         return this.clip.isRunning();
     }
 
+    /**
+     * Stops playing the sound. Will keep the position so that the playback can be continued with {@link Sound#keepGoing()}.
+     * @see Sound#keepGoing()
+     */
     public void stop() {
         this.clip.stop();
     }
 
+    /**
+     * Plays the sound from where it was stopped, or from the beginning if it was just loaded.
+     */
     public void keepGoing() {
         this.clip.start();
     }
