@@ -1,12 +1,12 @@
 package io.github.aritzhack.aritzh.collections;
 
+import com.google.common.base.Predicate;
 import com.google.common.collect.Sets;
 import io.github.aritzhack.aritzh.util.NotNull;
 
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Set;
-import java.util.function.Predicate;
 
 /**
  * @author Aritz Lopez
@@ -23,7 +23,7 @@ public class FilteredSet<E> implements Set<E> {
         if (!set.isEmpty()) {
             Iterator<E> iter = set.iterator();
             while (iter.hasNext()) {
-                if (!filter.test(iter.next())) iter.remove();
+                if (!filter.apply(iter.next())) iter.remove();
             }
         }
     }
@@ -71,7 +71,7 @@ public class FilteredSet<E> implements Set<E> {
 
     @Override
     public boolean add(E e) {
-        return this.filter.test(e) && this.set.add(e);
+        return this.filter.apply(e) && this.set.add(e);
     }
 
     @Override
