@@ -40,7 +40,6 @@ public class OSLogger extends ALogger {
     private static ILogger ERR_LOGGER;
     private final PrintStream ps;
     private final String format;
-    private boolean closed = false;
 
     public OSLogger(OutputStream os) {
         this(os, null);
@@ -137,12 +136,11 @@ public class OSLogger extends ALogger {
     }
 
     public boolean isClosed() {
-        return this.ps == null || this.closed;
+        return this.ps == null || this.ps.checkError();
     }
 
     public void close() {
         this.ps.close();
-        this.closed = true;
         OS_LOGGERS.remove(this);
     }
 }
