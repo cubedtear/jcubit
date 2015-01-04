@@ -41,8 +41,8 @@ public class SlickUtil {
     /**
      * <p>
      * A log system that ignores everything but errors. Errors are redirected to {@link io.github.aritzhack.aritzh.slick2d.AGame#LOG} through
-     * {@link io.github.aritzhack.aritzh.logging.ILogger#e(String) ILogger.e(String)} and
-     * {@link io.github.aritzhack.aritzh.logging.ILogger#e(String, Throwable) ILogger.e(String, Throwable)}
+     * {@link io.github.aritzhack.aritzh.logging.core.ILogger#e(String) ILogger.e(String)} and
+     * {@link io.github.aritzhack.aritzh.logging.core.ILogger#e(String, Throwable) ILogger.e(String, Throwable)}
      * </p>
      * <p>
      * It is thought to be used by calling

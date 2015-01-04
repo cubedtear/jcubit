@@ -5,8 +5,8 @@ import io.github.aritzhack.aritzh.awt.render.BufferedImageRenderer;
 import io.github.aritzhack.aritzh.awt.render.IRender;
 import io.github.aritzhack.aritzh.awt.render.Sprite;
 import io.github.aritzhack.aritzh.gameEngine.IGame;
-import io.github.aritzhack.aritzh.logging.ILogger;
-import io.github.aritzhack.aritzh.logging.NullLogger;
+import io.github.aritzhack.aritzh.logging.core.ILogger;
+import io.github.aritzhack.aritzh.logging.core.NullLogger;
 import io.github.aritzhack.aritzh.util.Nullable;
 
 import java.util.Map;

@@ -17,6 +17,8 @@
 package io.github.aritzhack.aritzh.logging;
 
 import com.google.common.collect.Sets;
+import io.github.aritzhack.aritzh.logging.core.ALogger;
+import io.github.aritzhack.aritzh.logging.core.ILogger;
 
 import java.util.Set;
 

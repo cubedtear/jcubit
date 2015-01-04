@@ -1,4 +1,4 @@
-package io.github.aritzhack.aritzh.logging;
+package io.github.aritzhack.aritzh.logging.core;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;

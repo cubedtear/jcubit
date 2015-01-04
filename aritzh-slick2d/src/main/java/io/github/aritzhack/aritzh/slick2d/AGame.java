@@ -16,7 +16,7 @@
 
 package io.github.aritzhack.aritzh.slick2d;
 
-import io.github.aritzhack.aritzh.logging.ILogger;
+import io.github.aritzhack.aritzh.logging.core.ILogger;
 import io.github.aritzhack.aritzh.logging.SLF4JLogger;
 import org.newdawn.slick.Font;
 import org.newdawn.slick.GameContainer;
@@ -26,7 +26,7 @@ import org.newdawn.slick.state.StateBasedGame;
 
 /**
  * Slightly improved version of {@link org.newdawn.slick.state.StateBasedGame}, which has some default fonts,
- * a {@link io.github.aritzhack.aritzh.logging.ILogger logger} and a getter for the
+ * a {@link io.github.aritzhack.aritzh.logging.core.ILogger logger} and a getter for the
  * {@link org.newdawn.slick.GameContainer container}
  *
  * @author Aritz Lopez

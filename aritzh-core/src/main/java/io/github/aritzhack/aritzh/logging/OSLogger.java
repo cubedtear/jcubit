@@ -1,5 +1,7 @@
 package io.github.aritzhack.aritzh.logging;
 
+import io.github.aritzhack.aritzh.logging.core.ALogger;
+import io.github.aritzhack.aritzh.logging.core.LogLevel;
 import io.github.aritzhack.aritzh.util.Nullable;
 
 import java.io.OutputStream;
