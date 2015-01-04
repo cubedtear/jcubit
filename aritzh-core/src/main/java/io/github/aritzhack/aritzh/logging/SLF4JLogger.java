@@ -26,6 +26,7 @@ import org.slf4j.Marker;
  *
  * @author Aritz Lopez
  */
+@Deprecated
 public class SLF4JLogger implements ILogger {
 
     public final Logger logger;
