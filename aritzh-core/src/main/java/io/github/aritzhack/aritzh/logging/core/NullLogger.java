@@ -14,7 +14,7 @@
  *    limitations under the License.
  */
 
-package io.github.aritzhack.aritzh.logging;
+package io.github.aritzhack.aritzh.logging.core;
 
 import io.github.aritzhack.aritzh.util.NotNull;
 import io.github.aritzhack.aritzh.util.Nullable;
@@ -25,10 +25,10 @@ import io.github.aritzhack.aritzh.util.Nullable;
 public class NullLogger extends ALogger {
 
     /**
-     * If the provided logger is not null, it is returned, otherwise a new {@link io.github.aritzhack.aritzh.logging.NullLogger} is returned
+     * If the provided logger is not null, it is returned, otherwise a new {@link NullLogger} is returned
      *
      * @param logger A logger, or null
-     * @return Either the provided logger if it is not null, or a new {@link io.github.aritzhack.aritzh.logging.NullLogger}
+     * @return Either the provided logger if it is not null, or a new {@link NullLogger}
      */
     @NotNull
     public static ILogger getLogger(@Nullable ILogger logger) {

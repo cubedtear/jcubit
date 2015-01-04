@@ -14,9 +14,11 @@
  *    limitations under the License.
  */
 
-package io.github.aritzhack.aritzh.logging;
+package io.github.aritzhack.aritzh.logging.event;
 
 import io.github.aritzhack.aritzh.eventBus.EventBus;
+import io.github.aritzhack.aritzh.logging.core.ALogger;
+import io.github.aritzhack.aritzh.logging.core.LogLevel;
 
 /**
  * @author Aritz Lopez

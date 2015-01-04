@@ -16,8 +16,8 @@
 
 package io.github.aritzhack.aritzh.lwjgl.util;
 
-import io.github.aritzhack.aritzh.logging.ILogger;
-import io.github.aritzhack.aritzh.logging.NullLogger;
+import io.github.aritzhack.aritzh.logging.core.ILogger;
+import io.github.aritzhack.aritzh.logging.core.NullLogger;
 
 import static org.lwjgl.opengl.GL11.GL_FALSE;
 import static org.lwjgl.opengl.GL20.*;

@@ -14,8 +14,9 @@
  *    limitations under the License.
  */
 
-package io.github.aritzhack.aritzh.logging;
+package io.github.aritzhack.aritzh.logging.event;
 
+import io.github.aritzhack.aritzh.logging.core.LogLevel;
 import io.github.aritzhack.aritzh.util.Nullable;
 import org.apache.logging.log4j.message.ParameterizedMessage;
 
@@ -29,7 +30,7 @@ public class LogEvent {
     private final Throwable throwable;
 
     public LogEvent(LogLevel level, String format, Object... args) {
-        this(level, new ParameterizedMessage(format, args).getFormattedMessage());
+        this(level, ParameterizedMessage.format(format, args));
     }
 
     public LogEvent(LogLevel level, String message) {

@@ -19,7 +19,7 @@ package io.github.aritzhack.aritzh.extensions;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import io.github.aritzhack.aritzh.extensions.events.ExtensionEvent;
-import io.github.aritzhack.aritzh.logging.ILogger;
+import io.github.aritzhack.aritzh.logging.core.ILogger;
 import io.github.aritzhack.aritzh.util.ReflectionUtil;
 
 import java.io.File;

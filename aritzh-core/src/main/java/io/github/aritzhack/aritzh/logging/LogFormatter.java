@@ -19,6 +19,7 @@ package io.github.aritzhack.aritzh.logging;
 import com.google.common.base.Strings;
 import com.google.common.base.Throwables;
 import com.google.common.collect.Maps;
+import io.github.aritzhack.aritzh.logging.core.LogLevel;
 import io.github.aritzhack.aritzh.util.NotNull;
 import io.github.aritzhack.aritzh.util.Nullable;
 

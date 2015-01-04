@@ -14,7 +14,7 @@
  *    limitations under the License.
  */
 
-package io.github.aritzhack.aritzh.logging;
+package io.github.aritzhack.aritzh.logging.core;
 
 /**
  * @author Aritz Lopez

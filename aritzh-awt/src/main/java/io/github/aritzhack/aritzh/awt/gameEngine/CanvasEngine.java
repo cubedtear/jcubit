@@ -20,8 +20,8 @@ import com.google.common.base.Preconditions;
 import io.github.aritzhack.aritzh.awt.gameEngine.input.InputHandler;
 import io.github.aritzhack.aritzh.gameEngine.BasicGame;
 import io.github.aritzhack.aritzh.gameEngine.IGame;
-import io.github.aritzhack.aritzh.logging.ILogger;
-import io.github.aritzhack.aritzh.logging.NullLogger;
+import io.github.aritzhack.aritzh.logging.core.ILogger;
+import io.github.aritzhack.aritzh.logging.core.NullLogger;
 import io.github.aritzhack.aritzh.util.Nullable;
 
 import javax.swing.JFrame;
