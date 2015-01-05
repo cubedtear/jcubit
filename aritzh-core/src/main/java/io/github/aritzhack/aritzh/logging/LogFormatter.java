@@ -26,7 +26,6 @@ import io.github.aritzhack.aritzh.util.Nullable;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -35,24 +34,28 @@ import java.util.Map;
 public enum LogFormatter {
     ;
 
-    private static final DateFormat DF = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM, Locale.getDefault());
-    private static final char MESSAGE_TOKEN = 'm';
-    private static final char DATE_TOKEN = 'd';
-    private static final char LEVEL_TOKEN = 'l';
-    private static final char FULL_LEVEL_TOKEN = 'L';
-    private static final char THROWABLE_TOKEN = 't';
-    private static final char TOKEN_CHAR = '%';
-    private static final char CONDITION_CHAR = '?';
+    private static final DateFormat DF = new SimpleDateFormat("HH:mm:ss.SSS");
+
+    private static final char TOKEN_MESSAGE = 'm';
+    private static final char TOKEN_DATE = 'd';
+    private static final char TOKEN_LEVEL = 'l';
+    private static final char TOKEN_FULL_LEVEL = 'L';
+    private static final char TOKEN_THROWABLE = 'e';
+    private static final char TOKEN_THREAD = 't';
+    private static final char TOKEN_NAME = 'n';
+
+    private static final char BEGIN_TOKEN = '%';
+    private static final char BEGIN_CONDITION = '?';
     private static final char DELIMITER_LEFT = '{';
     private static final char DELIMITER_RIGHT = '}';
 
     private static final Map<String, DateFormat> dateFormats = Maps.newHashMap();
 
-    public static String formatLogMessage(LogLevel level, String message, String format) {
-        return LogFormatter.formatLogMessage(level, message, null, format);
+    public static String formatLogMessage(@NotNull LogLevel level, @NotNull String format, @Nullable String message, @Nullable String loggerName) {
+        return LogFormatter.formatLogMessage(level, format, message, null, loggerName);
     }
 
-    public static String formatLogMessage(@NotNull LogLevel level, @Nullable String message, @Nullable Throwable t, @NotNull String format) {
+    public static String formatLogMessage(@NotNull LogLevel level, @NotNull String format, @Nullable String message, @Nullable Throwable t, @Nullable String loggerName) {
         boolean inCondition = false;
         boolean conditionMet = false;
         StringBuilder out = new StringBuilder();
@@ -73,17 +76,17 @@ public enum LogFormatter {
             // Skip if the condition is unmet
             if (inCondition && !conditionMet) continue;
 
-            if (c == TOKEN_CHAR && notLast) { // Check if we are in a replace-token
+            if (c == BEGIN_TOKEN && notLast) { // Check if we are in a replace-token
                 i++;
                 c = chars[i];
                 switch (c) {
-                    case TOKEN_CHAR:
-                        out.append(TOKEN_CHAR);
+                    case BEGIN_TOKEN:
+                        out.append(BEGIN_TOKEN);
                         break;
-                    case MESSAGE_TOKEN:
+                    case TOKEN_MESSAGE:
                         out.append(message);
                         break;
-                    case DATE_TOKEN:
+                    case TOKEN_DATE:
                         if (notLast && chars[i + 1] == DELIMITER_LEFT) {
                             i++;
                             String dFormat = "";
@@ -101,19 +104,26 @@ public enum LogFormatter {
                             out.append(DF.format(new Date()));
                         }
                         break;
-                    case LEVEL_TOKEN:
+                    case TOKEN_LEVEL:
                         out.append(level.name());
-                    case FULL_LEVEL_TOKEN:
+                        break;
+                    case TOKEN_FULL_LEVEL:
                         out.append("[").append(level.name()).append("]");
                         out.append(Strings.repeat(" ", LogLevel.maxNameLength - level.name().length()));
                         break;
-                    case THROWABLE_TOKEN:
+                    case TOKEN_THROWABLE:
                         if (t != null) {
                             out.append(Throwables.getStackTraceAsString(t));
                         }
                         break;
+                    case TOKEN_THREAD:
+                        out.append(Thread.currentThread().getName());
+                        break;
+                    case TOKEN_NAME:
+                        out.append(loggerName);
+                        break;
                 }
-            } else if (c == CONDITION_CHAR) { // Check if we are starting a condition environment
+            } else if (c == BEGIN_CONDITION) { // Check if we are starting a condition environment
                 inCondition = true;
 
                 // Read the condition
@@ -127,13 +137,15 @@ public enum LogFormatter {
                 }
 
                 // Parse the condition
-                if (condition.equalsIgnoreCase(toS(THROWABLE_TOKEN))) {
+                if (condition.equalsIgnoreCase(toS(TOKEN_THROWABLE))) {
                     conditionMet = t != null;
-                } else if (condition.startsWith(toS(LEVEL_TOKEN)) || condition.startsWith(toS(FULL_LEVEL_TOKEN))) {
+                } else if (condition.startsWith(toS(TOKEN_LEVEL)) || condition.startsWith(toS(TOKEN_FULL_LEVEL))) {
                     String cLevel = condition.substring(1);
                     conditionMet = LogLevel.getLevel(cLevel) == level;
-                } else if (condition.equalsIgnoreCase(toS(MESSAGE_TOKEN))) {
+                } else if (condition.equalsIgnoreCase(toS(TOKEN_MESSAGE))) {
                     conditionMet = !Strings.isNullOrEmpty(message);
+                } else if (condition.equalsIgnoreCase(toS(TOKEN_NAME))) {
+                    conditionMet = !Strings.isNullOrEmpty(loggerName);
                 }
             } else {
                 out.append(c);
