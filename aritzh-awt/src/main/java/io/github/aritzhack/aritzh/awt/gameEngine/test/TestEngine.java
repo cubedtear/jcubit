@@ -104,4 +104,12 @@ public class TestEngine implements IGame {
     public void onUpdatePS() {
         this.game.onUpdatePS();
     }
+
+    public IRender getRender() {
+        return render;
+    }
+
+    public CanvasEngine getEngine() {
+        return engine;
+    }
 }
