@@ -16,8 +16,8 @@
 
 package io.github.aritzhack.aritzh.slick2d;
 
+import io.github.aritzhack.aritzh.logging.OSLogger;
 import io.github.aritzhack.aritzh.logging.core.ILogger;
-import io.github.aritzhack.aritzh.logging.SLF4JLogger;
 import org.newdawn.slick.Font;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.SlickException;
@@ -33,7 +33,7 @@ import org.newdawn.slick.state.StateBasedGame;
  */
 public abstract class AGame extends StateBasedGame {
 
-    public static final ILogger LOG = new SLF4JLogger("Game");
+    public static final ILogger LOG = new OSLogger.Builder(System.out, "Game").build();
     public static Font FNT_COMIC_SANS_18;
     public static Font FNT_COMIC_SANS_24;
     private GameContainer container;

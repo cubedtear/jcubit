@@ -4,6 +4,7 @@ import io.github.aritzhack.aritzh.gameEngine.IGame;
 
 /**
  * Abstract empty implementation of IGame for use in {@link io.github.aritzhack.aritzh.awt.gameEngine.test.TestEngine}
+ *
  * @author Aritz Lopez
  */
 public abstract class AbstractGame implements IGame {

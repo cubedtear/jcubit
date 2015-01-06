@@ -29,54 +29,6 @@ public class Matrix4f {
 
     }
 
-    public void set(int x, int y, float value) {
-        this.matrix[y + x * SIZE] = value;
-    }
-
-    public float get(int x, int y) {
-        return this.matrix[y + x * SIZE];
-    }
-
-    public static Matrix4f identity() {
-        Matrix4f mat = Matrix4f.zero();
-
-        mat.set(0, 0, 1);
-        mat.set(1, 1, 1);
-        mat.set(2, 2, 1);
-        mat.set(3, 3, 1);
-
-        return mat;
-    }
-
-    public static Matrix4f zero() {
-        return new Matrix4f();
-    }
-
-    public Matrix4f mult(Matrix4f other) {
-        Matrix4f product = Matrix4f.zero();
-
-        for (int x = 0; x < SIZE; x++) {
-            for (int y = 0; y < 4; y++) {
-                float sum = 0f;
-                for (int e = 0; e < 4; e++) {
-                    sum += this.get(x, e) * other.get(e, y);
-                }
-                product.set(x, y, sum);
-            }
-        }
-        return product;
-    }
-
-    public Matrix4f translate(Vector3f vect) {
-        Matrix4f result = Matrix4f.identity();
-
-        result.set(3, 0, vect.x);
-        result.set(3, 1, vect.y);
-        result.set(3, 2, vect.z);
-
-        return result;
-    }
-
     public static Matrix4f rotateX(float angle) {
         Matrix4f result = Matrix4f.identity();
 
@@ -145,6 +97,54 @@ public class Matrix4f {
         result.set(3, 2, (far + near) / (far - near));
 
         return result;
+    }
+
+    public float get(int x, int y) {
+        return this.matrix[y + x * SIZE];
+    }
+
+    public Matrix4f mult(Matrix4f other) {
+        Matrix4f product = Matrix4f.zero();
+
+        for (int x = 0; x < SIZE; x++) {
+            for (int y = 0; y < 4; y++) {
+                float sum = 0f;
+                for (int e = 0; e < 4; e++) {
+                    sum += this.get(x, e) * other.get(e, y);
+                }
+                product.set(x, y, sum);
+            }
+        }
+        return product;
+    }
+
+    public Matrix4f translate(Vector3f vect) {
+        Matrix4f result = Matrix4f.identity();
+
+        result.set(3, 0, vect.x);
+        result.set(3, 1, vect.y);
+        result.set(3, 2, vect.z);
+
+        return result;
+    }
+
+    public static Matrix4f identity() {
+        Matrix4f mat = Matrix4f.zero();
+
+        mat.set(0, 0, 1);
+        mat.set(1, 1, 1);
+        mat.set(2, 2, 1);
+        mat.set(3, 3, 1);
+
+        return mat;
+    }
+
+    public void set(int x, int y, float value) {
+        this.matrix[y + x * SIZE] = value;
+    }
+
+    public static Matrix4f zero() {
+        return new Matrix4f();
     }
 
 

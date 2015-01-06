@@ -28,7 +28,7 @@ import static org.lwjgl.opengl.GL20.*;
 public class ShaderUtils {
 
     /**
-     * 
+     *
      */
     public static ILogger LOG = new NullLogger();
 

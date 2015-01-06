@@ -16,6 +16,7 @@
 
 package io.github.aritzhack.aritzh.awt.render;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 /**
@@ -29,7 +30,7 @@ public class SpriteTest {
     public void testColorSprite() {
         Sprite sprite = new Sprite(500, 500, COLOR);
         for (int i : sprite.getPixels()) {
-            assert i == COLOR : "One of the colors was not equal!";
+            Assert.assertTrue("One of the colors was not equal!", i == COLOR);
         }
     }
 }

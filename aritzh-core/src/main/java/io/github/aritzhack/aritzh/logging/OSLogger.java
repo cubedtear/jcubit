@@ -18,8 +18,12 @@ import java.util.Set;
  */
 public class OSLogger extends ALogger {
 
-    private static final String DEFAULT_FORMAT = "%d - %L %m?t{\n%t}";
+    private static final String DEFAULT_FORMAT = "%d - [%t] %l?n{ %n} - %m?e{\n%e}";
     private static final Set<OSLogger> OS_LOGGERS = Sets.newHashSet();
+    private static ILogger OUT_LOGGER;
+    private static ILogger ERR_LOGGER;
+    private final LogLevel level;
+    private final String loggerName;
 
     static {
         Runnable r = new Runnable() {
@@ -32,107 +36,92 @@ public class OSLogger extends ALogger {
                 }
             }
         };
-
         Runtime.getRuntime().addShutdownHook(new Thread(r, "Logger-closing thread"));
     }
 
-    private static ILogger OUT_LOGGER;
-    private static ILogger ERR_LOGGER;
     private final PrintStream ps;
     private final String format;
 
-    public OSLogger(OutputStream os) {
-        this(os, null);
+    public OSLogger(OutputStream os, String name) {
+        this(os, name, null, null);
     }
 
-    public OSLogger(OutputStream os, @Nullable String format) {
-        this.ps = new PrintStream(os, true);
+    public OSLogger(OutputStream os, String loggerName, @Nullable LogLevel level, @Nullable String format) {
+        this.level = level != null ? level : LogLevel.ALL;
+        this.loggerName = loggerName;
         this.format = format == null ? DEFAULT_FORMAT : format;
+        this.ps = new PrintStream(os, true);
         OS_LOGGERS.add(this);
     }
 
-    public static OSLogger getFileLogger(String path) throws FileNotFoundException {
-        return getFileLogger(path, null);
-    }
-
-    public static OSLogger getFileLogger(String path, String format) throws FileNotFoundException {
-        return getFileLogger(new File(path), format);
-    }
-
-    public static OSLogger getFileLogger(File file, String format) throws FileNotFoundException {
-        return getFileLogger(new FileOutputStream(file), format);
-    }
-
-    public static OSLogger getFileLogger(FileOutputStream fos, String format) {
-        return new OSLogger(fos, format);
-    }
-
-    public static OSLogger getFileLogger(File file) throws FileNotFoundException {
-        return getFileLogger(file, null);
-    }
-
-    public static OSLogger getFileLogger(FileOutputStream fos) {
-        return getFileLogger(fos, null);
-    }
-
     public static ILogger getSysoutLogger() {
-        if (OUT_LOGGER == null) OUT_LOGGER = new OSLogger(System.out);
+        if (OUT_LOGGER == null) OUT_LOGGER = new OSLogger(System.out, "");
         return OUT_LOGGER;
     }
 
     public static ILogger getSyserrLogger() {
-        if (ERR_LOGGER == null) ERR_LOGGER = new OSLogger(System.err);
+        if (ERR_LOGGER == null) ERR_LOGGER = new OSLogger(System.err, "");
         return ERR_LOGGER;
     }
 
     @Override
     public void t(String msg) {
-        ps.println(LogFormatter.formatLogMessage(LogLevel.TRACE, msg, this.format));
+        if (this.level.shouldBeLogged(LogLevel.TRACE))
+            ps.println(LogFormatter.formatLogMessage(LogLevel.TRACE, this.format, msg, loggerName));
     }
 
     @Override
     public void t(String msg, Throwable t) {
-        ps.println(LogFormatter.formatLogMessage(LogLevel.TRACE, msg, t, this.format));
+        if (this.level.shouldBeLogged(LogLevel.TRACE))
+            ps.println(LogFormatter.formatLogMessage(LogLevel.TRACE, this.format, msg, loggerName));
     }
 
     @Override
     public void d(String msg) {
-        ps.println(LogFormatter.formatLogMessage(LogLevel.DEBUG, msg, this.format));
+        if (this.level.shouldBeLogged(LogLevel.DEBUG))
+            ps.println(LogFormatter.formatLogMessage(LogLevel.DEBUG, this.format, msg, loggerName));
     }
 
     @Override
     public void d(String msg, Throwable t) {
-        ps.println(LogFormatter.formatLogMessage(LogLevel.DEBUG, msg, t, this.format));
+        if (this.level.shouldBeLogged(LogLevel.DEBUG))
+            ps.println(LogFormatter.formatLogMessage(LogLevel.DEBUG, this.format, msg, loggerName));
     }
 
     @Override
     public void i(String msg) {
-        ps.println(LogFormatter.formatLogMessage(LogLevel.INFO, msg, this.format));
+        if (this.level.shouldBeLogged(LogLevel.INFO))
+            ps.println(LogFormatter.formatLogMessage(LogLevel.INFO, this.format, msg, loggerName));
     }
 
     @Override
     public void i(String msg, Throwable t) {
-        ps.println(LogFormatter.formatLogMessage(LogLevel.INFO, msg, t, this.format));
+        if (this.level.shouldBeLogged(LogLevel.INFO))
+            ps.println(LogFormatter.formatLogMessage(LogLevel.INFO, this.format, msg, loggerName));
     }
 
     @Override
     public void w(String msg) {
-        ps.println(LogFormatter.formatLogMessage(LogLevel.WARN, msg, this.format));
+        if (this.level.shouldBeLogged(LogLevel.WARN))
+            ps.println(LogFormatter.formatLogMessage(LogLevel.WARN, this.format, msg, loggerName));
     }
 
     @Override
     public void w(String msg, Throwable t) {
-        ps.println(LogFormatter.formatLogMessage(LogLevel.WARN, msg, t, this.format));
+        if (this.level.shouldBeLogged(LogLevel.WARN))
+            ps.println(LogFormatter.formatLogMessage(LogLevel.WARN, this.format, msg, loggerName));
     }
 
     @Override
     public void e(String msg) {
-        ps.println(LogFormatter.formatLogMessage(LogLevel.ERROR, msg, this.format));
+        if (this.level.shouldBeLogged(LogLevel.ERROR))
+            ps.println(LogFormatter.formatLogMessage(LogLevel.ERROR, this.format, msg, loggerName));
     }
 
     @Override
     public void e(String msg, Throwable t) {
-        ps.println(LogFormatter.formatLogMessage(LogLevel.ERROR, msg, t, this.format));
+        if (this.level.shouldBeLogged(LogLevel.ERROR))
+            ps.println(LogFormatter.formatLogMessage(LogLevel.ERROR, this.format, msg, loggerName));
     }
 
     public boolean isClosed() {
@@ -142,5 +131,39 @@ public class OSLogger extends ALogger {
     public void close() {
         this.ps.close();
         OS_LOGGERS.remove(this);
+    }
+
+    public static class Builder {
+        private final OutputStream os;
+        private final String loggerName;
+        private String format = null;
+        private LogLevel level = null;
+
+        public Builder(String path, String loggerName) throws FileNotFoundException {
+            this(new File(path), loggerName);
+        }
+
+        public Builder(File f, String loggerName) throws FileNotFoundException {
+            this(new FileOutputStream(f), loggerName);
+        }
+
+        public Builder(OutputStream os, String loggerName) {
+            this.os = os;
+            this.loggerName = loggerName;
+        }
+
+        public Builder setFormat(String format) {
+            this.format = format;
+            return this;
+        }
+
+        public Builder setLevel(LogLevel level) {
+            this.level = level;
+            return this;
+        }
+
+        public OSLogger build() {
+            return new OSLogger(os, loggerName, level, format);
+        }
     }
 }

@@ -13,6 +13,7 @@ import java.util.Map;
 
 /**
  * Simple engine that can be used to test things quickly. Uses {@link io.github.aritzhack.aritzh.awt.gameEngine.CanvasEngine} internally
+ *
  * @author Aritz Lopez
  */
 public class TestEngine implements IGame {
@@ -26,8 +27,9 @@ public class TestEngine implements IGame {
 
     /**
      * Creates a TestEngine with the given game and size.
-     * @param game The implementation of the game.
-     * @param width The width of the game.
+     *
+     * @param game   The implementation of the game.
+     * @param width  The width of the game.
      * @param height The height of the game.
      */
     public TestEngine(AbstractGame game, int width, int height) {
@@ -36,10 +38,11 @@ public class TestEngine implements IGame {
 
     /**
      * Creates a TestEngine with the given game and size.
-     * @param game The implementation of the game.
-     * @param width The width of the game.
-     * @param height The height of the game.
-     * @param logger The logger that the {@link io.github.aritzhack.aritzh.awt.gameEngine.CanvasEngine} will use.
+     *
+     * @param game    The implementation of the game.
+     * @param width   The width of the game.
+     * @param height  The height of the game.
+     * @param logger  The logger that the {@link io.github.aritzhack.aritzh.awt.gameEngine.CanvasEngine} will use.
      * @param sprites The sprites that the renderer will use.
      */
     public TestEngine(AbstractGame game, int width, int height, @Nullable ILogger logger, @Nullable Map<String, Sprite> sprites) {

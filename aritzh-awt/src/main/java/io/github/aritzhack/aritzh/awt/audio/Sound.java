@@ -36,6 +36,7 @@ public class Sound {
 
     /**
      * Load a Sound from a URL.
+     *
      * @param url The URL from which the sound will be loaded.
      */
     public Sound(URL url) {
@@ -50,8 +51,9 @@ public class Sound {
 
     /**
      * Start playing the sound.
-     *
+     * <p/>
      * Note: Starts from the beginning each time. In order to keep playing from where it stopped, use {@link Sound#keepGoing()}.
+     *
      * @see Sound#keepGoing()
      */
     public void play() {
@@ -61,6 +63,7 @@ public class Sound {
 
     /**
      * True iff it is playing.
+     *
      * @return true if it is playing.
      */
     public boolean isPlaying() {
@@ -69,6 +72,7 @@ public class Sound {
 
     /**
      * Stops playing the sound. Will keep the position so that the playback can be continued with {@link Sound#keepGoing()}.
+     *
      * @see Sound#keepGoing()
      */
     public void stop() {
