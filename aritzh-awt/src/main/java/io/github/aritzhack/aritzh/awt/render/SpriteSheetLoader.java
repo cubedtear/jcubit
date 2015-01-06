@@ -25,6 +25,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -36,7 +37,7 @@ public class SpriteSheetLoader {
 
     private static final Pattern spritePattern = Pattern.compile("(\\w+).png (\\d+) (\\d+) (\\d+) (\\d+)");
 
-    public static Map<String, Sprite> load(String shtFile) {
+    public static SpriteSheet load(String shtFile) {
         Preconditions.checkArgument(shtFile != null, "File name cannot be null!");
         Preconditions.checkArgument(shtFile.length() != 0, "You must specify a valid path");
 
@@ -51,7 +52,7 @@ public class SpriteSheetLoader {
 
             BufferedImage sheet = ImageIO.read(imageStream);
 
-            Map<String, Sprite> sprites = Maps.newHashMap();
+            SpriteSheet sprites = new SpriteSheet();
 
             while ((line = reader.readLine()) != null) {
                 Matcher matcher = spritePattern.matcher(line);
@@ -75,4 +76,6 @@ public class SpriteSheetLoader {
         int[] pixels = image.getRGB(x, y, w, h, null, 0, w);
         return new Sprite(w, h, pixels);
     }
+
+    public static class SpriteSheet extends HashMap<String, Sprite> {}
 }
