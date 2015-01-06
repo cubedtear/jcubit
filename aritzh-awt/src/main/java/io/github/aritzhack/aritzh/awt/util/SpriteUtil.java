@@ -30,8 +30,9 @@ public class SpriteUtil {
 
     /**
      * Creates a new Sprite with a cicle drawn onto it
-     * @param diameter The diameter of the circle (will be the width and height of the sprite)
-     * @param color The color of the circle (in ARGB format: 0xAARRGGBB)
+     *
+     * @param diameter  The diameter of the circle (will be the width and height of the sprite)
+     * @param color     The color of the circle (in ARGB format: 0xAARRGGBB)
      * @param lineWidth The thickness of the circle. <span style="color:Aqua; font-weight:bold">Warning: if thickness is bigger than 1, it will not draw a perfectly filled circle</span>
      * @return A new Sprite with a circle drawn onto it
      */

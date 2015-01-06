@@ -36,6 +36,7 @@ import java.awt.image.BufferStrategy;
 
 /**
  * Game engine based on AWT and the Canvas component
+ *
  * @author Aritz Lopez
  */
 public class CanvasEngine extends BasicGame {
@@ -53,8 +54,9 @@ public class CanvasEngine extends BasicGame {
     /**
      * Create a canvas engine with the specified game and size. A {@link javax.swing.JFrame} that holds the canvas
      * will be created.
-     * @param game The implementation of the game.
-     * @param width The width of the game
+     *
+     * @param game   The implementation of the game.
+     * @param width  The width of the game
      * @param height The height of the game
      */
     public CanvasEngine(IGame game, int width, int height) {
@@ -64,11 +66,12 @@ public class CanvasEngine extends BasicGame {
     /**
      * Create a canvas engine with the specified game and size. Can be specified whether the {@link javax.swing.JFrame}
      * should be created or not.
-     * @param game The implementation of the game.
-     * @param width The width of the game
-     * @param height The height of the game
+     *
+     * @param game    The implementation of the game.
+     * @param width   The width of the game
+     * @param height  The height of the game
      * @param noFrame If true, no {@link javax.swing.JFrame} will be created.
-     * @param logger The logger to use. If null, nothing will be logged.
+     * @param logger  The logger to use. If null, nothing will be logged.
      */
     public CanvasEngine(IGame game, int width, int height, boolean noFrame, @Nullable ILogger logger) {
         super(game);
@@ -165,6 +168,7 @@ public class CanvasEngine extends BasicGame {
 
     /**
      * Returns the {@link java.awt.Graphics} object into which the game is being rendered.
+     *
      * @return the {@link java.awt.Graphics} object into which the game is being rendered.
      */
     public Graphics getGraphics() {
@@ -173,6 +177,7 @@ public class CanvasEngine extends BasicGame {
 
     /**
      * Returns the {@link io.github.aritzhack.aritzh.awt.gameEngine.input.InputHandler} used by this game.
+     *
      * @return the {@link io.github.aritzhack.aritzh.awt.gameEngine.input.InputHandler} used by this game.
      */
     public InputHandler getInputHandler() {
@@ -180,8 +185,8 @@ public class CanvasEngine extends BasicGame {
     }
 
     /**
-     *
      * Returns the size of the game.
+     *
      * @return the size of the game.
      */
     public Dimension getSize() {
