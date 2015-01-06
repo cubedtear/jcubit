@@ -20,7 +20,7 @@
 
 	<groupId>io.github.aritzhack</groupId>
 	<artifactId>aritzh-parent</artifactId>
-	<version>1.4.7</version>
+	<version>1.5.0</version>
 
 	<description>
 		Utility library to help making any kind of app or game.
