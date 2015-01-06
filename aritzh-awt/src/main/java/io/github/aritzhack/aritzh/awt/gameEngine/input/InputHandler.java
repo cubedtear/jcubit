@@ -31,6 +31,7 @@ import java.util.Queue;
 
 /**
  * Input handler for the {@link io.github.aritzhack.aritzh.awt.gameEngine.CanvasEngine} class.
+ *
  * @author Aritz Lopez
  */
 public class InputHandler implements KeyListener, FocusListener, MouseInputListener {
@@ -45,6 +46,7 @@ public class InputHandler implements KeyListener, FocusListener, MouseInputListe
 
     /**
      * True if the canvas is focused
+     *
      * @return True if the canvas is focused
      */
     public boolean hasFocus() {
@@ -54,6 +56,7 @@ public class InputHandler implements KeyListener, FocusListener, MouseInputListe
     /**
      * True if the key was pressed, but hadn't been previously checked. Subsequent calls to this method will,
      * therefore, return always false, as long as the key hasn't been released and pressed again.
+     *
      * @param keyCode The code that corresponds to the key, according to {@link java.awt.event.KeyEvent}
      * @return True if the key was pressed, but hadn't been previously checked.
      */
@@ -67,6 +70,7 @@ public class InputHandler implements KeyListener, FocusListener, MouseInputListe
 
     /**
      * Returns true if the key is being pressed.
+     *
      * @param keyCode The code that corresponds to the key, according to {@link java.awt.event.KeyEvent}
      * @return true if the key is being pressed.
      */
@@ -76,6 +80,7 @@ public class InputHandler implements KeyListener, FocusListener, MouseInputListe
 
     /**
      * Returns the position of the mouse.
+     *
      * @return the position of the mouse.
      */
     public Point getMousePos() {
@@ -85,6 +90,7 @@ public class InputHandler implements KeyListener, FocusListener, MouseInputListe
     /**
      * Returns a stack of {@link io.github.aritzhack.aritzh.awt.gameEngine.input.InputHandler.MouseInputEvent MouseInputEvents}
      * that represent the events the mouse had since it was last pressed.
+     *
      * @return a stack of mouse events
      */
     public Queue<MouseInputEvent> getMouseEvents() {

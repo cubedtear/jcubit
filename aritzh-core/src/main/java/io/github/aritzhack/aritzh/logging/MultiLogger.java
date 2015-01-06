@@ -35,70 +35,70 @@ public class MultiLogger extends ALogger {
 
     @Override
     public void t(String msg) {
-        for(ILogger l : this.loggers) {
+        for (ILogger l : this.loggers) {
             l.t(msg);
         }
     }
 
     @Override
     public void t(String msg, Throwable t) {
-        for(ILogger l : this.loggers) {
+        for (ILogger l : this.loggers) {
             l.t(msg, t);
         }
     }
 
     @Override
     public void d(String msg) {
-        for(ILogger l : this.loggers) {
+        for (ILogger l : this.loggers) {
             l.d(msg);
         }
     }
 
     @Override
     public void d(String msg, Throwable t) {
-        for(ILogger l : this.loggers) {
+        for (ILogger l : this.loggers) {
             l.d(msg, t);
         }
     }
 
     @Override
     public void i(String msg) {
-        for(ILogger l : this.loggers) {
+        for (ILogger l : this.loggers) {
             l.i(msg);
         }
     }
 
     @Override
     public void i(String msg, Throwable t) {
-        for(ILogger l : this.loggers) {
+        for (ILogger l : this.loggers) {
             l.i(msg, t);
         }
     }
 
     @Override
     public void w(String msg) {
-        for(ILogger l : this.loggers) {
+        for (ILogger l : this.loggers) {
             l.w(msg);
         }
     }
 
     @Override
     public void w(String msg, Throwable t) {
-        for(ILogger l : this.loggers) {
+        for (ILogger l : this.loggers) {
             l.w(msg, t);
         }
     }
 
     @Override
     public void e(String msg) {
-        for(ILogger l : this.loggers) {
+        for (ILogger l : this.loggers) {
             l.e(msg);
         }
     }
 
     @Override
     public void e(String msg, Throwable t) {
-        for(ILogger l : this.loggers) {
+        for (ILogger l : this.loggers) {
             l.e(msg, t);
         }
     }
