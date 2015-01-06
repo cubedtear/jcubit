@@ -51,7 +51,6 @@ public class Sound {
 
     /**
      * Start playing the sound.
-     * <p/>
      * Note: Starts from the beginning each time. In order to keep playing from where it stopped, use {@link Sound#keepGoing()}.
      *
      * @see Sound#keepGoing()
