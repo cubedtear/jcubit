@@ -48,7 +48,7 @@ public class CanvasEngine extends BasicGame {
     private final Canvas canvas = new Canvas();
     private JFrame frame;
     private boolean running;
-    private boolean noFrame;
+    private boolean hasFrame;
     private Graphics graphics;
 
     /**
@@ -77,7 +77,7 @@ public class CanvasEngine extends BasicGame {
         super(game);
         Preconditions.checkArgument(width > 0 && height > 0, "Game sizes cannot be negative!");
 
-        this.noFrame = noFrame;
+        this.hasFrame = !noFrame;
         this.size = new Dimension(width, height);
         this.thread = new Thread(this, game.getGameName() + "-Thread");
         this.inputHandler = new InputHandler();
@@ -87,7 +87,7 @@ public class CanvasEngine extends BasicGame {
         canvas.addFocusListener(this.inputHandler);
         canvas.addMouseListener(this.inputHandler);
         canvas.addMouseMotionListener(this.inputHandler);
-        if (!this.noFrame) this.createFrame();
+        if (this.hasFrame) this.createFrame();
     }
 
     private void createFrame() {
@@ -112,6 +112,10 @@ public class CanvasEngine extends BasicGame {
         });
     }
 
+    public void setTitle(String title) {
+        if (this.hasFrame) this.frame.setTitle(title);
+    }
+
     /**
      * This method must be called to start the engine (and therefore the game).
      */
@@ -119,7 +123,7 @@ public class CanvasEngine extends BasicGame {
     public synchronized void start() {
         super.start();
         this.running = true;
-        if (!this.noFrame) this.frame.setVisible(true);
+        if (this.hasFrame) this.frame.setVisible(true);
         this.thread.start();
     }
 
@@ -131,7 +135,7 @@ public class CanvasEngine extends BasicGame {
         this.logger.d("Stopping...");
         this.getGame().onStop();
         this.running = false;
-        if (!this.noFrame) this.frame.dispose();
+        if (this.hasFrame) this.frame.dispose();
         try {
             this.thread.join(3000);
         } catch (InterruptedException e) {
