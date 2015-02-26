@@ -38,6 +38,7 @@ public class StringFormatter {
             if(chars[i] == TOKEN_START && chars[i+1] == TOKEN_END) {
                 if(args == null || token >= args.length) b.append(NULL_STRING);
                 else b.append(args[token++]);
+                i++;
             } else {
                 b.append(chars[i]);
             }
