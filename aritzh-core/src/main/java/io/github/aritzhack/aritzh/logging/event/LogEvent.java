@@ -18,7 +18,7 @@ package io.github.aritzhack.aritzh.logging.event;
 
 import io.github.aritzhack.aritzh.logging.core.LogLevel;
 import io.github.aritzhack.aritzh.util.Nullable;
-import org.apache.logging.log4j.message.ParameterizedMessage;
+import io.github.aritzhack.aritzh.util.StringFormatter;
 
 /**
  * @author Aritz Lopez
@@ -30,7 +30,7 @@ public class LogEvent {
     private final Throwable throwable;
 
     public LogEvent(LogLevel level, String format, Object... args) {
-        this(level, ParameterizedMessage.format(format, args));
+        this(level, StringFormatter.format(format, args));
     }
 
     public LogEvent(LogLevel level, String message) {
@@ -44,7 +44,7 @@ public class LogEvent {
     }
 
     public LogEvent(LogLevel level, String format, @Nullable Throwable throwable, Object... args) {
-        this(level, new ParameterizedMessage(format, args).getFormattedMessage(), throwable);
+        this(level, StringFormatter.format(format, args), throwable);
     }
 }
 

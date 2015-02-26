@@ -16,7 +16,7 @@
 
 package io.github.aritzhack.aritzh.logging.core;
 
-import org.apache.logging.log4j.message.ParameterizedMessage;
+import io.github.aritzhack.aritzh.util.StringFormatter;
 
 /**
  * Abstract Logger that does nothing. Useful if you want to implement only part of the logging system
@@ -26,7 +26,7 @@ import org.apache.logging.log4j.message.ParameterizedMessage;
 public abstract class ALogger implements ILogger {
 
     private String format(String format, Object... args) {
-        return ParameterizedMessage.format(format, args);
+        return StringFormatter.format(format, args);
     }
 
     // region ...Abstracts...
