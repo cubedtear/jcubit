@@ -22,13 +22,17 @@ import io.github.aritzhack.aritzh.extensions.events.ExtensionEvent;
 import io.github.aritzhack.aritzh.logging.core.ILogger;
 import io.github.aritzhack.aritzh.logging.core.NullLogger;
 import io.github.aritzhack.aritzh.util.NotNull;
+import io.github.aritzhack.aritzh.util.Nullable;
 import io.github.aritzhack.aritzh.util.ReflectionUtil;
 
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.List;
 import java.util.Set;
+
+import static org.reflections.ReflectionUtils.*;
 
 /**
  * Loads the extensions for a {@link io.github.aritzhack.aritzh.extensions.ExtensibleApp}
@@ -46,7 +50,7 @@ public class Extensions {
         this(app, null);
     }
 
-    public Extensions(@NotNull ExtensibleApp app, ILogger logger) {
+    public Extensions(@NotNull ExtensibleApp app, @Nullable ILogger logger) {
         this.app = app;
         this.logger = NullLogger.getLogger(logger);
     }
@@ -66,24 +70,28 @@ public class Extensions {
         }
     }
 
-
+    public void loadExtensionsFromClasspath() throws ReflectiveOperationException {
+        for (Class c : app.getReflections().getTypesAnnotatedWith(ExtensionData.class)) {
+            logger.d("Found extension class: {}", c.getName());
+            Extension e = this.register(c);
+            this.app.getExtensionsEventBus().post(new ExtensionEvent.ExtensionLoadEvent(app, e));
+        }
+    }
 
     public Extension register(Class extensionClass) throws IllegalAccessException, InstantiationException {
         Preconditions.checkNotNull(extensionClass);
         Preconditions.checkArgument(ReflectionUtil.classHasAnnotation(extensionClass, ExtensionData.class), "Tried to register non-extension class " + extensionClass + "!");
-
-        Set<Field> instanceFields = app.getReflections().getFieldsAnnotatedWith(ExtensionInstance.class);
-
+        //noinspection unchecked
+        Set<Field> instanceFields = getAllFields(extensionClass, withAnnotation(ExtensionInstance.class), withModifier(Modifier.STATIC));
+        
         Object instance = null;
 
-        for(Field f : instanceFields) {
-            if(f.getDeclaringClass().equals(extensionClass)) {
-                try {
-                    instance = f.get(null);
-                } catch (NullPointerException e) {
-                    instance = null;
-                    logger.w("Field {}.{} annotated with @ExtensionInstance, but is not static!", f.getDeclaringClass(), f.getName());
-                }
+        for (Field f : instanceFields) {
+            try {
+                instance = f.get(null);
+            } catch (NullPointerException e) {
+                instance = null;
+                logger.w("Field {}.{} annotated with @ExtensionInstance, but is not static!", f.getDeclaringClass(), f.getName());
             }
         }
 
@@ -104,14 +112,6 @@ public class Extensions {
         this.extensions.add(e);
         logger.d("Extension \"{}\" successfully loaded", e.name);
         return e;
-    }
-
-    public void loadExtensionsFromClasspath() throws ReflectiveOperationException {
-        for (Class c : app.getReflections().getTypesAnnotatedWith(ExtensionData.class)) {
-            logger.d("Found extension class: {}", c.getName());
-            Extension e = this.register(c);
-            this.app.getExtensionsEventBus().post(new ExtensionEvent.ExtensionLoadEvent(app, e));
-        }
     }
 
     public List<Extension> getExtensions() {
