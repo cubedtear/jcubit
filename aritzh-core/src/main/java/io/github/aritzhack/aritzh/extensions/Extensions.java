@@ -20,6 +20,8 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import io.github.aritzhack.aritzh.extensions.events.ExtensionEvent;
 import io.github.aritzhack.aritzh.logging.core.ILogger;
+import io.github.aritzhack.aritzh.logging.core.NullLogger;
+import io.github.aritzhack.aritzh.util.NotNull;
 import io.github.aritzhack.aritzh.util.ReflectionUtil;
 
 import java.io.File;
@@ -37,67 +39,79 @@ public class Extensions {
 
     private final List<Extension> extensions = Lists.newArrayList();
 
-    private final ExtensibleApp app;
-    private final ILogger logger;
+    @NotNull private final ExtensibleApp app;
+    @NotNull private final ILogger logger;
 
-    public Extensions(ExtensibleApp app) {
+    public Extensions(@NotNull ExtensibleApp app) {
         this(app, null);
     }
 
-    public Extensions(ExtensibleApp app, ILogger logger) {
+    public Extensions(@NotNull ExtensibleApp app, ILogger logger) {
         this.app = app;
-        this.logger = logger;
+        this.logger = NullLogger.getLogger(logger);
     }
 
-    public void loadAllExtensions(File extensionsFolder) throws ReflectiveOperationException, IOException {
+    public void loadExtensionsFromFolder(File extensionsFolder) throws ReflectiveOperationException, IOException {
         try {
+            Preconditions.checkArgument(extensionsFolder.isDirectory(), "Extensions folder must be a directory");
             if (!extensionsFolder.exists() && !extensionsFolder.mkdirs())
                 throw new IOException("Extensions' folder did not exist an could not be created");
 
             ReflectionUtil.addFolderToClasspath(extensionsFolder);
 
-            for (Class c : app.getReflections().getTypesAnnotatedWith(ExtensionData.class)) {
-                if (logger != null) logger.d("Found extension class: {}", c.getName());
-                this.register(c);
-            }
-        } catch (IOException e) {
-            if (this.logger != null) logger.e("Error loading mods folder", e);
-            else throw e;
-        }
+            loadExtensionsFromClasspath();
 
-        this.app.getExtensionsEventBus().post(new ExtensionEvent.ExtensionLoadEvent(app));
+        } catch (IOException e) {
+            logger.e("Error loading extensions", e);
+        }
     }
 
-    public void register(Class extensionClass) throws IllegalAccessException, InstantiationException {
+
+
+    public Extension register(Class extensionClass) throws IllegalAccessException, InstantiationException {
         Preconditions.checkNotNull(extensionClass);
         Preconditions.checkArgument(ReflectionUtil.classHasAnnotation(extensionClass, ExtensionData.class), "Tried to register non-extension class " + extensionClass + "!");
 
-        Set<Field> instances = app.getReflections().getFieldsAnnotatedWith(ExtensionInstance.class);
+        Set<Field> instanceFields = app.getReflections().getFieldsAnnotatedWith(ExtensionInstance.class);
 
         Object instance = null;
 
-        if (instances != null && instances.size() == 1) {
-            instance = instances.iterator().next();
+        for(Field f : instanceFields) {
+            if(f.getDeclaringClass().equals(extensionClass)) {
+                try {
+                    instance = f.get(null);
+                } catch (NullPointerException e) {
+                    instance = null;
+                    logger.w("Field {}.{} annotated with @ExtensionInstance, but is not static!", f.getDeclaringClass(), f.getName());
+                }
+            }
         }
 
         if (instance == null) {
             try {
                 instance = extensionClass.newInstance();
             } catch (InstantiationException | IllegalAccessException e) {
-                if (logger != null)
-                    logger.e("Exception when instantiating extension class", new IllegalArgumentException(e));
-                else throw e;
+                logger.w("Exception when instantiating extension class {}, and @ExtensionInstance static field not present", e, extensionClass.getSimpleName());
             }
         }
 
-        if (instance == null && logger != null)
+        if (instance == null)
             logger.w("Class {} could not be loaded as a extension class", extensionClass);
 
         ExtensionData data = (ExtensionData) extensionClass.getAnnotation(ExtensionData.class);
 
         Extension e = new Extension(data.extensionName(), data.version(), data.appVersion(), instance);
         this.extensions.add(e);
-        if (this.logger != null) logger.d("Extension \"{}\" successfully loaded", e.name);
+        logger.d("Extension \"{}\" successfully loaded", e.name);
+        return e;
+    }
+
+    public void loadExtensionsFromClasspath() throws ReflectiveOperationException {
+        for (Class c : app.getReflections().getTypesAnnotatedWith(ExtensionData.class)) {
+            logger.d("Found extension class: {}", c.getName());
+            Extension e = this.register(c);
+            this.app.getExtensionsEventBus().post(new ExtensionEvent.ExtensionLoadEvent(app, e));
+        }
     }
 
     public List<Extension> getExtensions() {

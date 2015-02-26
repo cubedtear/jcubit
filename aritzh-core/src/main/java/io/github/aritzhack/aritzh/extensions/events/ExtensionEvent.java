@@ -17,6 +17,7 @@
 package io.github.aritzhack.aritzh.extensions.events;
 
 import io.github.aritzhack.aritzh.extensions.ExtensibleApp;
+import io.github.aritzhack.aritzh.extensions.Extension;
 
 /**
  * Root for all {@link io.github.aritzhack.aritzh.eventBus.EventBus} events related to extensions
@@ -25,24 +26,34 @@ import io.github.aritzhack.aritzh.extensions.ExtensibleApp;
  */
 public abstract class ExtensionEvent {
 
-    public final ExtensibleApp app;
+    protected final ExtensibleApp app;
+    protected final Extension e;
 
-    public ExtensionEvent(ExtensibleApp app) {
+    public ExtensionEvent(ExtensibleApp app, Extension e) {
         super();
         this.app = app;
+        this.e = e;
+    }
+
+    public ExtensibleApp getApp() {
+        return app;
+    }
+
+    public Extension getExtension() {
+        return e;
     }
 
     public static class ExtensionLoadEvent extends ExtensionEvent {
 
-        public ExtensionLoadEvent(ExtensibleApp app) {
-            super(app);
+        public ExtensionLoadEvent(ExtensibleApp app, Extension e) {
+            super(app, e);
         }
     }
 
     public static class ExtensionUnloadEvent extends ExtensionEvent {
 
-        public ExtensionUnloadEvent(ExtensibleApp app) {
-            super(app);
+        public ExtensionUnloadEvent(ExtensibleApp app, Extension e) {
+            super(app, e);
         }
     }
 }
