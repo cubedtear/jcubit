@@ -27,16 +27,16 @@ public class StringFormatter {
 
     @NotNull
     public static String format(@Nullable String format, @Nullable Object[] args) {
-        if(format == null || format.length() == 0 || "".equals(format)) return "";
+        if (format == null || format.length() == 0 || "".equals(format)) return "";
         char[] chars = format.toCharArray();
 
         StringBuilder b = new StringBuilder(format.length());
 
         int token = 0;
 
-        for(int i = 0; i<chars.length-1; i++) {
-            if(chars[i] == TOKEN_START && chars[i+1] == TOKEN_END) {
-                if(args == null || token >= args.length) b.append(NULL_STRING);
+        for (int i = 0; i < chars.length; i++) {
+            if (i < chars.length - 1 && chars[i] == TOKEN_START && chars[i + 1] == TOKEN_END) {
+                if (args == null || token >= args.length) b.append(NULL_STRING);
                 else b.append(args[token++]);
                 i++;
             } else {
