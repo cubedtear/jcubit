@@ -26,7 +26,7 @@ public class StringFormatter {
     private static final String NULL_STRING = "{NULL}";
 
     @NotNull
-    public static String format(@Nullable String format, @Nullable Object[] args) {
+    public static String format(@Nullable String format, @Nullable Object... args) {
         if (format == null || format.length() == 0 || "".equals(format)) return "";
         char[] chars = format.toCharArray();
 
