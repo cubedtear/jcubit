@@ -24,18 +24,32 @@ import com.google.common.base.Preconditions;
 public class BasicGame implements IGameEngine {
 
     protected final IGame gameHandler;
+    private final boolean lockFps;
     protected boolean running = false;
     protected int fps, ups;
+    private int targetUps;
 
     public BasicGame(IGame game) {
+        this(game, 60);
+    }
+
+    public BasicGame(IGame game, int targetUps) {
+        this(game, targetUps, false);
+    }
+
+    public BasicGame(IGame game, int targetUps, boolean lockFps) {
         Preconditions.checkArgument(game != null, "Game cannot be null!");
         this.gameHandler = game;
+        this.lockFps = lockFps;
+        this.targetUps = Math.max(targetUps, -1);
+    }
+
+    public BasicGame(IGame game, boolean lockFps) {
+        this(game, 60, lockFps);
     }
 
     @Override
     public void run() {
-
-        final double NSPerTick = 1000000000.0 / 60.0;
 
         double delta = 0;
 
@@ -47,6 +61,9 @@ public class BasicGame implements IGameEngine {
         this.running = true;
 
         while (this.running) {
+
+            double NSPerTick = 1000000000.0 / this.targetUps;
+
             long now = System.nanoTime();
             delta += (now - lastNano) / NSPerTick;
             lastNano = now;
@@ -55,10 +72,16 @@ public class BasicGame implements IGameEngine {
                 this.update();
                 this.ups++;
                 delta--;
+                if (lockFps) {
+                    this.render();
+                    this.fps++;
+                }
             }
 
-            this.render();
-            this.fps++;
+            if (!lockFps) {
+                this.render();
+                this.fps++;
+            }
 
             if (System.currentTimeMillis() - lastMillis >= 1000) {
                 lastMillis += 1000;
@@ -66,6 +89,14 @@ public class BasicGame implements IGameEngine {
                 this.fps = this.ups = 0;
             }
         }
+    }
+
+    public int getTargetUps() {
+        return targetUps;
+    }
+
+    public void setTargetUps(int targetUps) {
+        this.targetUps = targetUps;
     }
 
     @Override
