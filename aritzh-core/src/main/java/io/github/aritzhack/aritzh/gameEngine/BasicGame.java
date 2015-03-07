@@ -68,7 +68,7 @@ public class BasicGame implements IGameEngine {
             delta += (now - lastNano) / NSPerTick;
             lastNano = now;
 
-            if (delta >= 1) {
+            if (delta >= 1 || this.targetUps < 0) {
                 this.update();
                 this.ups++;
                 delta--;
