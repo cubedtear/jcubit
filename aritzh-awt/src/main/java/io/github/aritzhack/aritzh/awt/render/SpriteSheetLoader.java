@@ -17,16 +17,17 @@
 package io.github.aritzhack.aritzh.awt.render;
 
 import com.google.common.base.Preconditions;
-import com.google.common.collect.Maps;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -43,6 +44,26 @@ public class SpriteSheetLoader {
 
         InputStream is = SpriteSheetLoader.class.getClassLoader().getResourceAsStream(shtFile);
         Preconditions.checkArgument(is != null, "Could not find file %s", shtFile);
+        try {
+            return load(is);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Error loading sprite sheet from: " + shtFile, e);
+        }
+    }
+
+    public static SpriteSheet load(File file) throws FileNotFoundException {
+        Preconditions.checkArgument(file != null, "File name cannot be null!");
+        InputStream is = new FileInputStream(file);
+
+        try {
+            return load(is);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Error loading sprite sheet from file: " + file, e);
+        }
+    }
+
+    public static SpriteSheet load(InputStream is) {
+        Preconditions.checkArgument(is != null, "InputStream must not be null!");
         BufferedReader reader = new BufferedReader(new InputStreamReader(is));
         try {
             String line = reader.readLine();
@@ -68,7 +89,7 @@ public class SpriteSheetLoader {
 
             return sprites;
         } catch (IOException e) {
-            throw new IllegalArgumentException("Error loading sprite sheet: " + shtFile, e);
+            throw new IllegalArgumentException("Error loading sprite sheet", e);
         }
     }
 

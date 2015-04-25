@@ -18,6 +18,10 @@ package io.github.aritzhack.aritzh.awt.render;
 
 import com.google.common.base.Preconditions;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 
 /**
@@ -44,6 +48,20 @@ public class Sprite {
         this.width = width;
         this.pixels = new int[width * height];
         Arrays.fill(this.pixels, color);
+    }
+
+    public Sprite(String sprite) throws IOException {
+        this(ImageIO.read(Sprite.class.getClassLoader().getResourceAsStream(sprite.trim())));
+    }
+
+    public Sprite(File file) throws IOException {
+        this(ImageIO.read(file));
+    }
+
+    public Sprite(BufferedImage image) {
+        this.width = image.getWidth();
+        this.height = image.getHeight();
+        this.pixels = image.getRGB(0, 0, width, height, null, 0, width);
     }
 
     public int[] getPixels() {
