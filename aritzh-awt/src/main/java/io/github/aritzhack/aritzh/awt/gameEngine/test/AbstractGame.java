@@ -2,6 +2,8 @@ package io.github.aritzhack.aritzh.awt.gameEngine.test;
 
 import io.github.aritzhack.aritzh.gameEngine.IGame;
 
+import java.awt.*;
+
 /**
  * Abstract empty implementation of IGame for use in {@link io.github.aritzhack.aritzh.awt.gameEngine.test.TestEngine}
  *
@@ -30,5 +32,9 @@ public abstract class AbstractGame implements IGame {
 
     @Override
     public void onUpdatePS() {
+    }
+
+    public void onPostRender(Graphics g) {
+
     }
 }

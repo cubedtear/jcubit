@@ -88,6 +88,8 @@ public class TestEngine implements IGame {
         this.game.onRender();
 
         this.engine.getGraphics().drawImage(this.render.getImage(), 0, 0, width, height, null);
+
+        this.game.onPostRender(this.engine.getGraphics());
     }
 
     @Override
