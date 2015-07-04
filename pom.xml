@@ -15,12 +15,16 @@
   -->
 
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
+
+	<prerequisites>
+		<maven>2.2.1</maven>
+	</prerequisites>
 
 	<groupId>io.github.aritzhack</groupId>
 	<artifactId>aritzh-parent</artifactId>
-	<version>1.6.3</version>
+	<version>1.6.4</version>
 
 	<description>
 		Utility library to help making any kind of app or game.
@@ -45,7 +49,7 @@
 		<module>aritzh-core</module>
 		<module>aritzh-awt</module>
 		<module>aritzh-slick2d</module>
-        <module>aritzh-lwjgl</module>
+		<module>aritzh-lwjgl</module>
 	</modules>
 
 	<licenses>
@@ -75,10 +79,7 @@
 				<plugins>
 					<plugin>
 						<artifactId>maven-deploy-plugin</artifactId>
-						<version>2.8.1</version>
-						<configuration>
-							<repositoryId>bintray</repositoryId>
-						</configuration>
+						<version>2.8.2</version>
 					</plugin>
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
@@ -99,7 +100,6 @@
 			<distributionManagement>
 				<repository>
 					<id>bintray</id>
-					<name>aritzhack-maven-Aritzh</name>
 					<url>https://api.bintray.com/maven/aritzhack/maven/Aritzh</url>
 				</repository>
 			</distributionManagement>
@@ -121,6 +121,15 @@
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>versions-maven-plugin</artifactId>
 				<version>2.1</version>
+			</plugin>
+			<plugin>
+				<artifactId>maven-release-plugin</artifactId>
+				<version>2.4.1</version>
+				<configuration>
+					<useReleaseProfile>false</useReleaseProfile>
+					<releaseProfiles>release</releaseProfiles>
+					<autoVersionSubmodules>true</autoVersionSubmodules>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>

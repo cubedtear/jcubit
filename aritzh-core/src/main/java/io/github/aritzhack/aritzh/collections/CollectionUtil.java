@@ -20,6 +20,7 @@ import com.google.common.base.Function;
 import com.google.common.base.Preconditions;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -187,27 +188,51 @@ public class CollectionUtil {
         return ret;
     }
 
-    public static int integerSum(Iterable<Integer> list) {
+    /**
+     * Returns the sum of all integers from the iterable
+     * @param iter The iterable
+     * @return the sum of all integers from the iterable
+     */
+    public static int integerSum(Iterable<Integer> iter) {
         int ret = 0;
-        for (Integer i : list) {
+        for (Integer i : iter) {
             ret += i;
         }
         return ret;
     }
 
-    public static float floatSum(Iterable<Float> list) {
+    /**
+     * Returns the sum of all floats from the iterable
+     * @param iter The iterable
+     * @return the sum of all floats from the iterable
+     */
+    public static float floatSum(Iterable<Float> iter) {
         float ret = 0;
-        for (Float i : list) {
+        for (Float i : iter) {
             ret += i;
         }
         return ret;
     }
 
-    public static double doubleSum(Iterable<Double> list) {
+    /**
+     * Returns the sum of all doubles from the iterable
+     * @param iter The iterable
+     * @return the sum of all doubles from the iterable
+     */
+    public static double doubleSum(Iterable<Double> iter) {
         double ret = 0;
-        for (Double i : list) {
+        for (Double i : iter) {
             ret += i;
         }
         return ret;
+    }
+
+    /**
+     * Returns the last element of a list, or null if it is empty
+     * @param list The list
+     * @return the last element of a list, or null if it is empty
+     */
+    public static <T> T getLast(List<T> list) {
+        return list.isEmpty() ? null : list.get(list.size()-1);
     }
 }
