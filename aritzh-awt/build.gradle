@@ -1,19 +1,8 @@
 group 'io.github.aritzhack'
 
-buildscript {
-	repositories {
-		mavenCentral()
-		//maven { url "http://oss.sonatype.org/content/repositories/snapshots/" }
-	}
-	dependencies {
-		classpath "io.codearte.gradle.nexus:gradle-nexus-staging-plugin:0.5.3"
-	}
-}
-
 if (System.getenv('TRAVIS') == null) {
 	apply plugin: 'signing'
 	apply plugin: 'maven'
-	apply plugin: 'io.codearte.nexus-staging'
 }
 
 apply plugin: 'java'
@@ -66,9 +55,9 @@ if (System.getenv('TRAVIS') == null) {
 				}
 
 				pom.project {
-					name 'aritzh-core'
+					name 'aritzh-awt'
 					packaging 'jar'
-					artifactId 'aritzh-core'
+					artifactId 'aritzh-awt'
 					description 'Utility library to help making any kind of app or game.'
 					url 'https://github.com/aritzhack/aritzh'
 
