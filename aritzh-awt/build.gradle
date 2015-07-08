@@ -3,7 +3,6 @@ group 'io.github.aritzhack'
 buildscript {
 	repositories {
 		mavenCentral()
-		//Needed only for SNAPSHOT versions
 		//maven { url "http://oss.sonatype.org/content/repositories/snapshots/" }
 	}
 	dependencies {
@@ -11,44 +10,48 @@ buildscript {
 	}
 }
 
+if (System.getenv('TRAVIS') == null) {
+	apply plugin: 'signing'
+	apply plugin: 'maven'
+	apply plugin: 'io.codearte.nexus-staging'
+}
+
 apply plugin: 'java'
-apply plugin: 'signing'
-apply plugin: 'maven'
-apply plugin: 'io.codearte.nexus-staging'
 
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
 
 repositories {
-    mavenCentral()
+	mavenCentral()
 }
 
 dependencies {
-    compile project(':aritzh-core')
-    testCompile group: 'junit', name: 'junit', version: '4.11'
+	compile project(':aritzh-core')
+	testCompile group: 'junit', name: 'junit', version: '4.11'
 }
 
-task sourceJar(type: Jar, dependsOn: classes) {
-	classifier = 'sources'
-	from sourceSets.main.allSource
-}
+if (System.getenv('TRAVIS') == null) {
+	task sourceJar(type: Jar, dependsOn: classes) {
+		classifier = 'sources'
+		from sourceSets.main.allSource
+	}
 
-task javadocJar(type: Jar, dependsOn: javadoc) {
-	classifier = 'javadoc'
-	from javadoc.destinationDir
-}
+	task javadocJar(type: Jar, dependsOn: javadoc) {
+		classifier = 'javadoc'
+		from javadoc.destinationDir
+	}
 
-artifacts {
-	archives jar
-	archives sourceJar
-	archives javadocJar
-}
+	artifacts {
+		archives jar
+		archives sourceJar
+		archives javadocJar
+	}
 
-signing {
-	sign configurations.archives
-}
+	signing {
+		sign configurations.archives
+	}
 
-if(System.getenv('TRAVIS') == null) {
+
 	uploadArchives {
 		repositories {
 			mavenDeployer {
