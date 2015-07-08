@@ -1,0 +1,94 @@
+group 'io.github.aritzhack'
+
+buildscript {
+	repositories {
+		mavenCentral()
+		//Needed only for SNAPSHOT versions
+		//maven { url "http://oss.sonatype.org/content/repositories/snapshots/" }
+	}
+	dependencies {
+		classpath "io.codearte.gradle.nexus:gradle-nexus-staging-plugin:0.5.3"
+	}
+}
+
+apply plugin: 'java'
+apply plugin: 'signing'
+apply plugin: 'maven'
+apply plugin: 'io.codearte.nexus-staging'
+
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile project(':aritzh-core')
+    testCompile group: 'junit', name: 'junit', version: '4.11'
+}
+
+task sourceJar(type: Jar, dependsOn: classes) {
+	classifier = 'sources'
+	from sourceSets.main.allSource
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+	classifier = 'javadoc'
+	from javadoc.destinationDir
+}
+
+artifacts {
+	archives jar
+	archives sourceJar
+	archives javadocJar
+}
+
+signing {
+	sign configurations.archives
+}
+
+uploadArchives {
+	repositories {
+		mavenDeployer {
+			beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+			repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+				authentication(userName: ossrhUsername, password: ossrhPassword)
+			}
+
+			snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+				authentication(userName: ossrhUsername, password: ossrhPassword)
+			}
+
+			pom.project {
+				name 'aritzh-core'
+				packaging 'jar'
+				artifactId 'aritzh-core'
+				description 'Utility library to help making any kind of app or game.'
+				url 'https://github.com/aritzhack/aritzh'
+
+				scm {
+					connection 'scm:git:git@github.com/aritzhack/aritzh/'
+					developerConnection 'scm:git:git@github.com/aritzhack/aritzh/'
+					url 'https://github.com/aritzhack/aritzh'
+				}
+
+				licenses {
+					license {
+						name 'The Apache License, Version 2.0'
+						url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+					}
+				}
+
+				developers {
+					developer {
+						id 'aritzh'
+						name 'Aritz Lopez'
+						email 'aritzhack@gmail.com'
+					}
+				}
+			}
+		}
+	}
+}
