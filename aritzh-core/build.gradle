@@ -49,44 +49,46 @@ signing {
     sign configurations.archives
 }
 
-uploadArchives {
-    repositories {
-        mavenDeployer {
-            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+if(System.getenv('TRAVIS') == null) {
+    uploadArchives {
+        repositories {
+            mavenDeployer {
+                beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
 
-            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
-                authentication(userName: ossrhUsername, password: ossrhPassword)
-            }
+                repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                    authentication(userName: ossrhUsername, password: ossrhPassword)
+                }
 
-            snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
-                authentication(userName: ossrhUsername, password: ossrhPassword)
-            }
+                snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+                    authentication(userName: ossrhUsername, password: ossrhPassword)
+                }
 
-            pom.project {
-                name 'aritzh-core'
-                packaging 'jar'
-                artifactId 'aritzh-core'
-                description 'Utility library to help making any kind of app or game.'
-                url 'https://github.com/aritzhack/aritzh'
-
-                scm {
-                    connection 'scm:git:git@github.com/aritzhack/aritzh/'
-                    developerConnection 'scm:git:git@github.com/aritzhack/aritzh/'
+                pom.project {
+                    name 'aritzh-core'
+                    packaging 'jar'
+                    artifactId 'aritzh-core'
+                    description 'Utility library to help making any kind of app or game.'
                     url 'https://github.com/aritzhack/aritzh'
-                }
 
-                licenses {
-                    license {
-                        name 'The Apache License, Version 2.0'
-                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    scm {
+                        connection 'scm:git:git@github.com/aritzhack/aritzh/'
+                        developerConnection 'scm:git:git@github.com/aritzhack/aritzh/'
+                        url 'https://github.com/aritzhack/aritzh'
                     }
-                }
 
-                developers {
-                    developer {
-                        id 'aritzh'
-                        name 'Aritz Lopez'
-                        email 'aritzhack@gmail.com'
+                    licenses {
+                        license {
+                            name 'The Apache License, Version 2.0'
+                            url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                        }
+                    }
+
+                    developers {
+                        developer {
+                            id 'aritzh'
+                            name 'Aritz Lopez'
+                            email 'aritzhack@gmail.com'
+                        }
                     }
                 }
             }
