@@ -54,7 +54,7 @@ public class Matrix<E> implements Collection<ArrayList<E>> {
      * @param startHeight    The amount of rows
      * @param defaultElement The object to set all elements to
      */
-    public <D extends E> Matrix(int startWidth, int startHeight, D defaultElement) {
+    public Matrix(int startWidth, int startHeight, E defaultElement) {
         this.defaultElement = defaultElement;
         this.init(startWidth, startHeight);
     }
@@ -192,6 +192,7 @@ public class Matrix<E> implements Collection<ArrayList<E>> {
     /**
      * Flattens the matrix, column-after-column, so that it can
      * be used as a common collection
+     * @return an ArrayList containing all the elements in this matrix, column after column.
      */
     public ArrayList<E> toFlatArrayList() {
         ArrayList<E> ret = new ArrayList<>();

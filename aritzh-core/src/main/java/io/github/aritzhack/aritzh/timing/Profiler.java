@@ -58,11 +58,11 @@ public class Profiler {
 
     /**
      * Returns a specific instance of profiler, with no verbosity <br>
-     * <font color="#191919">
+     * <p style="color: #191919">
      * NOTE: Non-verbosity is not guaranteed. since loggers are cached, if there was another
      * profiler with the specified name and it was verbose, that instance will be
      * returned. To set the verbosity afterwards see {@link Profiler#setVerbose(boolean)}
-     * </font>
+     * </p>
      *
      * @param name The name of the profiler
      * @return A profiler with the specified name
@@ -74,11 +74,11 @@ public class Profiler {
     /**
      * Returns a specific instance of profiler, specifying verbosity
      * <br>
-     * <font color="red">
+     * <p style="color: red">
      * NOTE: Verbosity is not guaranteed. since loggers are cached, if there was another
      * profiler with the specified name and it was not verbose, that instance will be
      * returned. To set the verbosity afterwards see {@link Profiler#setVerbose(boolean)}
-     * </font>
+     * </p>
      *
      * @param name    The name of the profiler
      * @param verbose Whether to print to {@link System#out} when ending a section
@@ -161,6 +161,7 @@ public class Profiler {
      * Sets the verbosity of this profiler <br>
      *
      * @param verbose The value to which the verbosity of this profiler will be set
+     * @return {@code this}, To ease the builder pattern.
      */
     public synchronized Profiler setVerbose(boolean verbose) {
         this.verbose = verbose;

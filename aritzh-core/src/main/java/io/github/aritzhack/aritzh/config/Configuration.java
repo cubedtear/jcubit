@@ -41,342 +41,335 @@ import java.util.regex.Pattern;
 @SuppressWarnings({"UnusedDeclaration", "JavaDoc"})
 public class Configuration {
 
-    public static final Pattern CATEGORY_REGEX = Pattern.compile("^\\s*\\[(?:\\s*(?=[a-zA-Z_0-9{}]+))(.+)\\s*\\]\\s*$");// Category is trimmed, but keeps spaces in between
-    public static final Pattern PROP_REGEX = Pattern.compile("^\\s*(\\w+)\\s*=(?:\\s*(?=\\w+))(.*)\\s*$");
-    public static final Pattern SKIP_REGEX = Pattern.compile("(^\\s*$)|(^\\s*#.*$)"); // Empty line, or: Spaces or not, followed by # and followed by anything
+	public static final Pattern CATEGORY_REGEX = Pattern.compile("^\\s*\\[(?:\\s*(?=[a-zA-Z_0-9{}]+))(.+)\\s*\\]\\s*$");// Category is trimmed, but keeps spaces in between
+	public static final Pattern PROP_REGEX = Pattern.compile("^\\s*(\\w+)\\s*=(?:\\s*(?=\\w+))(.*)\\s*$");
+	public static final Pattern SKIP_REGEX = Pattern.compile("(^\\s*$)|(^\\s*#.*$)"); // Empty line, or: Spaces or not, followed by # and followed by anything
 
-    private final OneOrOther<File, Path> configFile;
-    private final boolean compressedSpaces;
-    private final Map<String, LinkedHashMap<String, String>> categories = Maps.newLinkedHashMap();
+	private final OneOrOther<File, Path> configFile;
+	private final boolean compressedSpaces;
+	private final Map<String, LinkedHashMap<String, String>> categories = Maps.newLinkedHashMap();
 
-    private Configuration(OneOrOther<File, Path> configFile, boolean compressedSpaces) {
-        this.configFile = configFile;
-        this.compressedSpaces = compressedSpaces;
-    }
+	private Configuration(OneOrOther<File, Path> configFile, boolean compressedSpaces) {
+		this.configFile = configFile;
+		this.compressedSpaces = compressedSpaces;
+	}
 
-    /**
-     * Loads the configuration file <br>
-     * If the config file did not exist, it will be created
-     * <p>
-     * Equivalent to calling {@code Configuration.loadConfig(configFile, false)}
-     * </p>
-     *
-     * @param configFile File to read the configuration from
-     * @return A new configuration object, already parsed from {@code configFile}
-     * @see Configuration#loadConfig(java.io.File, boolean)
-     */
-    public static Configuration loadConfig(File configFile) {
-        return Configuration.loadConfig(configFile, false);
-    }
+	/**
+	 * Loads the configuration file <br>
+	 * If the config file did not exist, it will be created
+	 * <p>
+	 * Equivalent to calling {@code Configuration.loadConfig(configFile, false)}
+	 * </p>
+	 *
+	 * @param configFile File to read the configuration from
+	 * @return A new configuration object, already parsed from {@code configFile}
+	 * @see Configuration#loadConfig(java.io.File, boolean)
+	 */
+	public static Configuration loadConfig(File configFile) {
+		return Configuration.loadConfig(configFile, false);
+	}
 
-    /**
-     * Loads the configuration file, specifying if spaces should be compressed or not ({@code currentLine.replaceAll("\\s+", " ")})
-     * If the config file did not exist, it will be created
-     *
-     * @param configFile     File to read the configuration from
-     * @param compressSpaces If true subsequent whitespaces will be replaced with a single one (defaults to {@code false})
-     * @return A new configuration object, already parsed, from {@code configFile}
-     */
-    public static Configuration loadConfig(File configFile, boolean compressSpaces) {
-        if (!configFile.exists()) {
-            return Configuration.newConfig(OneOrOther.<File, Path>ofOne(configFile));
-        }
+	/**
+	 * Loads the configuration file, specifying if spaces should be compressed or not ({@code currentLine.replaceAll("\\s+", " ")})
+	 * If the config file did not exist, it will be created
+	 *
+	 * @param configFile     File to read the configuration from
+	 * @param compressSpaces If true subsequent whitespaces will be replaced with a single one (defaults to {@code false})
+	 * @return A new configuration object, already parsed, from {@code configFile}
+	 */
+	public static Configuration loadConfig(File configFile, boolean compressSpaces) {
+		if (!configFile.exists()) {
+			return Configuration.newConfig(OneOrOther.<File, Path>ofOne(configFile));
+		}
 
-        Configuration config = new Configuration(OneOrOther.<File, Path>ofOne(configFile), compressSpaces);
+		Configuration config = new Configuration(OneOrOther.<File, Path>ofOne(configFile), compressSpaces);
 
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(configFile)))) {
-            loadConfig(config, reader, compressSpaces);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+		try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(configFile)))) {
+			loadConfig(config, reader, compressSpaces);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
-        return config;
-    }
+		return config;
+	}
 
-    private static Configuration newConfig(OneOrOther<File, Path> configFile) {
-        return new Configuration(configFile, false);
-    }
+	private static Configuration newConfig(OneOrOther<File, Path> configFile) {
+		return new Configuration(configFile, false);
+	}
 
-    private static void loadConfig(final Configuration config, final BufferedReader reader, final boolean compressSpaces) {
-        String line;
-        String currCategory = "";
-        try {
-            while ((line = reader.readLine()) != null) {
-                line = compressSpaces ? line.replaceAll("\\s+", " ").trim() : line;
+	private static void loadConfig(final Configuration config, final BufferedReader reader, final boolean compressSpaces) {
+		String line;
+		String currCategory = "";
+		try {
+			while ((line = reader.readLine()) != null) {
+				line = compressSpaces ? line.replaceAll("\\s+", " ").trim() : line;
 
-                currCategory = (compressSpaces ? currCategory.replaceAll("\\s+", " ") : currCategory).trim();
-                if (Strings.isNullOrEmpty(currCategory)) {
-                    currCategory = "Main";
-                    if (!config.categories.containsKey(currCategory)) config.addCategory(currCategory);
-                }
+				currCategory = (compressSpaces ? currCategory.replaceAll("\\s+", " ") : currCategory).trim();
+				if (Strings.isNullOrEmpty(currCategory)) {
+					currCategory = "Main";
+					if (!config.categories.containsKey(currCategory)) config.addCategory(currCategory);
+				}
 
-                Matcher m;
+				Matcher m;
 
-                if ((SKIP_REGEX.matcher(line)).matches()) continue;
+				if ((SKIP_REGEX.matcher(line)).matches()) continue;
 
-                if ((m = CATEGORY_REGEX.matcher(line)).matches()) {
-                    currCategory = config.addCategory(m.group(1));
-                } else if ((m = PROP_REGEX.matcher(line)).matches()) {
-                    config.addProperty(m, currCategory);
-                }
-            }
-        } catch (IOException e) {
-            throw new ParseException("Error parsing config", e);
-        }
-    }
+				if ((m = CATEGORY_REGEX.matcher(line)).matches()) {
+					currCategory = config.addCategory(m.group(1));
+				} else if ((m = PROP_REGEX.matcher(line)).matches()) {
+					config.addProperty(m, currCategory);
+				}
+			}
+		} catch (IOException e) {
+			throw new ParseException("Error parsing config", e);
+		}
+	}
 
-    private String addCategory(String cat) {
-        if (!this.categories.containsKey(cat)) this.categories.put(cat, Maps.<String, String>newLinkedHashMap());
-        return cat;
-    }
+	/**
+	 * Loads the configuration from the given path <br>
+	 * If the config path did not exist, it will be created
+	 * <p>
+	 * Equivalent to calling {@code Configuration.loadConfig(configFile, false)}
+	 * </p>
+	 *
+	 * @param configFile Path to read the configuration from
+	 * @return A new configuration object, already parsed from {@code configFile}
+	 * @see Configuration#loadConfig(java.nio.file.Path, boolean)
+	 */
+	public static Configuration loadConfig(Path configFile) {
+		return Configuration.loadConfig(configFile, false);
+	}
 
-    private void addProperty(Matcher m, String category) {
-        String key = m.group(1);
-        String val = m.group(2);
+	/**
+	 * Loads the configuration path, specifying if spaces should be compressed or not ({@code currentLine.replaceAll("\\s+", " ")})
+	 * If the config path did not exist, it will be created
+	 *
+	 * @param configFile     Path to read the configuration from
+	 * @param compressSpaces If true subsequent whitespaces will be replaced with a single one (defaults to {@code false})
+	 * @return A new configuration object, already parsed, from {@code configFile}
+	 */
+	public static Configuration loadConfig(Path configFile, boolean compressSpaces) {
+		if (Files.notExists(configFile)) {
+			return Configuration.newConfig(OneOrOther.<File, Path>ofOther(configFile));
+		}
 
-        LinkedHashMap<String, String> currCat = this.categories.get(category);
-        currCat.put(key, val);
-        this.categories.put(category, currCat);
-    }
+		Configuration config = new Configuration(OneOrOther.<File, Path>ofOther(configFile), compressSpaces);
 
-    /**
-     * Loads the configuration from the given path <br>
-     * If the config path did not exist, it will be created
-     * <p>
-     * Equivalent to calling {@code Configuration.loadConfig(configFile, false)}
-     * </p>
-     *
-     * @param configFile Path to read the configuration from
-     * @return A new configuration object, already parsed from {@code configFile}
-     * @see Configuration#loadConfig(java.nio.file.Path, boolean)
-     */
-    public static Configuration loadConfig(Path configFile) {
-        return Configuration.loadConfig(configFile, false);
-    }
+		try (BufferedReader reader = Files.newBufferedReader(configFile, Charset.defaultCharset())) {
+			loadConfig(config, reader, compressSpaces);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return config;
+	}
 
-    /**
-     * Loads the configuration path, specifying if spaces should be compressed or not ({@code currentLine.replaceAll("\\s+", " ")})
-     * If the config path did not exist, it will be created
-     *
-     * @param configFile     Path to read the configuration from
-     * @param compressSpaces If true subsequent whitespaces will be replaced with a single one (defaults to {@code false})
-     * @return A new configuration object, already parsed, from {@code configFile}
-     */
-    public static Configuration loadConfig(Path configFile, boolean compressSpaces) {
-        if (Files.notExists(configFile)) {
-            return Configuration.newConfig(OneOrOther.<File, Path>ofOther(configFile));
-        }
+	/**
+	 * Creates a new empty configuration object for the specified file
+	 *
+	 * @param configFile the config file (doesn't need to exist)
+	 * @return A new empty configuration object
+	 */
+	public static Configuration newConfig(@NotNull File configFile) {
+		return new Configuration(OneOrOther.<File, Path>ofOne(configFile), false);
+	}
 
-        Configuration config = new Configuration(OneOrOther.<File, Path>ofOther(configFile), compressSpaces);
+	/**
+	 * Creates a new empty configuration object for the specified file
+	 *
+	 * @param configFile the config file (doesn't need to exist)
+	 * @return A new empty configuration object
+	 */
+	public static Configuration newConfig(@NotNull Path configFile) {
+		return new Configuration(OneOrOther.<File, Path>ofOther(configFile), false);
+	}
 
-        try (BufferedReader reader = Files.newBufferedReader(configFile, Charset.defaultCharset())) {
-            loadConfig(config, reader, compressSpaces);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return config;
-    }
+	private static BufferedWriter getFileWriter(File file) throws IOException {
+		return new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file)));
+	}
 
-    /**
-     * Creates a new empty configuration object for the specified file
-     *
-     * @param configFile the config file (doesn't need to exist)
-     * @return A new empty configuration object
-     */
-    public static Configuration newConfig(@NotNull File configFile) {
-        return new Configuration(OneOrOther.<File, Path>ofOne(configFile), false);
-    }
+	public static BufferedWriter getPathWriter(Path path) throws IOException {
+		return Files.newBufferedWriter(path, Charset.defaultCharset(), StandardOpenOption.CREATE, StandardOpenOption.WRITE);
+	}
 
-    /**
-     * Creates a new empty configuration object for the specified file
-     *
-     * @param configFile the config file (doesn't need to exist)
-     * @return A new empty configuration object
-     */
-    public static Configuration newConfig(@NotNull Path configFile) {
-        return new Configuration(OneOrOther.<File, Path>ofOther(configFile), false);
-    }
+	private String addCategory(String cat) {
+		if (!this.categories.containsKey(cat)) this.categories.put(cat, Maps.<String, String>newLinkedHashMap());
+		return cat;
+	}
 
-    /**
-     * Sets a property in the configuration
-     *
-     * @param category The category of the property
-     * @param key      The key to identify the property
-     * @param value    The value associated with it
-     */
-    public void setProperty(String category, String key, Object value) {
-        this.setProperty(category, key, value.toString());
-    }
+	private void addProperty(Matcher m, String category) {
+		String key = m.group(1);
+		String val = m.group(2);
 
-    /**
-     * Sets a property in the configuration
-     *
-     * @param category The category of the property
-     * @param key      The key to identify the property
-     * @param value    The value associated with it
-     */
-    public void setProperty(String category, String key, String value) {
-        category = (this.compressedSpaces ? category.replaceAll("\\s+", " ") : category).trim();
-        if (Strings.isNullOrEmpty(category)) category = "Main";
-        key = (this.compressedSpaces ? key.replaceAll("\\s+", " ") : key).trim().replace(" ", "_");
-        value = (this.compressedSpaces ? value.replaceAll("\\s+", " ") : value).trim();
+		LinkedHashMap<String, String> currCat = this.categories.get(category);
+		currCat.put(key, val);
+		this.categories.put(category, currCat);
+	}
 
-        if (!this.categories.containsKey(category))
-            this.categories.put(category, Maps.<String, String>newLinkedHashMap());
-        LinkedHashMap<String, String> currCat = this.categories.get(category);
-        currCat.put(key, value);
-        this.categories.put(category, currCat);
-    }
+	/**
+	 * Sets a property in the configuration
+	 *
+	 * @param category The category of the property
+	 * @param key      The key to identify the property
+	 * @param value    The value associated with it
+	 */
+	public void setProperty(String category, String key, Object value) {
+		this.setProperty(category, key, value.toString());
+	}
 
-    public void setDefault(String category, String key, Object value) {
-        this.setDefault(category, key, String.valueOf(value));
-    }
+	/**
+	 * Sets a property in the configuration
+	 *
+	 * @param category The category of the property
+	 * @param key      The key to identify the property
+	 * @param value    The value associated with it
+	 */
+	public void setProperty(String category, String key, String value) {
+		category = (this.compressedSpaces ? category.replaceAll("\\s+", " ") : category).trim();
+		if (Strings.isNullOrEmpty(category)) category = "Main";
+		key = (this.compressedSpaces ? key.replaceAll("\\s+", " ") : key).trim().replace(" ", "_");
+		value = (this.compressedSpaces ? value.replaceAll("\\s+", " ") : value).trim();
 
-    /**
-     * Sets the property, unless it already had a value
-     *
-     * @param category The category of the property
-     * @param key      The identifier of the property
-     * @param value    The value to set to the property
-     */
-    public void setDefault(String category, String key, String value) {
-        if (this.hasProperty(category, key)) return;
-        this.setProperty(category, key, value);
-    }
+		if (!this.categories.containsKey(category))
+			this.categories.put(category, Maps.<String, String>newLinkedHashMap());
+		LinkedHashMap<String, String> currCat = this.categories.get(category);
+		currCat.put(key, value);
+		this.categories.put(category, currCat);
+	}
 
-    /**
-     * Checks whether the specified key is present in the specified category
-     *
-     * @param category The category to look into for the key
-     * @param key      The key to look for
-     * @return {@code true} if the key was found in the category, {@code false} otherwise
-     */
-    public boolean hasProperty(String category, String key) {
-        return this.categories.containsKey(category) && this.categories.get(category).containsKey(key);
-    }
+	public void setDefault(String category, String key, Object value) {
+		this.setDefault(category, key, String.valueOf(value));
+	}
 
-    /**
-     * Same as {@link Configuration#getProperty(String, String)}, but a boolean is parsed.
-     *
-     * @param category The category of the property
-     * @param key      The key (identifier) of the property
-     * @return {@code true} if the property can be parsed to boolean, or equals (ignoring case) {@code "on"}
-     */
-    public boolean getBoolean(String category, String key) {
-        String value = this.getProperty(category, key);
-        return Boolean.parseBoolean(value) || "on".equalsIgnoreCase(value);
-    }
+	/**
+	 * Sets the property, unless it already had a value
+	 *
+	 * @param category The category of the property
+	 * @param key      The identifier of the property
+	 * @param value    The value to set to the property
+	 */
+	public void setDefault(String category, String key, String value) {
+		if (this.hasProperty(category, key)) return;
+		this.setProperty(category, key, value);
+	}
 
-    /**
-     * Gets a property with an empty string as default value. <br>
-     * Equivalent to calling {@code config.getProperty(category, key, "")}
-     *
-     * @param category The category in which the property is
-     * @param key      The key of the property
-     * @return The value associated with {@code key} in {@code category}, or {@code ""} (an empty string) if not found
-     */
-    public String getProperty(String category, String key) {
-        return this.getProperty(category, key, "");
-    }
+	/**
+	 * Checks whether the specified key is present in the specified category
+	 *
+	 * @param category The category to look into for the key
+	 * @param key      The key to look for
+	 * @return {@code true} if the key was found in the category, {@code false} otherwise
+	 */
+	public boolean hasProperty(String category, String key) {
+		return this.categories.containsKey(category) && this.categories.get(category).containsKey(key);
+	}
 
-    /**
-     * Gets a property
-     *
-     * @param category     The category in which the property is
-     * @param key          The key of the property
-     * @param defaultValue If the property couldn't be found, this will be returned
-     * @return The value associated with {@code key} in {@code category}, or {@code defaultValue} if not found
-     */
-    public String getProperty(String category, String key, String defaultValue) {
-        category = (this.compressedSpaces ? category.replaceAll("\\s+", " ") : category).trim();
-        if (Strings.isNullOrEmpty(category)) category = "Main";
-        key = (this.compressedSpaces ? key.replaceAll("\\s+", " ") : key).trim().replace(" ", "_");
-        try {
-            return this.categories.get(category).get(key).replace("_", " ");
-        } catch (NullPointerException e) {
-            return defaultValue;
-        }
-    }
+	/**
+	 * Same as {@link Configuration#getProperty(String, String)}, but a boolean is parsed.
+	 *
+	 * @param category The category of the property
+	 * @param key      The key (identifier) of the property
+	 * @return {@code true} if the property can be parsed to boolean, or equals (ignoring case) {@code "on"}
+	 */
+	public boolean getBoolean(String category, String key) {
+		String value = this.getProperty(category, key);
+		return Boolean.parseBoolean(value) || "on".equalsIgnoreCase(value);
+	}
 
-    /**
-     * Same as {@link Configuration#getProperty(String, String)}, but a integer is parsed.
-     *
-     * @param category The category of the property
-     * @param key      The key (identifier) of the property
-     * @return the integer value parsed from the property
-     */
-    public int getInt(String category, String key) {
-        String value = this.getProperty(category, key).toLowerCase().trim();
-        return Integer.parseInt(value);
-    }
+	/**
+	 * Gets a property with an empty string as default value. <br>
+	 * Equivalent to calling {@code config.getProperty(category, key, "")}
+	 *
+	 * @param category The category in which the property is
+	 * @param key      The key of the property
+	 * @return The value associated with {@code key} in {@code category}, or {@code ""} (an empty string) if not found
+	 */
+	public String getProperty(String category, String key) {
+		return this.getProperty(category, key, "");
+	}
 
-    /**
-     * Same as {@link Configuration#getProperty(String, String)}, but a double is parsed.
-     *
-     * @param category The category of the property
-     * @param key      The key (identifier) of the property
-     * @return the double value parsed from the property
-     */
-    public double getDouble(String category, String key) {
-        String value = this.getProperty(category, key).toLowerCase().trim();
-        return Double.parseDouble(value);
-    }
+	/**
+	 * Gets a property
+	 *
+	 * @param category     The category in which the property is
+	 * @param key          The key of the property
+	 * @param defaultValue If the property couldn't be found, this will be returned
+	 * @return The value associated with {@code key} in {@code category}, or {@code defaultValue} if not found
+	 */
+	public String getProperty(String category, String key, String defaultValue) {
+		category = (this.compressedSpaces ? category.replaceAll("\\s+", " ") : category).trim();
+		if (Strings.isNullOrEmpty(category)) category = "Main";
+		key = (this.compressedSpaces ? key.replaceAll("\\s+", " ") : key).trim().replace(" ", "_");
+		try {
+			return this.categories.get(category).get(key).replace("_", " ");
+		} catch (NullPointerException e) {
+			return defaultValue;
+		}
+	}
 
-    /**
-     * Saves the configuration to the file it was created with <br>
-     * Equivalent to calling {@code config.save(configFile)}, if {@code config} was created with {@code configFile}
-     */
-    public void save() throws IOException {
-        this.save(configFile);
-    }
+	/**
+	 * Same as {@link Configuration#getProperty(String, String)}, but a integer is parsed.
+	 *
+	 * @param category The category of the property
+	 * @param key      The key (identifier) of the property
+	 * @return the integer value parsed from the property
+	 */
+	public int getInt(String category, String key) {
+		String value = this.getProperty(category, key).toLowerCase().trim();
+		return Integer.parseInt(value);
+	}
 
-    /**
-     * Saves the configuration to {@code configFile}
-     *
-     * @param configFile The file to save the configuration to
-     */
-    private void save(OneOrOther<File, Path> configFile) throws IOException {
-        if (configFile.isOne()) {
-            File config = configFile.getOne();
-            this.saveToWriter(getFileWriter(config));
-        } else {
-            Path config = configFile.getOther();
-            this.saveToWriter(getPathWriter(config));
-        }
-    }
+	/**
+	 * Same as {@link Configuration#getProperty(String, String)}, but a double is parsed.
+	 *
+	 * @param category The category of the property
+	 * @param key      The key (identifier) of the property
+	 * @return the double value parsed from the property
+	 */
+	public double getDouble(String category, String key) {
+		String value = this.getProperty(category, key).toLowerCase().trim();
+		return Double.parseDouble(value);
+	}
 
-    private void saveToWriter(BufferedWriter writer) throws IOException {
-        if (writer == null) return;
-        writer.write("# Last edit: " + new Date());
-        writer.newLine();
-        for (Map.Entry<String, LinkedHashMap<String, String>> e1 : this.categories.entrySet()) {
-            writer.write("[" + e1.getKey() + "]");
-            writer.newLine();
-            for (Map.Entry<String, String> e2 : e1.getValue().entrySet()) {
-                writer.write(e2.getKey() + "=" + e2.getValue());
-                writer.newLine();
-            }
-            writer.newLine();
-        }
-        writer.flush();
-        writer.close();
-    }
+	/**
+	 * Saves the configuration to the file it was created with <br>
+	 * Equivalent to calling {@code config.save(configFile)}, if {@code config} was created with {@code configFile}
+	 *
+	 * @throws IOException if an I/O error occurs
+	 */
+	public void save() throws IOException {
+		this.save(configFile);
+	}
 
-    private static BufferedWriter getFileWriter(File file) {
-        try {
-            return new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file)));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
+	/**
+	 * Saves the configuration to {@code configFile}
+	 *
+	 * @param configFile The file to save the configuration to.
+	 * @throws IOException if an I/O error occurs
+	 */
+	private void save(OneOrOther<File, Path> configFile) throws IOException {
+		if (configFile.isOne()) {
+			File config = configFile.getOne();
+			this.saveToWriter(getFileWriter(config));
+		} else {
+			Path config = configFile.getOther();
+			this.saveToWriter(getPathWriter(config));
+		}
+	}
 
-    public static BufferedWriter getPathWriter(Path path) {
-        try {
-            return Files.newBufferedWriter(path, Charset.defaultCharset(), StandardOpenOption.CREATE, StandardOpenOption.WRITE);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
+	private void saveToWriter(BufferedWriter writer) throws IOException {
+		if (writer == null) return;
+		writer.write("# Last edit: " + new Date());
+		writer.newLine();
+		for (Map.Entry<String, LinkedHashMap<String, String>> e1 : this.categories.entrySet()) {
+			writer.write("[" + e1.getKey() + "]");
+			writer.newLine();
+			for (Map.Entry<String, String> e2 : e1.getValue().entrySet()) {
+				writer.write(e2.getKey() + "=" + e2.getValue());
+				writer.newLine();
+			}
+			writer.newLine();
+		}
+		writer.flush();
+		writer.close();
+	}
 }
