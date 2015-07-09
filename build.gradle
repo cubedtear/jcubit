@@ -6,7 +6,7 @@ if (!javaV.java7) {
 
 subprojects {
 
-	version '2.1.0'
+	version '2.1.1'
 
 	group 'io.github.aritzhack'
 
@@ -126,8 +126,9 @@ if (System.getenv('TRAVIS') == null) {
 			}
 		}
 	}
+
+	closeAndPromoteRepository {}.mustRunAfter subprojects.uploadArchives
+
+	task buildAndDeploy(dependsOn: [subprojects.build, subprojects.uploadArchives, closeAndPromoteRepository])
+
 }
-
-closeAndPromoteRepository {}.mustRunAfter subprojects.uploadArchives
-
-task buildAndDeploy(dependsOn: [subprojects.build, subprojects.uploadArchives, closeAndPromoteRepository])
