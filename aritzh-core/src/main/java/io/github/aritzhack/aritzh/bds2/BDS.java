@@ -4,10 +4,7 @@ import com.google.common.base.Charsets;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import com.google.common.primitives.Doubles;
-import com.google.common.primitives.Ints;
-import com.google.common.primitives.Longs;
-import com.sun.org.apache.bcel.internal.generic.NEW;
+import com.google.common.primitives.*;
 import io.github.aritzhack.aritzh.collections.CollectionUtil;
 import io.github.aritzhack.aritzh.util.NotNull;
 import io.github.aritzhack.aritzh.util.Set2;
@@ -38,7 +35,15 @@ public class BDS {
 	private Map<String, Short> shorts = Maps.newHashMap();
 	private Map<String, Float> floats = Maps.newHashMap();
 	private Map<String, Double> doubles = Maps.newHashMap();
+	private Map<String, String[]> stringArrays = Maps.newHashMap();
+	private Map<String, Integer[]> intArrays = Maps.newHashMap();
+	private Map<String, Byte[]> byteArrays = Maps.newHashMap();
+	private Map<String, Long[]> longArrays = Maps.newHashMap();
+	private Map<String, Short[]> shortArrays = Maps.newHashMap();
+	private Map<String, Float[]> floatArrays = Maps.newHashMap();
+	private Map<String, Double[]> doubleArrays = Maps.newHashMap();
 	private Map<String, BDS> bdss = Maps.newHashMap();
+	private Map<String, BDS[]> bdsArrays = Maps.newHashMap();
 
 	private BDS(String name) {
 		this.name = name;
@@ -77,13 +82,13 @@ public class BDS {
 
 		BDS bds = BDS.createEmpty();
 
-		Set2<String, Integer> name = parseString(data, offset+1);
+		Set2<String, Integer> name = parseString(data, offset + 1);
 		bds.setName(name.getT());
 
 		int i = name.getU();
 
 		A:
-		while(i < data.length) {
+		while (i < data.length) {
 			switch (BDSType.fromSignature(data[i])) {
 				case BYTE:
 					i = bds.parseByte(data, i);
@@ -111,6 +116,37 @@ public class BDS {
 					bds.addBDS(bds1.getT());
 					i = bds1.getU();
 					break;
+				case LIST:
+					switch (BDSType.fromSignature(data[i+1])) {
+						case BYTE:
+							i = bds.parseByteArray(data, i);
+							break;
+						case SHORT:
+							i = bds.parseShortArray(data, i);
+							break;
+						case INT:
+							i = bds.parseIntArray(data, i);
+							break;
+						case LONG:
+							i = bds.parseLongArray(data, i);
+							break;
+						case FLOAT:
+							i = bds.parseFloatArray(data, i);
+							break;
+						case DOUBLE:
+							i = bds.parseDoubleArray(data, i);
+							break;
+						case STRING:
+							i = bds.parseStringArray(data, i);
+							break;
+						case BDS:
+							i = bds.parseBDSArray(data, i);
+							break;
+						case LIST:
+							throw new IllegalArgumentException("Nested lists are not allowed!");
+						default:
+							throw new IllegalArgumentException("Given data is not in the appropriate format!");
+					}
 				case END:
 					break A;
 				default:
@@ -124,11 +160,11 @@ public class BDS {
 		byte top = data[offset++];
 		byte bot = data[offset++];
 		int length = top << 8 | bot;
-		if(length == 0) return Set2.of("", offset);
+		if (length == 0) return Set2.of("", offset);
 		return Set2.of(new String(data, offset, length, Charsets.UTF_8), length + offset);
 	}
 
-	private static void addString(String nameStr, ByteArrayOutputStream baos) {
+	private static void writeString(String nameStr, ByteArrayOutputStream baos) {
 		byte[] name = nameStr.getBytes(Charsets.UTF_8);
 		if (name.length > Math.pow(2, 9)) {
 			throw new ArrayIndexOutOfBoundsException("Tag name is too long!");
@@ -138,11 +174,42 @@ public class BDS {
 		for (byte b : name) baos.write(b);
 	}
 
+	private static int getInt(byte[] data, int offset) {
+		return Ints.fromBytes(data[offset++], data[offset++], data[offset++], data[offset]);
+	}
+
+	private static long getLong(byte[] data, int offset) {
+		byte[] longData = new byte[8];
+		System.arraycopy(data, offset, longData, 0, 8);
+		return Longs.fromByteArray(longData);
+	}
+
+	private static void writeShort(short s, ByteArrayOutputStream baos) {
+		baos.write((byte) (s >> 8));
+		baos.write((byte) s);
+	}
+
+	private static void writeInt(int i, ByteArrayOutputStream baos) {
+		for (byte b : Ints.toByteArray(i)) baos.write(b);
+	}
+
+	private static void writeLong(long l, ByteArrayOutputStream baos) {
+		for (byte b : Longs.toByteArray(l)) baos.write(b);
+	}
+
+	private static void writeFloat(float f, ByteArrayOutputStream baos) {
+		for (byte b : Ints.toByteArray(Float.floatToIntBits(f))) baos.write(b);
+	}
+
+	private static void writeDouble(double d, ByteArrayOutputStream baos) {
+		for (byte b : Longs.toByteArray(Double.doubleToLongBits(d))) baos.write(b);
+	}
+
 	private int parseByte(byte[] data, int offset) {
 		if (data[offset] != BDSType.BYTE.signature)
 			throw new IllegalArgumentException("Given data is not in the appropriate format!");
 
-		Set2<String, Integer> name = parseString(data, offset+1);
+		Set2<String, Integer> name = parseString(data, offset + 1);
 		byte v = data[name.getU()];
 		this.addByte(name.getT(), v);
 		return name.getU();
@@ -152,7 +219,7 @@ public class BDS {
 		if (data[offset] != BDSType.SHORT.signature)
 			throw new IllegalArgumentException("Given data is not in the appropriate format!");
 
-		Set2<String, Integer> name = parseString(data, offset+1);
+		Set2<String, Integer> name = parseString(data, offset + 1);
 		offset = name.getU();
 		short v = (short) (data[offset++] << 8 | data[offset++]);
 		this.addShort(name.getT(), v);
@@ -163,23 +230,20 @@ public class BDS {
 		if (data[offset] != BDSType.INT.signature)
 			throw new IllegalArgumentException("Given data is not in the appropriate format!");
 
-		Set2<String, Integer> name = parseString(data, offset+1);
+		Set2<String, Integer> name = parseString(data, offset + 1);
 		offset = name.getU();
-		int v = Ints.fromBytes(data[offset++], data[offset++], data[offset++], data[offset++]);
+		int v = getInt(data, offset);
 		this.addInt(name.getT(), v);
-		return offset;
+		return offset + 4;
 	}
 
 	private int parseLong(byte[] data, int offset) {
 		if (data[offset] != BDSType.LONG.signature)
 			throw new IllegalArgumentException("Given data is not in the appropriate format!");
 
-		Set2<String, Integer> name = parseString(data, offset+1);
+		Set2<String, Integer> name = parseString(data, offset + 1);
 		offset = name.getU();
-		byte[] longData = new byte[8];
-		System.arraycopy(data, offset, longData, 0, 8);
-		long l = Longs.fromByteArray(longData);
-		this.addLong(name.getT(), l);
+		this.addLong(name.getT(), getLong(data, offset));
 		return offset + Longs.BYTES;
 	}
 
@@ -187,7 +251,7 @@ public class BDS {
 		if (data[offset] != BDSType.FLOAT.signature)
 			throw new IllegalArgumentException("Given data is not in the appropriate format!");
 
-		Set2<String, Integer> name = parseString(data, offset+1);
+		Set2<String, Integer> name = parseString(data, offset + 1);
 		offset = name.getU();
 		float f = Float.intBitsToFloat(Ints.fromBytes(data[offset++], data[offset++], data[offset++], data[offset++]));
 		this.addFloat(name.getT(), f);
@@ -198,7 +262,7 @@ public class BDS {
 		if (data[offset] != BDSType.DOUBLE.signature)
 			throw new IllegalArgumentException("Given data is not in the appropriate format!");
 
-		Set2<String, Integer> name = parseString(data, offset+1);
+		Set2<String, Integer> name = parseString(data, offset + 1);
 		offset = name.getU();
 
 		byte[] longData = new byte[8];
@@ -213,10 +277,132 @@ public class BDS {
 		if (data[offset] != BDSType.STRING.signature)
 			throw new IllegalArgumentException("Given data is not in the appropriate format!");
 
-		Set2<String, Integer> name = parseString(data, offset+1);
+		Set2<String, Integer> name = parseString(data, offset + 1);
 		Set2<String, Integer> str = parseString(data, name.getU());
 		this.addString(name.getT(), str.getT());
 		return str.getU();
+	}
+
+	private int parseByteArray(byte[] data, int offset) {
+		if (data[offset] != BDSType.LIST.signature || data[offset + 1] != BDSType.BYTE.signature)
+			throw new IllegalArgumentException("Given data is not in the appropriate format!");
+
+		Set2<String, Integer> name = parseString(data, offset + 2);
+		int length = getInt(data, name.getU());
+		byte[] byteArray = new byte[length];
+		offset = name.getU() + Ints.BYTES;
+		System.arraycopy(data, offset, byteArray, 0, length);
+		this.addBytes(name.getT(), byteArray);
+		return offset + length;
+	}
+
+	private int parseShortArray(byte[] data, int offset) {
+		if (data[offset] != BDSType.LIST.signature || data[offset + 1] != BDSType.SHORT.signature)
+			throw new IllegalArgumentException("Given data is not in the appropriate format!");
+
+		Set2<String, Integer> name = parseString(data, offset + 2);
+		int length = getInt(data, name.getU());
+		short[] shortArray = new short[length];
+		offset = name.getU() + Ints.BYTES;
+		for (int i = 0; i < length; i += Shorts.BYTES) {
+			shortArray[i] = Shorts.fromBytes(data[offset + i], data[offset + i + 1]);
+		}
+		this.addShorts(name.getT(), shortArray);
+		return offset + length * Shorts.BYTES;
+	}
+
+	private int parseIntArray(byte[] data, int offset) {
+		if (data[offset] != BDSType.LIST.signature || data[offset + 1] != BDSType.INT.signature)
+			throw new IllegalArgumentException("Given data is not in the appropriate format!");
+
+		Set2<String, Integer> name = parseString(data, offset + 2);
+		int length = getInt(data, name.getU());
+		int[] intArray = new int[length];
+		offset = name.getU() + Ints.BYTES;
+		for (int i = 0; i < length; i ++) {
+			intArray[i] = getInt(data, offset + i*Ints.BYTES);
+		}
+		this.addInts(name.getT(), intArray);
+		return offset + length * Ints.BYTES;
+	}
+
+	private int parseLongArray(byte[] data, int offset) {
+		if (data[offset] != BDSType.LIST.signature || data[offset + 1] != BDSType.LONG.signature)
+			throw new IllegalArgumentException("Given data is not in the appropriate format!");
+
+		Set2<String, Integer> name = parseString(data, offset + 2);
+		int length = getInt(data, name.getU());
+		long[] longArray = new long[length];
+		offset = name.getU() + Ints.BYTES;
+		for (int i = 0; i < length; i += Longs.BYTES) {
+			longArray[i] = getLong(data, offset);
+		}
+		this.addLongs(name.getT(), longArray);
+		return offset + length * Longs.BYTES;
+	}
+
+	private int parseFloatArray(byte[] data, int offset) {
+		if (data[offset] != BDSType.LIST.signature || data[offset + 1] != BDSType.FLOAT.signature)
+			throw new IllegalArgumentException("Given data is not in the appropriate format!");
+
+		Set2<String, Integer> name = parseString(data, offset + 2);
+		int length = getInt(data, name.getU());
+		float[] floatArray = new float[length];
+		offset = name.getU() + Ints.BYTES;
+		for (int i = 0; i < length; i += Longs.BYTES) {
+			floatArray[i] = Float.intBitsToFloat(getInt(data, offset));
+		}
+		this.addFloats(name.getT(), floatArray);
+		return offset + length * Floats.BYTES;
+	}
+
+	private int parseDoubleArray(byte[] data, int offset) {
+		if (data[offset] != BDSType.LIST.signature || data[offset + 1] != BDSType.DOUBLE.signature)
+			throw new IllegalArgumentException("Given data is not in the appropriate format!");
+
+		Set2<String, Integer> name = parseString(data, offset + 2);
+		int length = getInt(data, name.getU());
+		double[] doubleArray = new double[length];
+		offset = name.getU() + Ints.BYTES;
+		for (int i = 0; i < length; i += Longs.BYTES) {
+			doubleArray[i] = Double.longBitsToDouble(getLong(data, offset));
+		}
+		this.addDoubles(name.getT(), doubleArray);
+		return offset + length * Doubles.BYTES;
+	}
+
+	private int parseStringArray(byte[] data, int offset) {
+		if (data[offset] != BDSType.LIST.signature || data[offset + 1] != BDSType.FLOAT.signature)
+			throw new IllegalArgumentException("Given data is not in the appropriate format!");
+
+		Set2<String, Integer> name = parseString(data, offset + 2);
+		int length = getInt(data, name.getU());
+		String[] doubleArray = new String[length];
+		offset = name.getU() + Ints.BYTES;
+		for (int i = 0; i < length;) {
+			Set2<String, Integer> str = parseString(data, offset);
+			doubleArray[i] = str.getT();
+			offset = str.getU();
+		}
+		this.addStrings(name.getT(), doubleArray);
+		return offset;
+	}
+
+	private int parseBDSArray(byte[] data, int offset) {
+		if (data[offset] != BDSType.LIST.signature || data[offset + 1] != BDSType.FLOAT.signature)
+			throw new IllegalArgumentException("Given data is not in the appropriate format!");
+
+		Set2<String, Integer> name = parseString(data, offset + 2);
+		int length = getInt(data, name.getU());
+		BDS[] bdsArray = new BDS[length];
+		offset = name.getU() + Ints.BYTES;
+		for (int i = 0; i < length;) {
+			Set2<BDS, Integer> bds = parseBDS(data, offset);
+			bdsArray[i] = bds.getT();
+			offset = bds.getU();
+		}
+		this.addBDSs(name.getT(), bdsArray);
+		return offset;
 	}
 
 	public void writeToFile(File f) {
@@ -240,56 +426,120 @@ public class BDS {
 
 		baos.write(BDSType.BDS.signature);
 
-		addString(this.name, baos);
+		writeString(this.name, baos);
 
 		for (Map.Entry<String, Byte> bite : bytes.entrySet()) {
 			baos.write(BDSType.BYTE.signature);
-			addString(bite.getKey(), baos);
+			writeString(bite.getKey(), baos);
 			baos.write(bite.getValue());
 		}
 
 		for (Map.Entry<String, Short> sort : shorts.entrySet()) {
 			baos.write(BDSType.SHORT.signature);
-			addString(sort.getKey(), baos);
-			short s = sort.getValue();
-			baos.write((byte) (s >> 8));
-			baos.write((byte) s);
+			writeString(sort.getKey(), baos);
+			writeShort(sort.getValue(), baos);
 		}
 
 		for (Map.Entry<String, Integer> integer : ints.entrySet()) {
 			baos.write(BDSType.INT.signature);
-			addString(integer.getKey(), baos);
-			for (byte b : Ints.toByteArray(integer.getValue())) baos.write(b);
+			writeString(integer.getKey(), baos);
+			writeInt(integer.getValue(), baos);
 		}
 
 		for (Map.Entry<String, Long> loong : longs.entrySet()) {
 			baos.write(BDSType.LONG.signature);
-			addString(loong.getKey(), baos);
-			for (byte b : Longs.toByteArray(loong.getValue())) baos.write(b);
+			writeString(loong.getKey(), baos);
+			writeLong(loong.getValue(), baos);
 		}
 
 		for (Map.Entry<String, Float> flot : floats.entrySet()) {
 			baos.write(BDSType.FLOAT.signature);
-			addString(flot.getKey(), baos);
-			int i = Float.floatToIntBits(flot.getValue());
-			for (byte b : Ints.toByteArray(i)) baos.write(b);
+			writeString(flot.getKey(), baos);
+			writeFloat(flot.getValue(), baos);
 		}
 
 		for (Map.Entry<String, Double> doble : doubles.entrySet()) {
 			baos.write(BDSType.DOUBLE.signature);
-			addString(doble.getKey(), baos);
-			long loong = Double.doubleToLongBits(doble.getValue());
-			for (byte b : Longs.toByteArray(loong)) baos.write(b);
+			writeString(doble.getKey(), baos);
+			writeDouble(doble.getValue(), baos);
+
 		}
 
 		for (Map.Entry<String, String> str : strings.entrySet()) {
 			baos.write(BDSType.STRING.signature);
-			addString(str.getKey(), baos);
-			addString(str.getValue(), baos);
+			writeString(str.getKey(), baos);
+			writeString(str.getValue(), baos);
 		}
 
 		for (Map.Entry<String, BDS> bds : bdss.entrySet()) {
 			for (byte b : bds.getValue().write()) baos.write(b);
+		}
+
+		for (Map.Entry<String, Byte[]> byteArray : byteArrays.entrySet()) {
+			baos.write(BDSType.LIST.signature);
+			baos.write(BDSType.BYTE.signature);
+			writeString(byteArray.getKey(), baos);
+			writeInt(byteArray.getValue().length, baos);
+			for (Byte b : byteArray.getValue()) baos.write(b);
+		}
+
+		for (Map.Entry<String, Short[]> shortArray : shortArrays.entrySet()) {
+			baos.write(BDSType.LIST.signature);
+			baos.write(BDSType.SHORT.signature);
+			writeString(shortArray.getKey(), baos);
+			writeInt(shortArray.getValue().length, baos);
+			for (Short s : shortArray.getValue()) writeShort(s, baos);
+		}
+
+		for (Map.Entry<String, Integer[]> intArray : intArrays.entrySet()) {
+			baos.write(BDSType.LIST.signature);
+			baos.write(BDSType.INT.signature);
+			writeString(intArray.getKey(), baos);
+			writeInt(intArray.getValue().length, baos);
+			for (Integer i : intArray.getValue()) writeInt(i, baos);
+		}
+
+		for (Map.Entry<String, Long[]> longArray : longArrays.entrySet()) {
+			baos.write(BDSType.LIST.signature);
+			baos.write(BDSType.LONG.signature);
+			writeString(longArray.getKey(), baos);
+			writeInt(longArray.getValue().length, baos);
+			for (Long l : longArray.getValue()) writeLong(l, baos);
+		}
+
+		for (Map.Entry<String, Float[]> floatArray : floatArrays.entrySet()) {
+			baos.write(BDSType.LIST.signature);
+			baos.write(BDSType.FLOAT.signature);
+			writeString(floatArray.getKey(), baos);
+			writeInt(floatArray.getValue().length, baos);
+			for (Float f : floatArray.getValue()) writeFloat(f, baos);
+		}
+
+		for (Map.Entry<String, Double[]> doubleArray : doubleArrays.entrySet()) {
+			baos.write(BDSType.LIST.signature);
+			baos.write(BDSType.DOUBLE.signature);
+			writeString(doubleArray.getKey(), baos);
+			writeInt(doubleArray.getValue().length, baos);
+			for (Double d : doubleArray.getValue()) writeDouble(d, baos);
+		}
+
+		for (Map.Entry<String, String[]> stringArray : stringArrays.entrySet()) {
+			baos.write(BDSType.LIST.signature);
+			baos.write(BDSType.STRING.signature);
+			writeString(stringArray.getKey(), baos);
+			writeInt(stringArray.getValue().length, baos);
+			for (String s : stringArray.getValue()) writeString(s, baos);
+		}
+
+		for (Map.Entry<String, BDS[]> bdsArray : bdsArrays.entrySet()) {
+			baos.write(BDSType.LIST.signature);
+			baos.write(BDSType.BDS.signature);
+			writeString(bdsArray.getKey(), baos);
+			writeInt(bdsArray.getValue().length, baos);
+			for (BDS b : bdsArray.getValue()) {
+				byte[] data = b.write();
+				baos.write(data, 0, data.length);
+			}
 		}
 
 		baos.write(BDSType.END.signature);
@@ -362,6 +612,62 @@ public class BDS {
 		return true;
 	}
 
+	public boolean addStrings(String name, String[] values) {
+		if (takenNames.contains(name)) return false;
+		takenNames.add(name);
+		stringArrays.put(name, values);
+		return true;
+	}
+
+	public boolean addBytes(String name, byte[] values) {
+		if (takenNames.contains(name)) return false;
+		takenNames.add(name);
+		byteArrays.put(name, CollectionUtil.box(values));
+		return true;
+	}
+
+	public boolean addInts(String name, int[] values) {
+		if (takenNames.contains(name)) return false;
+		takenNames.add(name);
+		intArrays.put(name, CollectionUtil.box(values));
+		return true;
+	}
+
+	public boolean addShorts(String name, short[] values) {
+		if (takenNames.contains(name)) return false;
+		takenNames.add(name);
+		shortArrays.put(name, CollectionUtil.box(values));
+		return true;
+	}
+
+	public boolean addLongs(String name, long[] values) {
+		if (takenNames.contains(name)) return false;
+		takenNames.add(name);
+		longArrays.put(name, CollectionUtil.box(values));
+		return true;
+	}
+
+	public boolean addFloats(String name, float[] values) {
+		if (takenNames.contains(name)) return false;
+		takenNames.add(name);
+		floatArrays.put(name, CollectionUtil.box(values));
+		return true;
+	}
+
+	public boolean addDoubles(String name, double[] values) {
+		if (takenNames.contains(name)) return false;
+		takenNames.add(name);
+		doubleArrays.put(name, CollectionUtil.box(values));
+		return true;
+	}
+
+	public boolean addBDSs(String name, BDS[] values) {
+		if (takenNames.contains(name)) return false;
+		takenNames.add(name);
+		bdsArrays.put(name, values);
+		return true;
+	}
+
 	public Byte getByte(String name) {
 		return this.bytes.get(name);
 	}
@@ -394,6 +700,38 @@ public class BDS {
 		return this.bdss.get(name);
 	}
 
+	public byte[] getByteArray(String name) {
+		return CollectionUtil.unbox(this.byteArrays.get(name));
+	}
+
+	public short[] getShortArray(String name) {
+		return CollectionUtil.unbox(this.shortArrays.get(name));
+	}
+
+	public int[] getIntArray(String name) {
+		return this.intArrays.containsKey(name) ? CollectionUtil.unbox(this.intArrays.get(name)) : null;
+	}
+
+	public long[] getLongArray(String name) {
+		return CollectionUtil.unbox(this.longArrays.get(name));
+	}
+
+	public float[] getFloatArray(String name) {
+		return CollectionUtil.unbox(this.floatArrays.get(name));
+	}
+
+	public double[] getDoubleArray(String name) {
+		return CollectionUtil.unbox(this.doubleArrays.get(name));
+	}
+
+	public String[] getStringArray(String name) {
+		return this.stringArrays.get(name);
+	}
+
+	public BDS[] getBDSArray(String name) {
+		return this.bdsArrays.get(name);
+	}
+
 	private enum BDSType {
 		BYTE((byte) 1),
 		SHORT((byte) 2),
@@ -402,8 +740,9 @@ public class BDS {
 		FLOAT((byte) 5),
 		DOUBLE((byte) 6),
 		STRING((byte) 7),
-		BDS((byte) 8),
-		END((byte) 9),
+		LIST((byte) 8),
+		BDS((byte) 9),
+		END((byte) 10),
 		ERROR((byte) -1);
 
 		private static final Map<Byte, BDSType> TYPE_MAP;

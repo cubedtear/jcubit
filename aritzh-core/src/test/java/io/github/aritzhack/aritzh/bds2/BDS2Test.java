@@ -20,6 +20,7 @@ public class BDS2Test {
 
 		double value = 2.056d;
 		nested.addDouble("A", value);
+		bds1.addInts("ints", new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10});
 		bds1.addBDS(nested);
 
 		File f = new File("test.txt");
@@ -27,5 +28,9 @@ public class BDS2Test {
 
 		BDS bds2 = BDS.loadFromFile(f);
 		assertEquals(value, bds2.getBDS("C").getDouble("A"), 0.0d);
+		int[] ints = bds2.getIntArray("ints");
+		for(int i = 0; i<10; i++) {
+			assertEquals(ints[i], i+1);
+		}
 	}
 }
