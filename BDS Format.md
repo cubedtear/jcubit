@@ -18,14 +18,14 @@ Each section will have the following structure: First, there will be the section
 
 As of now, there are 8 different sections:
 
-- [Byte](#Byte)
-- [Short](#Short)
-- [Integer](#Integer)
-- [Long](#Long)
-- [Float](#Float)
-- [Double](#Double)
-- [String](#String)
-- [BDS](#BDS)
+- [Byte](#byte)
+- [Short](#short)
+- [Integer](#integer)
+- [Long](#long)
+- [Float](#float)
+- [Double](#double)
+- [String](#string)
+- [BDS](#bds)
 
 
 Let's see now how the content of each of them is encoded.
