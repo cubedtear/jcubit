@@ -84,7 +84,7 @@ public class CollectionUtil {
 	 *
 	 * @param arr           The array the elements will be appended to.
 	 * @param firstElements The elements to prepend, in order (first to last).
-	 * @param <T>          The type of the elements in the array.
+	 * @param <T>           The type of the elements in the array.
 	 * @return The array with all elements (The same as the {@code arr} argument).
 	 */
 	@SafeVarargs
@@ -240,10 +240,146 @@ public class CollectionUtil {
 	 * Returns the last element of a list, or null if it is empty
 	 *
 	 * @param list The list
-	 * @param <T> The type of the contents of the list
+	 * @param <T>  The type of the contents of the list
 	 * @return the last element of a list, or null if it is empty
 	 */
 	public static <T> T getLast(List<T> list) {
 		return list.isEmpty() ? null : list.get(list.size() - 1);
+	}
+
+	/**
+	 * Checks if two arrays are equal, up to the provided length.
+	 * Checked positions are [0, {@code length})
+	 *
+	 * @param a1     The first array
+	 * @param a2     The second array
+	 * @param length The length up to which to check if {@code a1} and {@code a2} are equal
+	 * @return Whether {@code a1} and {@code a2} are equal up to {@code length}
+	 */
+	public boolean equals(byte[] a1, byte[] a2, int length) {
+		if (a1.length < length || a2.length < length) return false;
+		for (int i = 0; i < length; i++) if (a1[i] != a2[i]) return false;
+		return true;
+	}
+
+	/**
+	 * Checks if two arrays are equal, up to the provided length.
+	 * Checked positions are [0, {@code length})
+	 *
+	 * @param a1     The first array
+	 * @param a2     The second array
+	 * @param length The length up to which to check if {@code a1} and {@code a2} are equal
+	 * @return Whether {@code a1} and {@code a2} are equal up to {@code length}
+	 */
+	public boolean equals(short[] a1, short[] a2, int length) {
+		if (a1.length < length || a2.length < length) return false;
+		for (int i = 0; i < length; i++) if (a1[i] != a2[i]) return false;
+		return true;
+	}
+
+	/**
+	 * Checks if two arrays are equal, up to the provided length.
+	 * Checked positions are [0, {@code length})
+	 *
+	 * @param a1     The first array
+	 * @param a2     The second array
+	 * @param length The length up to which to check if {@code a1} and {@code a2} are equal
+	 * @return Whether {@code a1} and {@code a2} are equal up to {@code length}
+	 */
+	public boolean equals(char[] a1, char[] a2, int length) {
+		if (a1.length < length || a2.length < length) return false;
+		for (int i = 0; i < length; i++) if (a1[i] != a2[i]) return false;
+		return true;
+	}
+
+	/**
+	 * Checks if two arrays are equal, up to the provided length.
+	 * Checked positions are [0, {@code length})
+	 *
+	 * @param a1     The first array
+	 * @param a2     The second array
+	 * @param length The length up to which to check if {@code a1} and {@code a2} are equal
+	 * @return Whether {@code a1} and {@code a2} are equal up to {@code length}
+	 */
+	public boolean equals(int[] a1, int[] a2, int length) {
+		if (a1.length < length || a2.length < length) return false;
+		for (int i = 0; i < length; i++) if (a1[i] != a2[i]) return false;
+		return true;
+	}
+
+	/**
+	 * Checks if two arrays are equal, up to the provided length.
+	 * Checked positions are [0, {@code length})
+	 *
+	 * @param a1     The first array
+	 * @param a2     The second array
+	 * @param length The length up to which to check if {@code a1} and {@code a2} are equal
+	 * @return Whether {@code a1} and {@code a2} are equal up to {@code length}
+	 */
+	public boolean equals(long[] a1, long[] a2, int length) {
+		if (a1.length < length || a2.length < length) return false;
+		for (int i = 0; i < length; i++) if (a1[i] != a2[i]) return false;
+		return true;
+	}
+
+	/**
+	 * Checks if two arrays are equal, up to the provided length.
+	 * Checked positions are [0, {@code length})
+	 *
+	 * @param a1     The first array
+	 * @param a2     The second array
+	 * @param length The length up to which to check if {@code a1} and {@code a2} are equal
+	 * @return Whether {@code a1} and {@code a2} are equal up to {@code length}
+	 */
+	public boolean equals(float[] a1, float[] a2, int length) {
+		if (a1.length < length || a2.length < length) return false;
+		for (int i = 0; i < length; i++) if (a1[i] != a2[i]) return false;
+		return true;
+	}
+
+	/**
+	 * Checks if two arrays are equal, up to the provided length.
+	 * Checked positions are [0, {@code length})
+	 *
+	 * @param a1     The first array
+	 * @param a2     The second array
+	 * @param length The length up to which to check if {@code a1} and {@code a2} are equal
+	 * @return Whether {@code a1} and {@code a2} are equal up to {@code length}
+	 */
+	public boolean equals(double[] a1, double[] a2, int length) {
+		if (a1.length < length || a2.length < length) return false;
+		for (int i = 0; i < length; i++) if (a1[i] != a2[i]) return false;
+		return true;
+	}
+
+	/**
+	 * Checks if two arrays are equal, up to the provided length.
+	 * Checked positions are [0, {@code length})
+	 *
+	 * @param a1     The first array
+	 * @param a2     The second array
+	 * @param length The length up to which to check if {@code a1} and {@code a2} are equal
+	 * @return Whether {@code a1} and {@code a2} are equal up to {@code length}
+	 */
+	public boolean equals(boolean[] a1, boolean[] a2, int length) {
+		if (a1.length < length || a2.length < length) return false;
+		for (int i = 0; i < length; i++) if (a1[i] != a2[i]) return false;
+		return true;
+	}
+
+	/**
+	 * Checks if two arrays are equal, up to the provided length.
+	 * Checked positions are [0, {@code length})
+	 *
+	 * @param a1     The first array
+	 * @param a2     The second array
+	 * @param length The length up to which to check if {@code a1} and {@code a2} are equal
+	 * @param <T>    The type of the array contents
+	 * @return Whether {@code a1} and {@code a2} are equal up to {@code length}
+	 */
+	public <T> boolean equals(T[] a1, T[] a2, int length) {
+		if (a1.length < length || a2.length < length) return false;
+		for (int i = 0; i < length; i++) if (a1[i].equals(a2[i])) return false;
+		return true;
 	}
 }
