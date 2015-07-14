@@ -256,7 +256,7 @@ public class CollectionUtil {
 	 * @param length The length up to which to check if {@code a1} and {@code a2} are equal
 	 * @return Whether {@code a1} and {@code a2} are equal up to {@code length}
 	 */
-	public boolean equals(byte[] a1, byte[] a2, int length) {
+	public static boolean equals(byte[] a1, byte[] a2, int length) {
 		if (a1.length < length || a2.length < length) return false;
 		for (int i = 0; i < length; i++) if (a1[i] != a2[i]) return false;
 		return true;
@@ -271,7 +271,7 @@ public class CollectionUtil {
 	 * @param length The length up to which to check if {@code a1} and {@code a2} are equal
 	 * @return Whether {@code a1} and {@code a2} are equal up to {@code length}
 	 */
-	public boolean equals(short[] a1, short[] a2, int length) {
+	public static boolean equals(short[] a1, short[] a2, int length) {
 		if (a1.length < length || a2.length < length) return false;
 		for (int i = 0; i < length; i++) if (a1[i] != a2[i]) return false;
 		return true;
@@ -286,7 +286,7 @@ public class CollectionUtil {
 	 * @param length The length up to which to check if {@code a1} and {@code a2} are equal
 	 * @return Whether {@code a1} and {@code a2} are equal up to {@code length}
 	 */
-	public boolean equals(char[] a1, char[] a2, int length) {
+	public static boolean equals(char[] a1, char[] a2, int length) {
 		if (a1.length < length || a2.length < length) return false;
 		for (int i = 0; i < length; i++) if (a1[i] != a2[i]) return false;
 		return true;
@@ -301,7 +301,7 @@ public class CollectionUtil {
 	 * @param length The length up to which to check if {@code a1} and {@code a2} are equal
 	 * @return Whether {@code a1} and {@code a2} are equal up to {@code length}
 	 */
-	public boolean equals(int[] a1, int[] a2, int length) {
+	public static boolean equals(int[] a1, int[] a2, int length) {
 		if (a1.length < length || a2.length < length) return false;
 		for (int i = 0; i < length; i++) if (a1[i] != a2[i]) return false;
 		return true;
@@ -316,7 +316,7 @@ public class CollectionUtil {
 	 * @param length The length up to which to check if {@code a1} and {@code a2} are equal
 	 * @return Whether {@code a1} and {@code a2} are equal up to {@code length}
 	 */
-	public boolean equals(long[] a1, long[] a2, int length) {
+	public static boolean equals(long[] a1, long[] a2, int length) {
 		if (a1.length < length || a2.length < length) return false;
 		for (int i = 0; i < length; i++) if (a1[i] != a2[i]) return false;
 		return true;
@@ -331,7 +331,7 @@ public class CollectionUtil {
 	 * @param length The length up to which to check if {@code a1} and {@code a2} are equal
 	 * @return Whether {@code a1} and {@code a2} are equal up to {@code length}
 	 */
-	public boolean equals(float[] a1, float[] a2, int length) {
+	public static boolean equals(float[] a1, float[] a2, int length) {
 		if (a1.length < length || a2.length < length) return false;
 		for (int i = 0; i < length; i++) if (a1[i] != a2[i]) return false;
 		return true;
@@ -346,7 +346,7 @@ public class CollectionUtil {
 	 * @param length The length up to which to check if {@code a1} and {@code a2} are equal
 	 * @return Whether {@code a1} and {@code a2} are equal up to {@code length}
 	 */
-	public boolean equals(double[] a1, double[] a2, int length) {
+	public static boolean equals(double[] a1, double[] a2, int length) {
 		if (a1.length < length || a2.length < length) return false;
 		for (int i = 0; i < length; i++) if (a1[i] != a2[i]) return false;
 		return true;
@@ -361,7 +361,7 @@ public class CollectionUtil {
 	 * @param length The length up to which to check if {@code a1} and {@code a2} are equal
 	 * @return Whether {@code a1} and {@code a2} are equal up to {@code length}
 	 */
-	public boolean equals(boolean[] a1, boolean[] a2, int length) {
+	public static boolean equals(boolean[] a1, boolean[] a2, int length) {
 		if (a1.length < length || a2.length < length) return false;
 		for (int i = 0; i < length; i++) if (a1[i] != a2[i]) return false;
 		return true;
@@ -377,7 +377,7 @@ public class CollectionUtil {
 	 * @param <T>    The type of the array contents
 	 * @return Whether {@code a1} and {@code a2} are equal up to {@code length}
 	 */
-	public <T> boolean equals(T[] a1, T[] a2, int length) {
+	public static <T> boolean equals(T[] a1, T[] a2, int length) {
 		if (a1.length < length || a2.length < length) return false;
 		for (int i = 0; i < length; i++) if (a1[i].equals(a2[i])) return false;
 		return true;
