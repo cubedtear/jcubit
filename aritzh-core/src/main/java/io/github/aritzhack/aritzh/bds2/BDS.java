@@ -396,13 +396,13 @@ public class BDS {
 
 	private enum BDSType {
 		BYTE((byte) 1),
-		STRING((byte) 2),
+		SHORT((byte) 2),
 		INT((byte) 3),
 		LONG((byte) 4),
-		SHORT((byte) 5),
-		BDS((byte) 6),
-		FLOAT((byte) 7),
-		DOUBLE((byte) 8),
+		FLOAT((byte) 5),
+		DOUBLE((byte) 6),
+		STRING((byte) 7),
+		BDS((byte) 8),
 		END((byte) 9),
 		ERROR((byte) -1);
 
