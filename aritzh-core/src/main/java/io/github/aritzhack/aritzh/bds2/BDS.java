@@ -117,7 +117,7 @@ public class BDS {
 					i = bds1.getU();
 					break;
 				case LIST:
-					switch (BDSType.fromSignature(data[i+1])) {
+					switch (BDSType.fromSignature(data[i + 1])) {
 						case BYTE:
 							i = bds.parseByteArray(data, i);
 							break;
@@ -147,13 +147,14 @@ public class BDS {
 						default:
 							throw new IllegalArgumentException("Given data is not in the appropriate format!");
 					}
+					break;
 				case END:
 					break A;
 				default:
 					throw new IllegalArgumentException("Unknown data type found, with byte: " + data[i]);
 			}
 		}
-		return Set2.of(bds, i);
+		return Set2.of(bds, i + 1);
 	}
 
 	private static Set2<String, Integer> parseString(byte[] data, int offset) {
@@ -172,6 +173,10 @@ public class BDS {
 		baos.write((byte) (name.length >> 8));
 		baos.write((byte) name.length);
 		for (byte b : name) baos.write(b);
+	}
+
+	private static short getShort(byte[] data, int offset) {
+		return (short) (data[offset++] << 8 | data[offset]);
 	}
 
 	private static int getInt(byte[] data, int offset) {
@@ -212,7 +217,7 @@ public class BDS {
 		Set2<String, Integer> name = parseString(data, offset + 1);
 		byte v = data[name.getU()];
 		this.addByte(name.getT(), v);
-		return name.getU();
+		return name.getU() + 1;
 	}
 
 	private int parseShort(byte[] data, int offset) {
@@ -221,9 +226,9 @@ public class BDS {
 
 		Set2<String, Integer> name = parseString(data, offset + 1);
 		offset = name.getU();
-		short v = (short) (data[offset++] << 8 | data[offset++]);
+		short v = getShort(data, offset);
 		this.addShort(name.getT(), v);
-		return offset;
+		return offset + Shorts.BYTES;
 	}
 
 	private int parseInt(byte[] data, int offset) {
@@ -234,7 +239,7 @@ public class BDS {
 		offset = name.getU();
 		int v = getInt(data, offset);
 		this.addInt(name.getT(), v);
-		return offset + 4;
+		return offset + Ints.BYTES;
 	}
 
 	private int parseLong(byte[] data, int offset) {
@@ -319,8 +324,8 @@ public class BDS {
 		int length = getInt(data, name.getU());
 		int[] intArray = new int[length];
 		offset = name.getU() + Ints.BYTES;
-		for (int i = 0; i < length; i ++) {
-			intArray[i] = getInt(data, offset + i*Ints.BYTES);
+		for (int i = 0; i < length; i++) {
+			intArray[i] = getInt(data, offset + i * Ints.BYTES);
 		}
 		this.addInts(name.getT(), intArray);
 		return offset + length * Ints.BYTES;
@@ -334,8 +339,8 @@ public class BDS {
 		int length = getInt(data, name.getU());
 		long[] longArray = new long[length];
 		offset = name.getU() + Ints.BYTES;
-		for (int i = 0; i < length; i += Longs.BYTES) {
-			longArray[i] = getLong(data, offset);
+		for (int i = 0; i < length; i++) {
+			longArray[i] = getLong(data, offset + i * Longs.BYTES);
 		}
 		this.addLongs(name.getT(), longArray);
 		return offset + length * Longs.BYTES;
@@ -379,7 +384,7 @@ public class BDS {
 		int length = getInt(data, name.getU());
 		String[] doubleArray = new String[length];
 		offset = name.getU() + Ints.BYTES;
-		for (int i = 0; i < length;) {
+		for (int i = 0; i < length; i++) {
 			Set2<String, Integer> str = parseString(data, offset);
 			doubleArray[i] = str.getT();
 			offset = str.getU();
@@ -389,14 +394,14 @@ public class BDS {
 	}
 
 	private int parseBDSArray(byte[] data, int offset) {
-		if (data[offset] != BDSType.LIST.signature || data[offset + 1] != BDSType.FLOAT.signature)
+		if (data[offset] != BDSType.LIST.signature || data[offset + 1] != BDSType.BDS.signature)
 			throw new IllegalArgumentException("Given data is not in the appropriate format!");
 
 		Set2<String, Integer> name = parseString(data, offset + 2);
 		int length = getInt(data, name.getU());
 		BDS[] bdsArray = new BDS[length];
 		offset = name.getU() + Ints.BYTES;
-		for (int i = 0; i < length;) {
+		for (int i = 0; i < length; i++) {
 			Set2<BDS, Integer> bds = parseBDS(data, offset);
 			bdsArray[i] = bds.getT();
 			offset = bds.getU();

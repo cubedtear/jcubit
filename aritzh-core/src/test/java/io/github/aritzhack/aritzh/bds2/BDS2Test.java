@@ -1,36 +1,63 @@
 package io.github.aritzhack.aritzh.bds2;
 
-import junit.framework.Assert;
+import io.github.aritzhack.aritzh.util.IOUtil;
+import org.junit.After;
 import org.junit.Test;
 
 import java.io.File;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
 
 /**
  * @author Aritz Lopez
  */
 public class BDS2Test {
 
+	private final File file = new File("test.txt");
+
 	@Test
 	public void testBDS() throws Exception {
 		BDS bds1 = BDS.createEmpty();
 
-		BDS nested = BDS.createEmpty("C");
+		BDS nested1 = BDS.createEmpty("C");
+		BDS nested2 = BDS.createEmpty("D");
+		bds1.addBDSs("bdss", new BDS[]{nested1, nested2});
 
-		double value = 2.056d;
-		nested.addDouble("A", value);
-		bds1.addInts("ints", new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10});
-		bds1.addBDS(nested);
+		final double doble = 2.056d;
+		final int[] ints = new int[]{10, 9, 8, 7, 6, 5, 4, 3, 2, 1, -12, -1, 0};
+		final String str = "Adios";
+		final byte bite = (byte) 5648;
+		final short sort = (short) 5;
+		final long loong = 15164613213165L;
+		final long[] longs = {16346141614L, 46168416416L, 4681464641486L};
 
-		File f = new File("test.txt");
-		bds1.writeToFile(f);
+		bds1.addLong("long", loong);
+		nested1.addDouble("double", doble);
+		nested1.addString("str", str);
+		nested2.addByte("byte", bite);
+		nested2.addShort("short", sort);
+		bds1.addLongs("longs", longs);
+		nested1.addInts("ints", ints);
 
-		BDS bds2 = BDS.loadFromFile(f);
-		assertEquals(value, bds2.getBDS("C").getDouble("A"), 0.0d);
-		int[] ints = bds2.getIntArray("ints");
-		for(int i = 0; i<10; i++) {
-			assertEquals(ints[i], i+1);
-		}
+		bds1.writeToFile(file);
+
+		BDS bds2 = BDS.loadFromFile(file);
+		BDS nestedOut1 = bds2.getBDSArray("bdss")[0];
+		BDS nestedOut2 = bds2.getBDSArray("bdss")[1];
+
+		assertEquals(loong, (long) bds2.getLong("long"));
+		assertEquals(doble, nestedOut1.getDouble("double"), 0.0d);
+		assertEquals(str, nestedOut1.getString("str"));
+		assertEquals(bite, (byte) nestedOut2.getByte("byte"));
+		assertEquals(sort, (short) nestedOut2.getShort("short"));
+		assertArrayEquals(longs, bds2.getLongArray("longs"));
+		assertArrayEquals(ints, nested1.getIntArray("ints"));
+	}
+
+	@After
+	public void tearDown() throws Exception {
+		IOUtil.delete(file);
+
 	}
 }
