@@ -1,3 +1,134 @@
-subprojects{
-	version '2.0.0'
+def javaV = org.gradle.internal.jvm.Jvm.current().javaVersion
+if (!javaV.java7) {
+	println "Building with java version " + javaV
+	println "Recommended to run gradle with java 7 instead"
+}
+
+subprojects {
+
+	version '2.1.2'
+
+	group 'io.github.aritzhack'
+
+	apply plugin: 'java'
+
+	sourceCompatibility = 1.7
+	targetCompatibility = 1.7
+
+	repositories {
+		mavenCentral()
+	}
+
+	if (System.getenv('TRAVIS') == null) {
+		apply plugin: 'signing'
+		apply plugin: 'maven'
+
+		uploadArchives.mustRunAfter build
+
+		task sourceJar(type: Jar, dependsOn: classes) {
+			classifier = 'sources'
+			from sourceSets.main.allSource
+		}
+
+		task javadocJar(type: Jar, dependsOn: javadoc) {
+			classifier = 'javadoc'
+			from javadoc.destinationDir
+		}
+
+		artifacts {
+			archives jar
+			archives sourceJar
+			archives javadocJar
+		}
+
+		signing {
+			sign configurations.archives
+		}
+
+		uploadArchives {
+			repositories {
+				mavenDeployer {
+					beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+					repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+						authentication(userName: ossrhUsername, password: ossrhPassword)
+					}
+
+					snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+						authentication(userName: ossrhUsername, password: ossrhPassword)
+					}
+
+					pom.project {
+						name project.name
+						packaging 'jar'
+						artifactId project.name
+						description 'Utility library to help making any kind of app or game.'
+						url 'https://github.com/aritzhack/aritzh'
+
+						scm {
+							connection 'scm:git:git@github.com/aritzhack/aritzh/'
+							developerConnection 'scm:git:git@github.com/aritzhack/aritzh/'
+							url 'https://github.com/aritzhack/aritzh'
+						}
+
+						licenses {
+							license {
+								name 'The Apache License, Version 2.0'
+								url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+							}
+						}
+
+						developers {
+							developer {
+								id 'aritzh'
+								name 'Aritz Lopez'
+								email 'aritzhack@gmail.com'
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+buildscript {
+	repositories {
+		mavenCentral()
+		//Needed only for SNAPSHOT versions
+		//maven { url "http://oss.sonatype.org/content/repositories/snapshots/" }
+	}
+	dependencies {
+		classpath "io.codearte.gradle.nexus:gradle-nexus-staging-plugin:0.5.3"
+	}
+}
+
+if (System.getenv('TRAVIS') == null) {
+	apply plugin: 'io.codearte.nexus-staging'
+	apply plugin: 'maven'
+
+	nexusStaging {
+		packageGroup = "io.github.aritzhack"
+	}
+
+	uploadArchives {
+		repositories {
+			mavenDeployer {
+				beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+				repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+					authentication(userName: ossrhUsername, password: ossrhPassword)
+				}
+
+				snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+					authentication(userName: ossrhUsername, password: ossrhPassword)
+				}
+			}
+		}
+	}
+
+	closeAndPromoteRepository {}.mustRunAfter subprojects.uploadArchives
+
+	task buildAndDeploy(dependsOn: [subprojects.build, subprojects.uploadArchives, closeAndPromoteRepository])
+
 }

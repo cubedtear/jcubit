@@ -24,12 +24,7 @@ import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import com.google.common.io.Files;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -40,7 +35,7 @@ import java.util.zip.GZIPOutputStream;
 import static com.google.common.base.Preconditions.checkArgument;
 
 /**
- * Special BDS that can store different BDSs inside of it
+ * Special BDS that can store different BDSs inside of it.
  *
  * @author Aritz Lopez
  */
@@ -50,27 +45,28 @@ public class BDSCompound extends BDS {
     private final List<BDS> items = new ArrayList<>();
 
     /**
-     * Creates an empty BDSCompound
+     * Creates an empty BDSCompound.
      *
-     * @param name The name of this BDS
+     * @param name The name of this BDSCompound.
      */
     public BDSCompound(String name) {
         this.name = name;
     }
 
     /**
-     * Reads the BDSCompound from a file
+     * Reads the BDSCompound from a file.
      *
-     * @param file The file to read from
+     * @param file The file to read from.
+     * @throws IOException if {@link Files#toByteArray(File)} throws an exception.
      */
     public BDSCompound(File file) throws IOException {
         this(Files.toByteArray(file));
     }
 
     /**
-     * Parses a BDSCompound from a byte array
+     * Parses a BDSCompound from a byte array.
      *
-     * @param data The byte array to parse this BDSCompound from
+     * @param data The byte array to parse this BDSCompound from.
      */
     public BDSCompound(byte[] data) {
         this(data, true);
@@ -137,29 +133,30 @@ public class BDSCompound extends BDS {
     }
 
     /**
-     * Constructs a BDS with the single specified BDS inside
+     * Constructs a BDS with the single specified BDS inside.
      *
-     * @param item The BDS this BDSCompound will contain
-     * @param name The name of this BDS
+     * @param item The BDS this BDSCompound will contain.
+     * @param name The name of this BDSCompound.
      */
     public BDSCompound(BDS item, String name) {
         this(new BDS[]{item}, name);
     }
 
     /**
-     * Constructs a BDSCompound with the BDSs inside of the array
+     * Constructs a BDSCompound with the BDSs inside of the array.
      *
-     * @param items The array of BDSs to construct this with
+     * @param items The array of BDSs to construct this with.
+     * @param name The name of this BDSCompound.
      */
     public BDSCompound(BDS[] items, String name) {
         this(Arrays.asList(items), name);
     }
 
     /**
-     * Constructs a BDSCompound with specified BDSs
+     * Constructs a BDSCompound with specified BDSs.
      *
-     * @param items The list of BDSs to construct this with
-     * @param name  The name of this BDS
+     * @param items The list of BDSs to construct this with.
+     * @param name  The name of this BDS.
      */
     public BDSCompound(List<BDS> items, String name) {
         this.items.addAll(items);
@@ -186,10 +183,10 @@ public class BDSCompound extends BDS {
     // Getters for each type
 
     /**
-     * Add an element to this BDS
+     * Add an element to this BDS.
      *
-     * @param bds The element to be added
-     * @return {@code this}. Eases builder pattern
+     * @param bds The element to be added.
+     * @return {@code this}. Eases builder pattern.
      */
     public BDSCompound add(BDS bds) {
         checkArgument(bds != this, "Cannot add itself as a sub-element!");
@@ -198,8 +195,8 @@ public class BDSCompound extends BDS {
     }
 
     /**
-     * @param coll Adds all elements in the collection to this BDS
-     * @return {@code this}. Eases builder pattern
+     * @param coll Adds all elements in the collection to this BDS.
+     * @return {@code this}. Eases builder pattern.
      */
     public BDSCompound addAll(Collection<? extends BDS> coll) {
         this.items.addAll(coll);
@@ -207,19 +204,30 @@ public class BDSCompound extends BDS {
     }
 
     /**
-     * Returns the {@code offset}'th BDSString from the list
+     * Returns the {@code offset}'th BDSString from the list.
      *
-     * @param offset The number of BDSStrings to skip
-     * @return The {@code offset}'th BDSString from the list
+     * @param offset The number of BDSStrings to skip.
+     * @return The {@code offset}'th BDSString from the list.
      */
-    public BDSString getString(String name, int offset) {
+    public BDSString getString(int offset) {
         return this.getAllStrings().get(offset);
     }
 
+	/**
+	 * Returns the BDSString with the given name
+	 *
+	 * @param name The name of BDSString to find.
+	 * @return The BDSString with the given name, or null if it couldn't be found.
+	 */
+	public BDSString getString(String name) {
+		for(BDS b : this.items) if(b instanceof BDSString && b.getName().equals(name)) return (BDSString) b;
+		return null;
+	}
+
     /**
-     * Returns a list with all {@link BDSString}s inside this Compound
+     * Returns a list with all {@link BDSString}s inside this Compound.
      *
-     * @return a list with all {@link BDSString}s inside this Compound
+     * @return a list with all {@link BDSString}s inside this Compound.
      */
     public List<BDSString> getAllStrings() {
         List<BDSString> ret = Lists.newArrayList();
@@ -230,19 +238,30 @@ public class BDSCompound extends BDS {
     }
 
     /**
-     * Returns the {@code offset}'th BDSByte from the list
+     * Returns the {@code offset}'th BDSByte from the list.
      *
-     * @param offset The number of BDSBytes to skip
-     * @return The {@code offset}'th BDSByte from the list
+     * @param offset The number of BDSBytes to skip.
+     * @return The {@code offset}'th BDSByte from the list.
      */
-    public BDSByte getByte(String name, int offset) {
+    public BDSByte getByte(int offset) {
         return this.getAllBytes().get(offset);
     }
 
+	/**
+	 * Returns the BDSByte with the given name
+	 *
+	 * @param name The name of BDSByte to find.
+	 * @return The BDSByte with the given name, or null if it couldn't be found.
+	 */
+	public BDSByte getByte(String name) {
+		for(BDS b : this.items) if(b instanceof BDSByte && b.getName().equals(name)) return (BDSByte) b;
+		return null;
+	}
+
     /**
-     * Returns a list with all {@link BDSByte}s inside this Compound
+     * Returns a list with all {@link BDSByte}s inside this Compound.
      *
-     * @return a list with all {@link BDSByte}s inside this Compound
+     * @return a list with all {@link BDSByte}s inside this Compound.
      */
     public List<BDSByte> getAllBytes() {
         List<BDSByte> ret = Lists.newArrayList();
@@ -253,19 +272,30 @@ public class BDSCompound extends BDS {
     }
 
     /**
-     * Returns the {@code offset}'th BDSShort from the list
+     * Returns the {@code offset}'th BDSShort from the list.
      *
-     * @param offset The number of BDSShorts to skip
-     * @return The {@code offset}'th BDSShort from the list
+     * @param offset The number of BDSShorts to skip.
+     * @return The {@code offset}'th BDSShort from the list.
      */
-    public BDSShort getShort(String name, int offset) {
+    public BDSShort getShort(int offset) {
         return this.getAllShorts().get(offset);
     }
 
+	/**
+	 * Returns the BDSShort with the given name
+	 *
+	 * @param name The name of BDSShort to find.
+	 * @return The BDSShort with the given name, or null if it couldn't be found.
+	 */
+	public BDSShort getShort(String name) {
+		for(BDS b : this.items) if(b instanceof BDSShort && b.getName().equals(name)) return (BDSShort) b;
+		return null;
+	}
+
     /**
-     * Returns a list with all {@link BDSShort}s inside this Compound
+     * Returns a list with all {@link BDSShort}s inside this Compound.
      *
-     * @return a list with all {@link BDSShort}s inside this Compound
+     * @return a list with all {@link BDSShort}s inside this Compound.
      */
     public List<BDSShort> getAllShorts() {
         List<BDSShort> ret = Lists.newArrayList();
@@ -276,19 +306,30 @@ public class BDSCompound extends BDS {
     }
 
     /**
-     * Returns the {@code offset}'th BDSInt from the list
+     * Returns the {@code offset}'th BDSInt from the list.
      *
-     * @param offset The number of BDSInts to skip
-     * @return The {@code offset}'th BDSInt from the list
+     * @param offset The number of BDSInts to skip.
+     * @return The {@code offset}'th BDSInt from the list.
      */
-    public BDSInt getInt(String name, int offset) {
+    public BDSInt getInt(int offset) {
         return this.getAllInts().get(offset);
     }
 
+	/**
+	 * Returns the BDSInt with the given name
+	 *
+	 * @param name The name of BDSInt to find.
+	 * @return The BDSInt with the given name, or null if it couldn't be found.
+	 */
+	public BDSInt getInt(String name) {
+		for(BDS b : this.items) if(b instanceof BDSInt && b.getName().equals(name)) return (BDSInt) b;
+		return null;
+	}
+
     /**
-     * Returns a list with all {@link BDSInt}s inside this Compound
+     * Returns a list with all {@link BDSInt}s inside this Compound.
      *
-     * @return a list with all {@link BDSInt}s inside this Compound
+     * @return a list with all {@link BDSInt}s inside this Compound.
      */
     public List<BDSInt> getAllInts() {
         List<BDSInt> ret = Lists.newArrayList();
@@ -299,19 +340,30 @@ public class BDSCompound extends BDS {
     }
 
     /**
-     * Returns the {@code offset}th BDSCompound from the list
+     * Returns the {@code offset}th BDSCompound from the list.
      *
-     * @param offset The number of BDSCompounds to skip
-     * @return The {@code offset}th BDSCompound from the list
+     * @param offset The number of BDSCompounds to skip.
+     * @return The {@code offset}th BDSCompound from the list.
      */
-    public BDSCompound getComp(String name, int offset) {
+    public BDSCompound getComp(int offset) {
         return this.getAllCompounds().get(offset);
     }
 
+	/**
+	 * Returns the BDSCompound with the given name
+	 *
+	 * @param name The name of BDSCompound to find.
+	 * @return The BDSCompound with the given name, or null if it couldn't be found.
+	 */
+	public BDSCompound getComp(String name) {
+		for(BDS b : this.items) if(b instanceof BDSCompound && b.getName().equals(name)) return (BDSCompound) b;
+		return null;
+	}
+
     /**
-     * Returns a list with all {@link BDSCompound}s inside this Compound
+     * Returns a list with all {@link BDSCompound}s inside this Compound.
      *
-     * @return a list with all {@link BDSCompound}s inside this Compound
+     * @return a list with all {@link BDSCompound}s inside this Compound.
      */
     public List<BDSCompound> getAllCompounds() {
         List<BDSCompound> ret = Lists.newArrayList();
@@ -322,10 +374,10 @@ public class BDSCompound extends BDS {
     }
 
     /**
-     * Remove the element from the list
+     * Remove the element from the list.
      *
-     * @param bds The element to be removed
-     * @return {@code true} if this BDSCompound contained the element
+     * @param bds The element to be removed.
+     * @return {@code true} if this BDSCompound contained the element.
      */
     public boolean remove(BDS bds) {
         return this.items.remove(bds);
@@ -346,20 +398,20 @@ public class BDSCompound extends BDS {
 
     /**
      * Stores the data from this BDSCompound into a byte array, so that
-     * it can be easy and efficiently saved. Gzip is used to compress the data
+     * it can be easy and efficiently saved. Gzip is used to compress the data.
      *
-     * @return The byte array identifying this BDS
-     * @see #getUncompressedBytes() Uncompressed counterpart
+     * @return The byte array identifying this BDS.
+     * @see #getUncompressedBytes() Uncompressed counterpart.
      */
     public byte[] getBytes() {
         return compress(this.getUncompressedBytes());
     }
 
     /**
-     * Writes this BDSCompound to the specified file
+     * Writes this BDSCompound to the specified file.
      *
-     * @param f The file to write this Compound to
-     * @throws java.io.IOException Caused by opening the file or writing to it
+     * @param f The file to write this Compound to.
+     * @throws java.io.IOException Caused by opening the file or writing to it.
      */
     public void writeToFile(File f) throws IOException {
         Preconditions.checkArgument(f != null, "File cannot be null");
@@ -373,9 +425,10 @@ public class BDSCompound extends BDS {
     }
 
     /**
-     * Write this BDSCompound to an {@link java.io.OutputStream}
+     * Write this BDSCompound to an {@link java.io.OutputStream}.
      *
      * @param s The stream this Compound will be written to.
+     * @throws IOException If {@link java.io.OutputStream#write(byte[])} throws an exception.
      */
     public void writeToStream(OutputStream s) throws IOException {
         Preconditions.checkArgument(s != null, "Stream cannot be null");
@@ -444,9 +497,9 @@ public class BDSCompound extends BDS {
 
 
     /**
-     * Returns a multi-line string representing the tree structure of this Compound
+     * Returns a multi-line string representing the tree structure of this Compound.
      *
-     * @return a multi-line string representing the tree structure of this Compound
+     * @return a multi-line string representing the tree structure of this Compound.
      */
     @Override
     public String toString() {

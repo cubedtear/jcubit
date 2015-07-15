@@ -55,6 +55,7 @@ public abstract class BDS {
 
     /**
      * Returns the data corresponding to this BDS.
+     * @return the data corresponding to this BDS.
      */
     public abstract Object getData();
 

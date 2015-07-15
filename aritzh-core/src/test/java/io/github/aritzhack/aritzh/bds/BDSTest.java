@@ -93,18 +93,18 @@ public class BDSTest {
 
         BDSCompound afterComp = new BDSCompound(beforeComp.getBytes());
 
-        BDSString afterStringBDS = afterComp.getString("string", 0);
-        BDSByte afterByteBDS = afterComp.getByte("byte", 0);
-        BDSShort afterShortBDS = afterComp.getShort("short", 0);
-        BDSInt afterIntBDS = afterComp.getInt("int", 0);
+        BDSString afterStringBDS = afterComp.getString("string");
+        BDSByte afterByteBDS = afterComp.getByte("byte");
+        BDSShort afterShortBDS = afterComp.getShort("short");
+        BDSInt afterIntBDS = afterComp.getInt("int");
 
 
-        BDSCompound nestedComp = afterComp.getComp("nestedComp", 0);
+        BDSCompound nestedComp = afterComp.getComp("nestedComp");
 
-        BDSString afterNestedStringBDS = nestedComp.getString("string", 0);
-        BDSByte afterNestedByteBDS = nestedComp.getByte("byte", 0);
-        BDSShort afterNestedShortBDS = nestedComp.getShort("short", 0);
-        BDSInt afterNestedIntBDS = nestedComp.getInt("int", 0);
+        BDSString afterNestedStringBDS = nestedComp.getString("string");
+        BDSByte afterNestedByteBDS = nestedComp.getByte("byte");
+        BDSShort afterNestedShortBDS = nestedComp.getShort("short");
+        BDSInt afterNestedIntBDS = nestedComp.getInt("int");
 
         assertEquals(beforeComp, afterComp);
 
