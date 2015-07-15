@@ -18,7 +18,7 @@ public class BDS2Test {
 
 	@Test
 	public void testBDS() throws Exception {
-		BDS bds1 = BDS.createEmpty();
+		BDS bds1 = BDS.createEmpty("");
 
 		BDS nested1 = BDS.createEmpty("C");
 		BDS nested2 = BDS.createEmpty("D");

@@ -384,75 +384,87 @@ public class CollectionUtil {
 	}
 
 	public static Byte[] box(byte[] bytes) {
+		if (bytes == null) return null;
 		Byte[] nBytes = new Byte[bytes.length];
-		for(int i = 0; i<bytes.length; i++) nBytes[i] = bytes[i];
+		for (int i = 0; i < bytes.length; i++) nBytes[i] = bytes[i];
 		return nBytes;
 	}
 
 	public static Short[] box(short[] shorts) {
+		if (shorts == null) return null;
 		Short[] nShorts = new Short[shorts.length];
-		for(int i = 0; i<shorts.length; i++) nShorts[i] = shorts[i];
+		for (int i = 0; i < shorts.length; i++) nShorts[i] = shorts[i];
 		return nShorts;
 	}
 
 	public static Integer[] box(int[] ints) {
+		if (ints == null) return null;
 		Integer[] nInts = new Integer[ints.length];
-		for(int i = 0; i<ints.length; i++) nInts[i] = ints[i];
+		for (int i = 0; i < ints.length; i++) nInts[i] = ints[i];
 		return nInts;
 	}
 
 	public static Long[] box(long[] longs) {
+		if (longs == null) return null;
 		Long[] nLongs = new Long[longs.length];
-		for(int i = 0; i<longs.length; i++) nLongs[i] = longs[i];
+		for (int i = 0; i < longs.length; i++) nLongs[i] = longs[i];
 		return nLongs;
 	}
 
 	public static Float[] box(float[] floats) {
+		if (floats == null) return null;
 		Float[] nFloats = new Float[floats.length];
-		for(int i = 0; i<floats.length; i++) nFloats[i] = floats[i];
+		for (int i = 0; i < floats.length; i++) nFloats[i] = floats[i];
 		return nFloats;
 	}
-	
+
 	public static Double[] box(double[] doubles) {
+		if (doubles == null) return null;
 		Double[] nDoubles = new Double[doubles.length];
-		for(int i = 0; i<doubles.length; i++) nDoubles[i] = doubles[i];
+		for (int i = 0; i < doubles.length; i++) nDoubles[i] = doubles[i];
 		return nDoubles;
 	}
 
 	public static byte[] unbox(Byte[] bytes) {
+		if (bytes == null) return null;
 		byte[] nBytes = new byte[bytes.length];
-		for(int i = 0; i<bytes.length; i++) nBytes[i] = bytes[i];
+		for (int i = 0; i < bytes.length; i++) nBytes[i] = bytes[i];
 		return nBytes;
 	}
 
 	public static short[] unbox(Short[] shorts) {
+		if (shorts == null) return null;
 		short[] nShorts = new short[shorts.length];
-		for(int i = 0; i<shorts.length; i++) nShorts[i] = shorts[i];
+		for (int i = 0; i < shorts.length; i++) nShorts[i] = shorts[i];
 		return nShorts;
 	}
 
 	public static int[] unbox(Integer[] ints) {
+		if (ints == null) return null;
 		int[] nInts = new int[ints.length];
-		for(int i = 0; i<ints.length; i++) nInts[i] = ints[i];
+		for (int i = 0; i < ints.length; i++) nInts[i] = ints[i];
 		return nInts;
 	}
 
 	public static long[] unbox(Long[] longs) {
+		if (longs == null) return null;
 		long[] nLongs = new long[longs.length];
-		for(int i = 0; i<longs.length; i++) nLongs[i] = longs[i];
+		for (int i = 0; i < longs.length; i++) nLongs[i] = longs[i];
 		return nLongs;
 	}
 
 	public static float[] unbox(Float[] floats) {
+		if (floats == null) return null;
 		float[] nFloats = new float[floats.length];
-		for(int i = 0; i<floats.length; i++) nFloats[i] = floats[i];
+		for (int i = 0; i < floats.length; i++) nFloats[i] = floats[i];
 		return nFloats;
 	}
 
 	public static double[] unbox(Double[] doubles) {
+		if (doubles == null) return null;
 		double[] nDoubles = new double[doubles.length];
-		for(int i = 0; i<doubles.length; i++) nDoubles[i] = doubles[i];
+		for (int i = 0; i < doubles.length; i++) nDoubles[i] = doubles[i];
 		return nDoubles;
 	}
-	
+
 }
