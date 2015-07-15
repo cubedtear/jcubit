@@ -1,4 +1,4 @@
-package io.github.aritzhack.aritzh.bds2;
+package io.github.aritzhack.aritzh.bds;
 
 import io.github.aritzhack.aritzh.util.IOUtil;
 import org.junit.After;
@@ -12,7 +12,7 @@ import static org.junit.Assert.assertEquals;
 /**
  * @author Aritz Lopez
  */
-public class BDS2Test {
+public class BDSTest {
 
 	private final File file = new File("test.txt");
 

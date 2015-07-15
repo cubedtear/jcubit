@@ -1,4 +1,4 @@
-package io.github.aritzhack.aritzh.bds2;
+package io.github.aritzhack.aritzh.bds;
 
 import com.google.common.base.Charsets;
 import com.google.common.collect.ImmutableMap;
