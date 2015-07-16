@@ -74,7 +74,7 @@ public class SpriteSheetLoader {
 
 			while ((line = reader.readLine()) != null) {
 				Matcher matcher = spritePattern.matcher(line);
-				if(line.matches("\\w+\\.png")) continue;
+				if (line.matches("\\w+\\.png")) continue;
 				if (!matcher.matches())
 					throw new IllegalArgumentException("Line \"" + line + "\" does not match regex \"" + spritePattern.pattern() + "\"");
 				String name = matcher.group(1);

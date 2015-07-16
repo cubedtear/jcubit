@@ -29,55 +29,55 @@ import java.util.Arrays;
  */
 public class Sprite {
 
-    private final int[] pixels;
-    private final int width;
-    private final int height;
+	private final int[] pixels;
+	private final int width;
+	private final int height;
 
-    public Sprite(int width, int height, int[] pixels) {
-        Preconditions.checkArgument(width >= 0 && height >= 0, "Sprite sizes cannot be negative");
-        Preconditions.checkArgument(pixels.length == width * height, "Pixel array size does not match the given width and height");
-        this.width = width;
-        this.height = height;
-        this.pixels = pixels;
-    }
+	public Sprite(int width, int height, int[] pixels) {
+		Preconditions.checkArgument(width >= 0 && height >= 0, "Sprite sizes cannot be negative");
+		Preconditions.checkArgument(pixels.length == width * height, "Pixel array size does not match the given width and height");
+		this.width = width;
+		this.height = height;
+		this.pixels = pixels;
+	}
 
-    public Sprite(int width, int height, int color) {
-        Preconditions.checkArgument(width >= 0 && height >= 0, "Sprite sizes cannot be negative");
-        Preconditions.checkArgument((long) width * (long) height < Integer.MAX_VALUE, "Sizes are too big (" + width + " * " + height + " > Integer.MAX_VALUE)");
-        this.height = height;
-        this.width = width;
-        this.pixels = new int[width * height];
-        Arrays.fill(this.pixels, color);
-    }
+	public Sprite(int width, int height, int color) {
+		Preconditions.checkArgument(width >= 0 && height >= 0, "Sprite sizes cannot be negative");
+		Preconditions.checkArgument((long) width * (long) height < Integer.MAX_VALUE, "Sizes are too big (" + width + " * " + height + " > Integer.MAX_VALUE)");
+		this.height = height;
+		this.width = width;
+		this.pixels = new int[width * height];
+		Arrays.fill(this.pixels, color);
+	}
 
-    public Sprite(String sprite) throws IOException {
-        this(ImageIO.read(Sprite.class.getClassLoader().getResourceAsStream(sprite.trim())));
-    }
+	public Sprite(String sprite) throws IOException {
+		this(ImageIO.read(Sprite.class.getClassLoader().getResourceAsStream(sprite.trim())));
+	}
 
-    public Sprite(File file) throws IOException {
-        this(ImageIO.read(file));
-    }
+	public Sprite(File file) throws IOException {
+		this(ImageIO.read(file));
+	}
 
-    public Sprite(BufferedImage image) {
-        this.width = image.getWidth();
-        this.height = image.getHeight();
-        this.pixels = image.getRGB(0, 0, width, height, null, 0, width);
-    }
+	public Sprite(BufferedImage image) {
+		this.width = image.getWidth();
+		this.height = image.getHeight();
+		this.pixels = image.getRGB(0, 0, width, height, null, 0, width);
+	}
 
-    public int[] getPixels() {
-        return pixels;
-    }
+	public int[] getPixels() {
+		return pixels;
+	}
 
-    public int getWidth() {
-        return width;
-    }
+	public int getWidth() {
+		return width;
+	}
 
-    public int getHeight() {
-        return height;
-    }
+	public int getHeight() {
+		return height;
+	}
 
-    public Sprite copy() {
-        int[] newPix = Arrays.copyOf(this.pixels, this.pixels.length);
-        return new Sprite(this.width, this.height, newPix);
-    }
+	public Sprite copy() {
+		int[] newPix = Arrays.copyOf(this.pixels, this.pixels.length);
+		return new Sprite(this.width, this.height, newPix);
+	}
 }

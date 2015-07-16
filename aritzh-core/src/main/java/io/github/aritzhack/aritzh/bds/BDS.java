@@ -6,7 +6,6 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.google.common.primitives.*;
 import io.github.aritzhack.aritzh.collections.ArrayUtil;
-import io.github.aritzhack.aritzh.collections.CollectionUtil;
 import io.github.aritzhack.aritzh.util.NotNull;
 import io.github.aritzhack.aritzh.util.Set2;
 

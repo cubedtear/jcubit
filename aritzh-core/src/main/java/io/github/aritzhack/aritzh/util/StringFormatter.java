@@ -21,29 +21,29 @@ package io.github.aritzhack.aritzh.util;
  */
 public class StringFormatter {
 
-    private static final char TOKEN_START = '{';
-    private static final char TOKEN_END = '}';
-    private static final String NULL_STRING = "{NULL}";
+	private static final char TOKEN_START = '{';
+	private static final char TOKEN_END = '}';
+	private static final String NULL_STRING = "{NULL}";
 
-    @NotNull
-    public static String format(@Nullable String format, @Nullable Object... args) {
-        if (format == null || format.length() == 0 || "".equals(format)) return "";
-        char[] chars = format.toCharArray();
+	@NotNull
+	public static String format(@Nullable String format, @Nullable Object... args) {
+		if (format == null || format.length() == 0 || "".equals(format)) return "";
+		char[] chars = format.toCharArray();
 
-        StringBuilder b = new StringBuilder(format.length());
+		StringBuilder b = new StringBuilder(format.length());
 
-        int token = 0;
+		int token = 0;
 
-        for (int i = 0; i < chars.length; i++) {
-            if (i < chars.length - 1 && chars[i] == TOKEN_START && chars[i + 1] == TOKEN_END) {
-                if (args == null || token >= args.length) b.append(NULL_STRING);
-                else b.append(args[token++]);
-                i++;
-            } else {
-                b.append(chars[i]);
-            }
-        }
+		for (int i = 0; i < chars.length; i++) {
+			if (i < chars.length - 1 && chars[i] == TOKEN_START && chars[i + 1] == TOKEN_END) {
+				if (args == null || token >= args.length) b.append(NULL_STRING);
+				else b.append(args[token++]);
+				i++;
+			} else {
+				b.append(chars[i]);
+			}
+		}
 
-        return b.toString();
-    }
+		return b.toString();
+	}
 }

@@ -23,19 +23,19 @@ import java.awt.image.BufferedImage;
  */
 public interface IRender {
 
-    void clear();
+	void clear();
 
-    void draw(int x, int y, int width, int height, int[] colors);
+	void draw(int x, int y, int width, int height, int[] colors);
 
-    void draw(int x, int y, Sprite sprite);
+	void draw(int x, int y, Sprite sprite);
 
-    void draw(int x, int y, String spriteName);
+	void draw(int x, int y, String spriteName);
 
-    void draw(int x, int y, long deltaNS, AnimatedSprite sprite);
+	void draw(int x, int y, long deltaNS, AnimatedSprite sprite);
 
-    BufferedImage getImage();
+	BufferedImage getImage();
 
-    int getWidth();
+	int getWidth();
 
-    int getHeight();
+	int getHeight();
 }

@@ -17,7 +17,6 @@
 package io.github.aritzhack.aritzh.collections;
 
 import com.google.common.base.Function;
-import com.google.common.base.Preconditions;
 
 import java.util.Collection;
 import java.util.List;

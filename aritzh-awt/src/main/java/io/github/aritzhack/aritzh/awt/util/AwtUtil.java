@@ -16,18 +16,17 @@
 
 package io.github.aritzhack.aritzh.awt.util;
 
-import javax.swing.JOptionPane;
-import java.awt.Component;
-import java.awt.Window;
+import javax.swing.*;
+import java.awt.*;
 
 /**
  * @author Aritz Lopez
  */
 public class AwtUtil {
 
-    public static Window getWindow(Component component) {
-        if (component == null) return JOptionPane.getRootFrame();
-        else if (component instanceof Window) return (Window) component;
-        else return AwtUtil.getWindow(component.getParent());
-    }
+	public static Window getWindow(Component component) {
+		if (component == null) return JOptionPane.getRootFrame();
+		else if (component instanceof Window) return (Window) component;
+		else return AwtUtil.getWindow(component.getParent());
+	}
 }

@@ -23,119 +23,119 @@ import com.google.common.base.Preconditions;
  */
 public class BasicGame implements IGameEngine {
 
-    protected final IGame gameHandler;
-    private final boolean lockFps;
-    protected boolean running = false;
-    protected int fps, ups;
-    private int targetUps;
+	protected final IGame gameHandler;
+	private final boolean lockFps;
+	protected boolean running = false;
+	protected int fps, ups;
+	private int targetUps;
 
-    public BasicGame(IGame game) {
-        this(game, 60);
-    }
+	public BasicGame(IGame game) {
+		this(game, 60);
+	}
 
-    public BasicGame(IGame game, int targetUps) {
-        this(game, targetUps, false);
-    }
+	public BasicGame(IGame game, int targetUps) {
+		this(game, targetUps, false);
+	}
 
-    public BasicGame(IGame game, int targetUps, boolean lockFps) {
-        Preconditions.checkArgument(game != null, "Game cannot be null!");
-        this.gameHandler = game;
-        this.lockFps = lockFps;
-        this.targetUps = Math.max(targetUps, -1);
-    }
+	public BasicGame(IGame game, int targetUps, boolean lockFps) {
+		Preconditions.checkArgument(game != null, "Game cannot be null!");
+		this.gameHandler = game;
+		this.lockFps = lockFps;
+		this.targetUps = Math.max(targetUps, -1);
+	}
 
-    public BasicGame(IGame game, boolean lockFps) {
-        this(game, 60, lockFps);
-    }
+	public BasicGame(IGame game, boolean lockFps) {
+		this(game, 60, lockFps);
+	}
 
-    @Override
-    public void run() {
+	@Override
+	public void run() {
 
-        double delta = 0;
+		double delta = 0;
 
-        long lastNano = System.nanoTime();
-        long lastMillis = System.currentTimeMillis();
+		long lastNano = System.nanoTime();
+		long lastMillis = System.currentTimeMillis();
 
-        this.getGame().onStart();
+		this.getGame().onStart();
 
-        this.running = true;
+		this.running = true;
 
-        while (this.running) {
+		while (this.running) {
 
-            double NSPerTick = 1000000000.0 / this.targetUps;
+			double NSPerTick = 1000000000.0 / this.targetUps;
 
-            long now = System.nanoTime();
-            delta += (now - lastNano) / NSPerTick;
-            lastNano = now;
+			long now = System.nanoTime();
+			delta += (now - lastNano) / NSPerTick;
+			lastNano = now;
 
-            if (delta >= 1 || this.targetUps < 0) {
-                this.update();
-                this.ups++;
-                delta--;
-                if (lockFps) {
-                    this.render();
-                    this.fps++;
-                }
-            }
+			if (delta >= 1 || this.targetUps < 0) {
+				this.update();
+				this.ups++;
+				delta--;
+				if (lockFps) {
+					this.render();
+					this.fps++;
+				}
+			}
 
-            if (!lockFps) {
-                this.render();
-                this.fps++;
-            }
+			if (!lockFps) {
+				this.render();
+				this.fps++;
+			}
 
-            if (System.currentTimeMillis() - lastMillis >= 1000) {
-                lastMillis += 1000;
-                this.updatePS();
-                this.fps = this.ups = 0;
-            }
-        }
-    }
+			if (System.currentTimeMillis() - lastMillis >= 1000) {
+				lastMillis += 1000;
+				this.updatePS();
+				this.fps = this.ups = 0;
+			}
+		}
+	}
 
-    public int getTargetUps() {
-        return targetUps;
-    }
+	public int getTargetUps() {
+		return targetUps;
+	}
 
-    public void setTargetUps(int targetUps) {
-        this.targetUps = targetUps;
-    }
+	public void setTargetUps(int targetUps) {
+		this.targetUps = targetUps;
+	}
 
-    @Override
-    public void start() {
-        this.getGame().onStart();
-    }
+	@Override
+	public void start() {
+		this.getGame().onStart();
+	}
 
-    @Override
-    public void stop() {
-        this.getGame().onStop();
-    }
+	@Override
+	public void stop() {
+		this.getGame().onStop();
+	}
 
-    @Override
-    public void update() {
-        this.getGame().onUpdate();
-    }
+	@Override
+	public void update() {
+		this.getGame().onUpdate();
+	}
 
-    @Override
-    public void render() {
-        this.getGame().onRender();
-    }
+	@Override
+	public void render() {
+		this.getGame().onRender();
+	}
 
-    @Override
-    public void updatePS() {
-        this.getGame().onUpdatePS();
-    }
+	@Override
+	public void updatePS() {
+		this.getGame().onUpdatePS();
+	}
 
-    @Override
-    public IGame getGame() {
-        return this.gameHandler;
-    }
+	@Override
+	public IGame getGame() {
+		return this.gameHandler;
+	}
 
-    @Override
-    public int getFPS() {
-        return fps;
-    }
+	@Override
+	public int getFPS() {
+		return fps;
+	}
 
-    @Override
-    public int getUPS() {
-        return ups;
-    }
+	@Override
+	public int getUPS() {
+		return ups;
+	}
 }

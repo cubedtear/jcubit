@@ -22,16 +22,16 @@ package io.github.aritzhack.aritzh.extensions;
  * @author Aritz Lopez
  */
 public class Extension {
-    public final String name;
-    public final String version;
-    public final String appVersion;
-    public final Object extensionInstance;
+	public final String name;
+	public final String version;
+	public final String appVersion;
+	public final Object extensionInstance;
 
-    protected Extension(String name, String version, String appVersion, Object extensionInstance) {
-        this.name = name;
-        this.version = version;
-        this.appVersion = appVersion;
-        this.extensionInstance = extensionInstance;
-    }
+	protected Extension(String name, String version, String appVersion, Object extensionInstance) {
+		this.name = name;
+		this.version = version;
+		this.appVersion = appVersion;
+		this.extensionInstance = extensionInstance;
+	}
 
 }

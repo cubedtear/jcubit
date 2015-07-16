@@ -25,27 +25,27 @@ import io.github.aritzhack.aritzh.util.StringFormatter;
  */
 public class LogEvent {
 
-    private final String message;
-    private final LogLevel level;
-    private final Throwable throwable;
+	private final String message;
+	private final LogLevel level;
+	private final Throwable throwable;
 
-    public LogEvent(LogLevel level, String format, Object... args) {
-        this(level, StringFormatter.format(format, args));
-    }
+	public LogEvent(LogLevel level, String format, Object... args) {
+		this(level, StringFormatter.format(format, args));
+	}
 
-    public LogEvent(LogLevel level, String message) {
-        this(level, message, (Throwable) null);
-    }
+	public LogEvent(LogLevel level, String message) {
+		this(level, message, (Throwable) null);
+	}
 
-    public LogEvent(LogLevel level, String message, @Nullable Throwable throwable) {
-        this.level = level;
-        this.throwable = throwable;
-        this.message = message;
-    }
+	public LogEvent(LogLevel level, String message, @Nullable Throwable throwable) {
+		this.level = level;
+		this.throwable = throwable;
+		this.message = message;
+	}
 
-    public LogEvent(LogLevel level, String format, @Nullable Throwable throwable, Object... args) {
-        this(level, StringFormatter.format(format, args), throwable);
-    }
+	public LogEvent(LogLevel level, String format, @Nullable Throwable throwable, Object... args) {
+		this(level, StringFormatter.format(format, args), throwable);
+	}
 }
 
 

@@ -24,38 +24,38 @@ import org.junit.Test;
  */
 public class MatrixTest {
 
-    @Test
-    public void getElementTest() {
-        Matrix<Integer> mat = MatrixTest.newMultiplicationTable(10, 10);
-        for (int x = 0; x < 10; x++) {
-            for (int y = 0; y < 10; y++) {
-                Assert.assertEquals("For coords (" + x + ", " + y + ")", x * y, mat.get(x, y).intValue());
-            }
-        }
-    }
+	public static Matrix<Integer> newMultiplicationTable(int x, int y) {
+		Matrix<Integer> ret = new Matrix<>(x, y, 0);
+		for (int ix = 0; ix < x; ix++) {
+			for (int iy = 0; iy < y; iy++) {
+				ret.set(ix * iy, ix, iy);
+			}
+		}
+		return ret;
+	}
 
-    public static Matrix<Integer> newMultiplicationTable(int x, int y) {
-        Matrix<Integer> ret = new Matrix<>(x, y, 0);
-        for (int ix = 0; ix < x; ix++) {
-            for (int iy = 0; iy < y; iy++) {
-                ret.set(ix * iy, ix, iy);
-            }
-        }
-        return ret;
-    }
+	@Test
+	public void getElementTest() {
+		Matrix<Integer> mat = MatrixTest.newMultiplicationTable(10, 10);
+		for (int x = 0; x < 10; x++) {
+			for (int y = 0; y < 10; y++) {
+				Assert.assertEquals("For coords (" + x + ", " + y + ")", x * y, mat.get(x, y).intValue());
+			}
+		}
+	}
 
-    @Test
-    public void paramFuncTest() {
-        Matrix<Integer> mat = MatrixTest.newMultiplicationTable(10, 10);
+	@Test
+	public void paramFuncTest() {
+		Matrix<Integer> mat = MatrixTest.newMultiplicationTable(10, 10);
 
-        mat.runForEach(new ParametrizedFunction<Matrix<Integer>.MatrixElement<Integer>, Object>() {
-            @Override
-            public Object apply(Matrix<Integer>.MatrixElement<Integer> element, Object... args) {
-                int x = element.getX();
-                int y = element.getY();
-                Assert.assertEquals("For coords (" + x + ", " + y + ")", x * y, element.getE().intValue());
-                return null;
-            }
-        });
-    }
+		mat.runForEach(new ParametrizedFunction<Matrix<Integer>.MatrixElement<Integer>, Object>() {
+			@Override
+			public Object apply(Matrix<Integer>.MatrixElement<Integer> element, Object... args) {
+				int x = element.getX();
+				int y = element.getY();
+				Assert.assertEquals("For coords (" + x + ", " + y + ")", x * y, element.getE().intValue());
+				return null;
+			}
+		});
+	}
 }

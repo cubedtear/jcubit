@@ -21,43 +21,43 @@ package io.github.aritzhack.aritzh.logging.core;
  */
 public interface ILogger {
 
-    void t(String msg);
+	void t(String msg);
 
-    void t(String format, Object... arguments);
+	void t(String format, Object... arguments);
 
-    void t(String msg, Throwable t);
+	void t(String msg, Throwable t);
 
-    void t(String msg, Throwable t, Object... args);
+	void t(String msg, Throwable t, Object... args);
 
-    void d(String msg);
+	void d(String msg);
 
-    void d(String format, Object... arguments);
+	void d(String format, Object... arguments);
 
-    void d(String msg, Throwable t);
+	void d(String msg, Throwable t);
 
-    void d(String msg, Throwable t, Object... args);
+	void d(String msg, Throwable t, Object... args);
 
-    void i(String msg);
+	void i(String msg);
 
-    void i(String format, Object... arguments);
+	void i(String format, Object... arguments);
 
-    void i(String msg, Throwable t);
+	void i(String msg, Throwable t);
 
-    void i(String msg, Throwable t, Object... args);
+	void i(String msg, Throwable t, Object... args);
 
-    void w(String msg);
+	void w(String msg);
 
-    void w(String format, Object... arguments);
+	void w(String format, Object... arguments);
 
-    void w(String msg, Throwable t);
+	void w(String msg, Throwable t);
 
-    void w(String msg, Throwable t, Object... args);
+	void w(String msg, Throwable t, Object... args);
 
-    void e(String msg);
+	void e(String msg);
 
-    void e(String format, Object... arguments);
+	void e(String format, Object... arguments);
 
-    void e(String msg, Throwable t);
+	void e(String msg, Throwable t);
 
-    void e(String msg, Throwable t, Object... args);
+	void e(String msg, Throwable t, Object... args);
 }

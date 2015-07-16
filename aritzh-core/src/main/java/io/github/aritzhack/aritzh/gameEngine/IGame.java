@@ -21,15 +21,15 @@ package io.github.aritzhack.aritzh.gameEngine;
  */
 public interface IGame {
 
-    public void onStart();
+	public void onStart();
 
-    public void onStop();
+	public void onStop();
 
-    public void onRender();
+	public void onRender();
 
-    public void onUpdate();
+	public void onUpdate();
 
-    public String getGameName();
+	public String getGameName();
 
-    public void onUpdatePS();
+	public void onUpdatePS();
 }

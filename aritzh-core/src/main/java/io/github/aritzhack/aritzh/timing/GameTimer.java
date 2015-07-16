@@ -26,54 +26,54 @@ import java.util.List;
  */
 public class GameTimer {
 
-    private int fps, ups, cfps, cups;
-    private List<Integer> fpss = Lists.newArrayList();
-    private List<Integer> upss = Lists.newArrayList();
-    private long lastMillis;
+	private int fps, ups, cfps, cups;
+	private List<Integer> fpss = Lists.newArrayList();
+	private List<Integer> upss = Lists.newArrayList();
+	private long lastMillis;
 
-    public GameTimer() {
-        this.init();
-    }
+	public GameTimer() {
+		this.init();
+	}
 
-    public void init() {
-        this.ups = this.fps = 0;
-        this.lastMillis = System.currentTimeMillis();
-    }
+	public void init() {
+		this.ups = this.fps = 0;
+		this.lastMillis = System.currentTimeMillis();
+	}
 
-    public void update() {
-        this.cups++;
+	public void update() {
+		this.cups++;
 
-        if (System.currentTimeMillis() - lastMillis >= 1000) {
-            this.updatePS();
-        }
-    }
+		if (System.currentTimeMillis() - lastMillis >= 1000) {
+			this.updatePS();
+		}
+	}
 
-    private void updatePS() {
-        this.fps = this.cfps;
-        this.ups = this.cups;
-        this.fpss.add(this.fps);
-        this.upss.add(this.ups);
-        this.cups = this.cfps = 0;
-        this.lastMillis += 1000;
-    }
+	private void updatePS() {
+		this.fps = this.cfps;
+		this.ups = this.cups;
+		this.fpss.add(this.fps);
+		this.upss.add(this.ups);
+		this.cups = this.cfps = 0;
+		this.lastMillis += 1000;
+	}
 
-    public void render() {
-        this.cfps++;
-    }
+	public void render() {
+		this.cfps++;
+	}
 
-    public int getFPS() {
-        return fps;
-    }
+	public int getFPS() {
+		return fps;
+	}
 
-    public int getUPS() {
-        return ups;
-    }
+	public int getUPS() {
+		return ups;
+	}
 
-    public int getAverageFPS() {
-        return this.fpss.size() > 0 ? CollectionUtil.integerSum(this.fpss) / this.fpss.size() : 0;
-    }
+	public int getAverageFPS() {
+		return this.fpss.size() > 0 ? CollectionUtil.integerSum(this.fpss) / this.fpss.size() : 0;
+	}
 
-    public int getAverageUPS() {
-        return this.upss.size() > 0 ? CollectionUtil.integerSum(this.upss) / this.upss.size() : 0;
-    }
+	public int getAverageUPS() {
+		return this.upss.size() > 0 ? CollectionUtil.integerSum(this.upss) / this.upss.size() : 0;
+	}
 }

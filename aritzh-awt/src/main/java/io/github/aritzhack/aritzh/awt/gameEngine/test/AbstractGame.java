@@ -11,30 +11,30 @@ import java.awt.*;
  */
 public abstract class AbstractGame implements IGame {
 
-    @Override
-    public void onStart() {
-    }
+	@Override
+	public void onStart() {
+	}
 
-    @Override
-    public void onStop() {
-    }
+	@Override
+	public void onStop() {
+	}
 
-    @Override
-    public void onRender() {
-    }
+	@Override
+	public void onRender() {
+	}
 
-    @Override
-    public void onUpdate() {
-    }
+	@Override
+	public void onUpdate() {
+	}
 
-    @Override
-    public abstract String getGameName();
+	@Override
+	public abstract String getGameName();
 
-    @Override
-    public void onUpdatePS() {
-    }
+	@Override
+	public void onUpdatePS() {
+	}
 
-    public void onPostRender(Graphics g) {
+	public void onPostRender(Graphics g) {
 
-    }
+	}
 }
