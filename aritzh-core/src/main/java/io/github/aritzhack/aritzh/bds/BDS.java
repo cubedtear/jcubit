@@ -5,6 +5,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.google.common.primitives.*;
+import io.github.aritzhack.aritzh.collections.ArrayUtil;
 import io.github.aritzhack.aritzh.collections.CollectionUtil;
 import io.github.aritzhack.aritzh.util.NotNull;
 import io.github.aritzhack.aritzh.util.Set2;
@@ -69,7 +70,7 @@ public class BDS {
 		if (data.length < SIGNATURE.length + 2)
 			throw new IllegalArgumentException("Data is too short, it is not in the correct format!");
 
-		if (!CollectionUtil.equals(data, SIGNATURE, SIGNATURE.length))
+		if (!ArrayUtil.equals(data, SIGNATURE, SIGNATURE.length))
 			throw new IllegalArgumentException("Given data is not in the appropriate format!");
 
 		return parseBDS(data, SIGNATURE.length).getT();
@@ -719,7 +720,7 @@ public class BDS {
 	public boolean addBytes(String name, byte[] values) {
 		if (takenNames.contains(name)) return false;
 		takenNames.add(name);
-		byteArrays.put(name, CollectionUtil.box(values));
+		byteArrays.put(name, ArrayUtil.box(values));
 		return true;
 	}
 
@@ -733,7 +734,7 @@ public class BDS {
 	public boolean addInts(String name, int[] values) {
 		if (takenNames.contains(name)) return false;
 		takenNames.add(name);
-		intArrays.put(name, CollectionUtil.box(values));
+		intArrays.put(name, ArrayUtil.box(values));
 		return true;
 	}
 
@@ -747,7 +748,7 @@ public class BDS {
 	public boolean addShorts(String name, short[] values) {
 		if (takenNames.contains(name)) return false;
 		takenNames.add(name);
-		shortArrays.put(name, CollectionUtil.box(values));
+		shortArrays.put(name, ArrayUtil.box(values));
 		return true;
 	}
 
@@ -761,7 +762,7 @@ public class BDS {
 	public boolean addLongs(String name, long[] values) {
 		if (takenNames.contains(name)) return false;
 		takenNames.add(name);
-		longArrays.put(name, CollectionUtil.box(values));
+		longArrays.put(name, ArrayUtil.box(values));
 		return true;
 	}
 
@@ -775,7 +776,7 @@ public class BDS {
 	public boolean addFloats(String name, float[] values) {
 		if (takenNames.contains(name)) return false;
 		takenNames.add(name);
-		floatArrays.put(name, CollectionUtil.box(values));
+		floatArrays.put(name, ArrayUtil.box(values));
 		return true;
 	}
 
@@ -789,7 +790,7 @@ public class BDS {
 	public boolean addDoubles(String name, double[] values) {
 		if (takenNames.contains(name)) return false;
 		takenNames.add(name);
-		doubleArrays.put(name, CollectionUtil.box(values));
+		doubleArrays.put(name, ArrayUtil.box(values));
 		return true;
 	}
 
@@ -894,7 +895,7 @@ public class BDS {
 	 * @return the array with the given name.
 	 */
 	public byte[] getByteArray(String name) {
-		return CollectionUtil.unbox(this.byteArrays.get(name));
+		return ArrayUtil.unbox(this.byteArrays.get(name));
 	}
 
 	/**
@@ -904,7 +905,7 @@ public class BDS {
 	 * @return the array with the given name.
 	 */
 	public short[] getShortArray(String name) {
-		return CollectionUtil.unbox(this.shortArrays.get(name));
+		return ArrayUtil.unbox(this.shortArrays.get(name));
 	}
 
 	/**
@@ -914,7 +915,7 @@ public class BDS {
 	 * @return the array with the given name.
 	 */
 	public int[] getIntArray(String name) {
-		return CollectionUtil.unbox(this.intArrays.get(name));
+		return ArrayUtil.unbox(this.intArrays.get(name));
 	}
 
 	/**
@@ -924,7 +925,7 @@ public class BDS {
 	 * @return the array with the given name.
 	 */
 	public long[] getLongArray(String name) {
-		return CollectionUtil.unbox(this.longArrays.get(name));
+		return ArrayUtil.unbox(this.longArrays.get(name));
 	}
 
 	/**
@@ -934,7 +935,7 @@ public class BDS {
 	 * @return the array with the given name.
 	 */
 	public float[] getFloatArray(String name) {
-		return CollectionUtil.unbox(this.floatArrays.get(name));
+		return ArrayUtil.unbox(this.floatArrays.get(name));
 	}
 
 	/**
@@ -944,7 +945,7 @@ public class BDS {
 	 * @return the array with the given name.
 	 */
 	public double[] getDoubleArray(String name) {
-		return CollectionUtil.unbox(this.doubleArrays.get(name));
+		return ArrayUtil.unbox(this.doubleArrays.get(name));
 	}
 
 	/**

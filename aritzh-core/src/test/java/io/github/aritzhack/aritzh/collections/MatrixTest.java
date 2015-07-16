@@ -48,7 +48,7 @@ public class MatrixTest {
     public void paramFuncTest() {
         Matrix<Integer> mat = MatrixTest.newMultiplicationTable(10, 10);
 
-        mat.runForEach(new ParameterizedFunction<Matrix<Integer>.MatrixElement<Integer>, Object>() {
+        mat.runForEach(new ParametrizedFunction<Matrix<Integer>.MatrixElement<Integer>, Object>() {
             @Override
             public Object apply(Matrix<Integer>.MatrixElement<Integer> element, Object... args) {
                 int x = element.getX();
