@@ -1,7 +1,5 @@
 package io.github.aritzhack.aritzh.collections;
 
-import com.google.common.base.Preconditions;
-
 /**
  * @author Aritz Lopez
  */
@@ -39,104 +37,6 @@ public enum ArrayUtil {
 		T[] ret = (T[]) new Object[arr.length + firstElements.length];
 		System.arraycopy(firstElements, 0, ret, 0, firstElements.length);
 		System.arraycopy(arr, 0, ret, firstElements.length, arr.length);
-		return ret;
-	}
-
-	/**
-	 * Convert a {@link Byte} array to a primitive {@code byte} array.
-	 *
-	 * @param byteArray The array to convert to primitive.
-	 * @return The primitive array the argument represents.
-	 * @throws NullPointerException If a null was found, thrown when unboxing.
-	 */
-	public static byte[] toPrimitiveArray(Byte[] byteArray) throws NullPointerException {
-		Preconditions.checkArgument(byteArray != null);
-		byte[] ret = new byte[byteArray.length];
-		for (int i = 0; i < byteArray.length; i++) ret[i] = byteArray[i];
-		return ret;
-	}
-
-	/**
-	 * Convert a {@link Integer} array to a primitive {@code int} array.
-	 *
-	 * @param integerArray The array to convert to primitive.
-	 * @return The primitive array the argument represents.
-	 * @throws NullPointerException If a null was found, thrown when unboxing.
-	 */
-	public static int[] toPrimitiveArray(Integer[] integerArray) throws NullPointerException {
-		Preconditions.checkArgument(integerArray != null);
-		int[] ret = new int[integerArray.length];
-		for (int i = 0; i < integerArray.length; i++) ret[i] = integerArray[i];
-		return ret;
-	}
-
-	/**
-	 * Convert a {@link Short} array to a primitive {@code short} array.
-	 *
-	 * @param shortArray The array to convert to primitive.
-	 * @return The primitive array the argument represents.
-	 * @throws NullPointerException If a null was found, thrown when unboxing.
-	 */
-	public static short[] toPrimitiveArray(Short[] shortArray) throws NullPointerException {
-		Preconditions.checkArgument(shortArray != null);
-		short[] ret = new short[shortArray.length];
-		for (int i = 0; i < shortArray.length; i++) ret[i] = shortArray[i];
-		return ret;
-	}
-
-	/**
-	 * Convert a {@link Long} array to a primitive {@code long} array.
-	 *
-	 * @param longArray The array to convert to primitive.
-	 * @return The primitive array the argument represents.
-	 * @throws NullPointerException If a null was found, thrown when unboxing.
-	 */
-	public static long[] toPrimitiveArray(Long[] longArray) throws NullPointerException {
-		Preconditions.checkArgument(longArray != null);
-		long[] ret = new long[longArray.length];
-		for (int i = 0; i < longArray.length; i++) ret[i] = longArray[i];
-		return ret;
-	}
-
-	/**
-	 * Convert a {@link Float} array to a primitive {@code float} array.
-	 *
-	 * @param floatArray The array to convert to primitive.
-	 * @return The primitive array the argument represents.
-	 * @throws NullPointerException If a null was found, thrown when unboxing.
-	 */
-	public static float[] toPrimitiveArray(Float[] floatArray) throws NullPointerException {
-		Preconditions.checkArgument(floatArray != null);
-		float[] ret = new float[floatArray.length];
-		for (int i = 0; i < floatArray.length; i++) ret[i] = floatArray[i];
-		return ret;
-	}
-
-	/**
-	 * Convert a {@link Double} array to a primitive {@code double} array.
-	 *
-	 * @param doubleArray The array to convert to primitive.
-	 * @return The primitive array the argument represents.
-	 * @throws NullPointerException If a null was found, thrown when unboxing.
-	 */
-	public static double[] toPrimitiveArray(Double[] doubleArray) throws NullPointerException {
-		Preconditions.checkArgument(doubleArray != null);
-		double[] ret = new double[doubleArray.length];
-		for (int i = 0; i < doubleArray.length; i++) ret[i] = doubleArray[i];
-		return ret;
-	}
-
-	/**
-	 * Convert a {@link Character} array to a primitive {@code char} array.
-	 *
-	 * @param characterArray The array to convert to primitive.
-	 * @return The primitive array the argument represents.
-	 * @throws NullPointerException If a null was found, thrown when unboxing.
-	 */
-	public static char[] toPrimitiveArray(Character[] characterArray) throws NullPointerException {
-		Preconditions.checkArgument(characterArray != null);
-		char[] ret = new char[characterArray.length];
-		for (int i = 0; i < characterArray.length; i++) ret[i] = characterArray[i];
 		return ret;
 	}
 
@@ -276,6 +176,11 @@ public enum ArrayUtil {
 		return true;
 	}
 
+	/**
+	 * Boxes a primitive array to a wrapper array.
+	 * @param bytes The primitive array.
+	 * @return the primitive array converted to a wrapper array, or {@code null} if the input was {@code null}.
+	 */
 	public static Byte[] box(byte[] bytes) {
 		if (bytes == null) return null;
 		Byte[] nBytes = new Byte[bytes.length];
@@ -283,6 +188,23 @@ public enum ArrayUtil {
 		return nBytes;
 	}
 
+	/**
+	 * Boxes a primitive array to a wrapper array.
+	 * @param chars The primitive array.
+	 * @return the primitive array converted to a wrapper array, or {@code null} if the input was {@code null}.
+	 */
+	public static Character[] box(char[] chars) {
+		if (chars == null) return null;
+		Character[] nChars = new Character[chars.length];
+		for (int i = 0; i < chars.length; i++) nChars[i] = chars[i];
+		return nChars;
+	}
+
+	/**
+	 * Boxes a primitive array to a wrapper array.
+	 * @param shorts The primitive array.
+	 * @return the primitive array converted to a wrapper array, or {@code null} if the input was {@code null}.
+	 */
 	public static Short[] box(short[] shorts) {
 		if (shorts == null) return null;
 		Short[] nShorts = new Short[shorts.length];
@@ -290,6 +212,11 @@ public enum ArrayUtil {
 		return nShorts;
 	}
 
+	/**
+	 * Boxes a primitive array to a wrapper array.
+	 * @param ints The primitive array.
+	 * @return the primitive array converted to a wrapper array, or {@code null} if the input was {@code null}.
+	 */
 	public static Integer[] box(int[] ints) {
 		if (ints == null) return null;
 		Integer[] nInts = new Integer[ints.length];
@@ -297,6 +224,11 @@ public enum ArrayUtil {
 		return nInts;
 	}
 
+	/**
+	 * Boxes a primitive array to a wrapper array.
+	 * @param longs The primitive array.
+	 * @return the primitive array converted to a wrapper array, or {@code null} if the input was {@code null}.
+	 */
 	public static Long[] box(long[] longs) {
 		if (longs == null) return null;
 		Long[] nLongs = new Long[longs.length];
@@ -304,6 +236,11 @@ public enum ArrayUtil {
 		return nLongs;
 	}
 
+	/**
+	 * Boxes a primitive array to a wrapper array.
+	 * @param floats The primitive array.
+	 * @return the primitive array converted to a wrapper array, or {@code null} if the input was {@code null}.
+	 */
 	public static Float[] box(float[] floats) {
 		if (floats == null) return null;
 		Float[] nFloats = new Float[floats.length];
@@ -311,6 +248,11 @@ public enum ArrayUtil {
 		return nFloats;
 	}
 
+	/**
+	 * Boxes a primitive array to a wrapper array.
+	 * @param doubles The primitive array.
+	 * @return the primitive array converted to a wrapper array, or {@code null} if the input was {@code null}.
+	 */
 	public static Double[] box(double[] doubles) {
 		if (doubles == null) return null;
 		Double[] nDoubles = new Double[doubles.length];
@@ -318,6 +260,12 @@ public enum ArrayUtil {
 		return nDoubles;
 	}
 
+	/**
+	 * Unboxes a wrapper array to a primitive array.
+	 * @param bytes The wrapper array.
+	 * @return the wrapper array converted to a primitive array, or {@code null} if the input was {@code null}.
+	 * @throws NullPointerException If one of the values is null.
+	 */
 	public static byte[] unbox(Byte[] bytes) {
 		if (bytes == null) return null;
 		byte[] nBytes = new byte[bytes.length];
@@ -325,6 +273,25 @@ public enum ArrayUtil {
 		return nBytes;
 	}
 
+	/**
+	 * Unboxes a wrapper array to a primitive array.
+	 * @param chars The wrapper array.
+	 * @return the wrapper array converted to a primitive array, or {@code null} if the input was {@code null}.
+	 * @throws NullPointerException If one of the values is null.
+	 */
+	public static char[] unbox(Character[] chars) {
+		if (chars == null) return null;
+		char[] nChars = new char[chars.length];
+		for (int i = 0; i < chars.length; i++) nChars[i] = chars[i];
+		return nChars;
+	}
+
+	/**
+	 * Unboxes a wrapper array to a primitive array.
+	 * @param shorts The wrapper array.
+	 * @return the wrapper array converted to a primitive array, or {@code null} if the input was {@code null}.
+	 * @throws NullPointerException If one of the values is null.
+	 */
 	public static short[] unbox(Short[] shorts) {
 		if (shorts == null) return null;
 		short[] nShorts = new short[shorts.length];
@@ -332,6 +299,12 @@ public enum ArrayUtil {
 		return nShorts;
 	}
 
+	/**
+	 * Unboxes a wrapper array to a primitive array.
+	 * @param ints The wrapper array.
+	 * @return the wrapper array converted to a primitive array, or {@code null} if the input was {@code null}.
+	 * @throws NullPointerException If one of the values is null.
+	 */
 	public static int[] unbox(Integer[] ints) {
 		if (ints == null) return null;
 		int[] nInts = new int[ints.length];
@@ -339,6 +312,12 @@ public enum ArrayUtil {
 		return nInts;
 	}
 
+	/**
+	 * Unboxes a wrapper array to a primitive array.
+	 * @param longs The wrapper array.
+	 * @return the wrapper array converted to a primitive array, or {@code null} if the input was {@code null}.
+	 * @throws NullPointerException If one of the values is null.
+	 */
 	public static long[] unbox(Long[] longs) {
 		if (longs == null) return null;
 		long[] nLongs = new long[longs.length];
@@ -346,6 +325,12 @@ public enum ArrayUtil {
 		return nLongs;
 	}
 
+	/**
+	 * Unboxes a wrapper array to a primitive array.
+	 * @param floats The wrapper array.
+	 * @return the wrapper array converted to a primitive array, or {@code null} if the input was {@code null}.
+	 * @throws NullPointerException If one of the values is null.
+	 */
 	public static float[] unbox(Float[] floats) {
 		if (floats == null) return null;
 		float[] nFloats = new float[floats.length];
@@ -353,6 +338,12 @@ public enum ArrayUtil {
 		return nFloats;
 	}
 
+	/**
+	 * Unboxes a wrapper array to a primitive array.
+	 * @param doubles The wrapper array.
+	 * @return the wrapper array converted to a primitive array, or {@code null} if the input was {@code null}.
+	 * @throws NullPointerException If one of the values is null.
+	 */
 	public static double[] unbox(Double[] doubles) {
 		if (doubles == null) return null;
 		double[] nDoubles = new double[doubles.length];
