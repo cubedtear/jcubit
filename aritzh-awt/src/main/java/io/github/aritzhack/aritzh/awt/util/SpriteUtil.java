@@ -233,8 +233,8 @@ public class SpriteUtil {
 		widthSum /= (Math.floor(Math.sqrt(spriteList.size())));
 		for (Sprite s : spriteList) {
 			if (x + s.getWidth() > widthSum) {
-				if(y + s.getHeight() > heightSum) {
-					heightSum+=s.getHeight();
+				if (y + s.getHeight() > heightSum) {
+					heightSum += s.getHeight();
 				}
 				x = 0;
 				y += maxY;
@@ -267,15 +267,15 @@ public class SpriteUtil {
 		int maxY = img.getHeight();
 		boolean isTransparent = true;
 
-		while(isTransparent) {
+		while (isTransparent) {
 			maxY--;
-			if(maxY == 0) break;
-			for(int x = 0; x<img.getWidth() && isTransparent; x++) {
-				if(img.getRGB(x, maxY) != 0) isTransparent = false;
+			if (maxY == 0) break;
+			for (int x = 0; x < img.getWidth() && isTransparent; x++) {
+				if (img.getRGB(x, maxY) != 0) isTransparent = false;
 			}
 		}
 
-		return img.getSubimage(0, 0, img.getWidth(), maxY+1);
+		return img.getSubimage(0, 0, img.getWidth(), maxY + 1);
 	}
 
 	public static String sheetMapToString(Map<String, Rectangle> sheet) {

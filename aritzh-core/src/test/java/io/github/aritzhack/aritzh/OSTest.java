@@ -28,28 +28,27 @@ import java.io.IOException;
  */
 public class OSTest {
 
-    @Test
-    public void getOsTest() {
-
-        File f = new File("");
-        switch (OSUtil.getOs()) {
-            case WINDOWS:
-                try {
-                    Assert.assertFalse(f.getCanonicalPath().startsWith("/"));
-                } catch (IOException e) {
-                    Assert.assertFalse(f.getAbsolutePath().startsWith("/"));
-                }
-                return;
-            case UNIX:
-            case MACOS:
-                try {
-                    Assert.assertTrue(f.getCanonicalPath().startsWith("/"));
-                } catch (IOException e) {
-                    Assert.assertTrue(f.getAbsolutePath().startsWith("/"));
-                }
-                return;
-            case UNKNOWN:
-                Assert.fail("Unknown OS: " + System.getProperty("os.name").toLowerCase());
-        }
-    }
+	@Test
+	public void getOsTest() {
+		File f = new File("");
+		switch (OSUtil.getOs()) {
+			case WINDOWS:
+				try {
+					Assert.assertFalse(f.getCanonicalPath().startsWith("/"));
+				} catch (IOException e) {
+					Assert.assertFalse(f.getAbsolutePath().startsWith("/"));
+				}
+				return;
+			case UNIX:
+			case MACOS:
+				try {
+					Assert.assertTrue(f.getCanonicalPath().startsWith("/"));
+				} catch (IOException e) {
+					Assert.assertTrue(f.getAbsolutePath().startsWith("/"));
+				}
+				return;
+			case UNKNOWN:
+				Assert.fail("Unknown OS: " + System.getProperty("os.name").toLowerCase());
+		}
+	}
 }

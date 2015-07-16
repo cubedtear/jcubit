@@ -27,17 +27,17 @@ import org.reflections.Reflections;
  */
 public interface ExtensibleApp {
 
-    /**
-     * Returns an instance of Reflections used to load the extensions. {@link org.reflections.Reflections#Reflections(Object...)} by providing a ClassLoader
-     *
-     * @return an instance of Reflections used to load the extensions
-     */
-    public Reflections getReflections();
+	/**
+	 * Returns an instance of Reflections used to load the extensions. {@link org.reflections.Reflections#Reflections(Object...)} by providing a ClassLoader
+	 *
+	 * @return an instance of Reflections used to load the extensions
+	 */
+	public Reflections getReflections();
 
-    /**
-     * Returns EventBus into which the extension-related events should be posted
-     *
-     * @return the EventBus for the extension-related events
-     */
-    public EventBus getExtensionsEventBus();
+	/**
+	 * Returns EventBus into which the extension-related events should be posted
+	 *
+	 * @return the EventBus for the extension-related events
+	 */
+	public EventBus getExtensionsEventBus();
 }

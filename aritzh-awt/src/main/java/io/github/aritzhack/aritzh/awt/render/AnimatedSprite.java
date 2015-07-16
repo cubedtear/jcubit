@@ -26,30 +26,30 @@ import java.util.Map;
  */
 public class AnimatedSprite {
 
-    private final long delay;
-    private final int spriteAmount;
-    List<Sprite> sprites = Lists.newArrayList();
-    private long currentDelta = 0;
-    private int currentSprite = 0;
+	private final long delay;
+	private final int spriteAmount;
+	List<Sprite> sprites = Lists.newArrayList();
+	private long currentDelta = 0;
+	private int currentSprite = 0;
 
-    public AnimatedSprite(Map<String, Sprite> sprites, String name, int frameCount, long delayInMillis) {
-        this.delay = delayInMillis * 1_000_000;
+	public AnimatedSprite(Map<String, Sprite> sprites, String name, int frameCount, long delayInMillis) {
+		this.delay = delayInMillis * 1_000_000;
 
-        for (int i = 0; i < frameCount; i++) {
-            Sprite s = sprites.get(name + i);
-            if (s == null) break;
-            this.sprites.add(s);
-        }
-        this.spriteAmount = this.sprites.size();
-    }
+		for (int i = 0; i < frameCount; i++) {
+			Sprite s = sprites.get(name + i);
+			if (s == null) break;
+			this.sprites.add(s);
+		}
+		this.spriteAmount = this.sprites.size();
+	}
 
-    public Sprite getCurrentFrame(long delta) {
-        this.currentDelta += delta;
-        if (this.currentDelta > this.delay) {
-            this.currentDelta -= this.delay;
-            this.currentSprite++;
-            if (this.currentSprite >= this.spriteAmount) this.currentSprite = 0;
-        }
-        return this.sprites.get(currentSprite);
-    }
+	public Sprite getCurrentFrame(long delta) {
+		this.currentDelta += delta;
+		if (this.currentDelta > this.delay) {
+			this.currentDelta -= this.delay;
+			this.currentSprite++;
+			if (this.currentSprite >= this.spriteAmount) this.currentSprite = 0;
+		}
+		return this.sprites.get(currentSprite);
+	}
 }

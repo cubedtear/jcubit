@@ -24,46 +24,56 @@ import io.github.aritzhack.aritzh.util.Nullable;
  */
 public class NullLogger extends ALogger {
 
-    /**
-     * If the provided logger is not null, it is returned, otherwise a new {@link NullLogger} is returned
-     *
-     * @param logger A logger, or null
-     * @return Either the provided logger if it is not null, or a new {@link NullLogger}
-     */
-    @NotNull
-    public static ILogger getLogger(@Nullable ILogger logger) {
-        return logger == null ? new NullLogger() : logger;
-    }
+	/**
+	 * If the provided logger is not null, it is returned, otherwise a new {@link NullLogger} is returned
+	 *
+	 * @param logger A logger, or null
+	 * @return Either the provided logger if it is not null, or a new {@link NullLogger}
+	 */
+	@NotNull
+	public static ILogger getLogger(@Nullable ILogger logger) {
+		return logger == null ? new NullLogger() : logger;
+	}
 
-    @Override
-    public void t(String msg) {}
+	@Override
+	public void t(String msg) {
+	}
 
-    @Override
-    public void t(String msg, Throwable t) {}
+	@Override
+	public void t(String msg, Throwable t) {
+	}
 
-    @Override
-    public void d(String msg) {}
+	@Override
+	public void d(String msg) {
+	}
 
-    @Override
-    public void d(String msg, Throwable t) {}
+	@Override
+	public void d(String msg, Throwable t) {
+	}
 
-    @Override
-    public void i(String msg) {}
+	@Override
+	public void i(String msg) {
+	}
 
-    @Override
-    public void i(String msg, Throwable t) {}
+	@Override
+	public void i(String msg, Throwable t) {
+	}
 
-    @Override
-    public void w(String msg) {}
+	@Override
+	public void w(String msg) {
+	}
 
-    @Override
-    public void w(String msg, Throwable t) {}
+	@Override
+	public void w(String msg, Throwable t) {
+	}
 
-    @Override
-    public void e(String msg) {}
+	@Override
+	public void e(String msg) {
+	}
 
-    @Override
-    public void e(String msg, Throwable t) {}
+	@Override
+	public void e(String msg, Throwable t) {
+	}
 
 
 }

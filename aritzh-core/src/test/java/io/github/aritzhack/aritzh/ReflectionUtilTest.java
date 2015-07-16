@@ -30,19 +30,22 @@ import java.lang.annotation.Target;
  */
 public class ReflectionUtilTest {
 
-    @Test
-    public void testClassHasAnnotation() throws Exception {
-        Assert.assertTrue("Class does not have the annotation!", ReflectionUtil.classHasAnnotation(WithAnnotation.class, Annotation.class));
+	@Test
+	public void testClassHasAnnotation() throws Exception {
+		Assert.assertTrue("Class does not have the annotation!", ReflectionUtil.classHasAnnotation(WithAnnotation.class, Annotation.class));
 
-        Assert.assertTrue("Class does not have the annotation!", ReflectionUtil.classHasAnnotation(ToTest.class, Annotation.class));
-    }
+		Assert.assertTrue("Class does not have the annotation!", ReflectionUtil.classHasAnnotation(ToTest.class, Annotation.class));
+	}
 
-    @Target(ElementType.TYPE)
-    @Retention(RetentionPolicy.RUNTIME)
-    private static @interface Annotation {}
+	@Target(ElementType.TYPE)
+	@Retention(RetentionPolicy.RUNTIME)
+	private static @interface Annotation {
+	}
 
-    @Annotation
-    private static class WithAnnotation {}
+	@Annotation
+	private static class WithAnnotation {
+	}
 
-    private static class ToTest extends WithAnnotation {}
+	private static class ToTest extends WithAnnotation {
+	}
 }

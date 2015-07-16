@@ -25,73 +25,93 @@ import io.github.aritzhack.aritzh.util.StringFormatter;
  */
 public abstract class ALogger implements ILogger {
 
-    private String format(String format, Object... args) {
-        return StringFormatter.format(format, args);
-    }
+	private String format(String format, Object... args) {
+		return StringFormatter.format(format, args);
+	}
 
-    // region ...Abstracts...
+	// region ...Abstracts...
 
-    @Override
-    public abstract void t(String msg);
+	@Override
+	public abstract void t(String msg);
 
-    @Override
-    public abstract void t(String msg, Throwable t);
+	@Override
+	public abstract void t(String msg, Throwable t);
 
-    @Override
-    public abstract void d(String msg);
+	@Override
+	public abstract void d(String msg);
 
-    @Override
-    public abstract void d(String msg, Throwable t);
+	@Override
+	public abstract void d(String msg, Throwable t);
 
-    @Override
-    public abstract void i(String msg);
+	@Override
+	public abstract void i(String msg);
 
-    @Override
-    public abstract void i(String msg, Throwable t);
+	@Override
+	public abstract void i(String msg, Throwable t);
 
-    @Override
-    public abstract void w(String msg);
+	@Override
+	public abstract void w(String msg);
 
-    @Override
-    public abstract void w(String msg, Throwable t);
+	@Override
+	public abstract void w(String msg, Throwable t);
 
-    @Override
-    public abstract void e(String msg);
+	@Override
+	public abstract void e(String msg);
 
-    @Override
-    public abstract void e(String msg, Throwable t);
+	@Override
+	public abstract void e(String msg, Throwable t);
 
-    // endregion
+	// endregion
 
-    @Override
-    public void t(String format, Object... arguments) { this.t(format(format, arguments)); }
+	@Override
+	public void t(String format, Object... arguments) {
+		this.t(format(format, arguments));
+	}
 
-    @Override
-    public void t(String msg, Throwable t, Object... args) { this.t(format(msg, args), t); }
+	@Override
+	public void t(String msg, Throwable t, Object... args) {
+		this.t(format(msg, args), t);
+	}
 
-    @Override
-    public void d(String format, Object... arguments) { this.d(format(format, arguments)); }
+	@Override
+	public void d(String format, Object... arguments) {
+		this.d(format(format, arguments));
+	}
 
-    @Override
-    public void d(String msg, Throwable t, Object... args) { this.d(format(msg, args), t); }
+	@Override
+	public void d(String msg, Throwable t, Object... args) {
+		this.d(format(msg, args), t);
+	}
 
-    @Override
-    public void i(String format, Object... arguments) { this.i(format(format, arguments)); }
+	@Override
+	public void i(String format, Object... arguments) {
+		this.i(format(format, arguments));
+	}
 
-    @Override
-    public void i(String msg, Throwable t, Object... args) { this.i(format(msg, args), t); }
+	@Override
+	public void i(String msg, Throwable t, Object... args) {
+		this.i(format(msg, args), t);
+	}
 
-    @Override
-    public void w(String format, Object... arguments) { this.w(format(format, arguments)); }
+	@Override
+	public void w(String format, Object... arguments) {
+		this.w(format(format, arguments));
+	}
 
-    @Override
-    public void w(String msg, Throwable t, Object... args) { this.w(format(msg, args), t); }
+	@Override
+	public void w(String msg, Throwable t, Object... args) {
+		this.w(format(msg, args), t);
+	}
 
-    @Override
-    public void e(String format, Object... arguments) { this.e(format(format, arguments)); }
+	@Override
+	public void e(String format, Object... arguments) {
+		this.e(format(format, arguments));
+	}
 
-    @Override
-    public void e(String msg, Throwable t, Object... args) { this.e(format(msg, args), t); }
+	@Override
+	public void e(String msg, Throwable t, Object... args) {
+		this.e(format(msg, args), t);
+	}
 
 
 }

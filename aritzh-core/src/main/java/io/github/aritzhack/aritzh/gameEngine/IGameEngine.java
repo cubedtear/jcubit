@@ -21,19 +21,19 @@ package io.github.aritzhack.aritzh.gameEngine;
  */
 public interface IGameEngine extends Runnable {
 
-    public void start();
+	public void start();
 
-    public void stop();
+	public void stop();
 
-    public void update();
+	public void update();
 
-    public void render();
+	public void render();
 
-    public void updatePS();
+	public void updatePS();
 
-    public IGame getGame();
+	public IGame getGame();
 
-    public int getFPS();
+	public int getFPS();
 
-    public int getUPS();
+	public int getUPS();
 }

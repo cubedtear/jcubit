@@ -23,13 +23,13 @@ package io.github.aritzhack.aritzh.eventBus;
  */
 public class DeadEvent {
 
-    private final Object event;
+	private final Object event;
 
-    public DeadEvent(Object event) {
-        this.event = event;
-    }
+	public DeadEvent(Object event) {
+		this.event = event;
+	}
 
-    public Object getEvent() {
-        return event;
-    }
+	public Object getEvent() {
+		return event;
+	}
 }

@@ -24,37 +24,37 @@ package io.github.aritzhack.aritzh.eventBus;
 public class EventException extends RuntimeException {
 
 
-    private final EventHandler handler;
-    private final Object event;
+	private final EventHandler handler;
+	private final Object event;
 
-    /**
-     * Creates a EventException. Supposedly the {@code handler} threw {@code throwable} when handling {@code event}.
-     *
-     * @param handler   The EventHandler that threw the Throwable.
-     * @param event     The event that made the handler throw the Throwable.
-     * @param throwable The Throwable that was thrown.
-     */
-    public EventException(EventHandler handler, Object event, Throwable throwable) {
-        super(throwable);
-        this.handler = handler;
-        this.event = event;
-    }
+	/**
+	 * Creates a EventException. Supposedly the {@code handler} threw {@code throwable} when handling {@code event}.
+	 *
+	 * @param handler   The EventHandler that threw the Throwable.
+	 * @param event     The event that made the handler throw the Throwable.
+	 * @param throwable The Throwable that was thrown.
+	 */
+	public EventException(EventHandler handler, Object event, Throwable throwable) {
+		super(throwable);
+		this.handler = handler;
+		this.event = event;
+	}
 
-    /**
-     * Returns the EventHandler that threw the Throwable.
-     *
-     * @return the EventHandler that threw the Throwable.
-     */
-    public EventHandler getThrower() {
-        return handler;
-    }
+	/**
+	 * Returns the EventHandler that threw the Throwable.
+	 *
+	 * @return the EventHandler that threw the Throwable.
+	 */
+	public EventHandler getThrower() {
+		return handler;
+	}
 
-    /**
-     * Returns the event that made the EventHandler throw the exception.
-     *
-     * @return the event that made the EventHandler throw the exception.
-     */
-    public Object getEvent() {
-        return event;
-    }
+	/**
+	 * Returns the event that made the EventHandler throw the exception.
+	 *
+	 * @return the event that made the EventHandler throw the exception.
+	 */
+	public Object getEvent() {
+		return event;
+	}
 }

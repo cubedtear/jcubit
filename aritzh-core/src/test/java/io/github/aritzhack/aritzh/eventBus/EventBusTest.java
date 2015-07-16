@@ -26,32 +26,32 @@ import java.util.UUID;
  */
 public class EventBusTest {
 
-    String returnMessage = null;
+	String returnMessage = null;
 
-    @Test
-    public void testEventBus() throws Exception {
-        EventBus bus = new EventBus();
-        bus.register(this);
+	@Test
+	public void testEventBus() throws Exception {
+		EventBus bus = new EventBus();
+		bus.register(this);
 
-        String message = UUID.randomUUID().toString();
+		String message = UUID.randomUUID().toString();
 
-        bus.post(new BaseEvent(message));
+		bus.post(new BaseEvent(message));
 
-        Assert.assertNotNull("Message was null!", returnMessage);
+		Assert.assertNotNull("Message was null!", returnMessage);
 
-        Assert.assertEquals("Messages are not equal", message, returnMessage);
-    }
+		Assert.assertEquals("Messages are not equal", message, returnMessage);
+	}
 
-    @Subscribe
-    public void handleEvent(BaseEvent event) {
-        this.returnMessage = event.message;
-    }
+	@Subscribe
+	public void handleEvent(BaseEvent event) {
+		this.returnMessage = event.message;
+	}
 
-    public class BaseEvent {
-        public final String message;
+	public class BaseEvent {
+		public final String message;
 
-        public BaseEvent(String message) {
-            this.message = message;
-        }
-    }
+		public BaseEvent(String message) {
+			this.message = message;
+		}
+	}
 }

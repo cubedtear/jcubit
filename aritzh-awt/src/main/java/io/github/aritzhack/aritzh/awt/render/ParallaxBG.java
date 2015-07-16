@@ -22,18 +22,18 @@ import com.google.common.base.Preconditions;
  * @author Aritz Lopez
  */
 public class ParallaxBG {
-    private final Background[] backgrounds;
+	private final Background[] backgrounds;
 
-    public ParallaxBG(Background... backgrounds) {
-        Preconditions.checkArgument(backgrounds != null, "Background list cannot be null!");
-        Preconditions.checkArgument(backgrounds.length != 0, "Background list cannot be empty!");
+	public ParallaxBG(Background... backgrounds) {
+		Preconditions.checkArgument(backgrounds != null, "Background list cannot be null!");
+		Preconditions.checkArgument(backgrounds.length != 0, "Background list cannot be empty!");
 
-        this.backgrounds = backgrounds;
-    }
+		this.backgrounds = backgrounds;
+	}
 
-    public void render(IRender render, long deltaNS) {
-        for (Background b : this.backgrounds) {
-            b.render(render, deltaNS);
-        }
-    }
+	public void render(IRender render, long deltaNS) {
+		for (Background b : this.backgrounds) {
+			b.render(render, deltaNS);
+		}
+	}
 }

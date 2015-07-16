@@ -31,24 +31,24 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Target(value = TYPE)
 public @interface ExtensionData {
 
-    /**
-     * Version of the extension. Can be any string in any format
-     *
-     * @return the version of the extension
-     */
-    String version();
+	/**
+	 * Version of the extension. Can be any string in any format
+	 *
+	 * @return the version of the extension
+	 */
+	String version();
 
-    /**
-     * The version of the app this extension is designed for
-     *
-     * @return the version of the app this extension is designed for
-     */
-    String appVersion() default "0.0.0"; // Non-existing version, to skip version-check
+	/**
+	 * The version of the app this extension is designed for
+	 *
+	 * @return the version of the app this extension is designed for
+	 */
+	String appVersion() default "0.0.0"; // Non-existing version, to skip version-check
 
-    /**
-     * The name of this extension
-     *
-     * @return the name of this extension
-     */
-    String extensionName();
+	/**
+	 * The name of this extension
+	 *
+	 * @return the name of this extension
+	 */
+	String extensionName();
 }

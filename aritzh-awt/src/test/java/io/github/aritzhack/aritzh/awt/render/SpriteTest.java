@@ -24,13 +24,13 @@ import org.junit.Test;
  */
 public class SpriteTest {
 
-    public static final int COLOR = 0xFF00FFFF;
+	public static final int COLOR = 0xFF00FFFF;
 
-    @Test
-    public void testColorSprite() {
-        Sprite sprite = new Sprite(500, 500, COLOR);
-        for (int i : sprite.getPixels()) {
-            Assert.assertTrue("One of the colors was not equal!", i == COLOR);
-        }
-    }
+	@Test
+	public void testColorSprite() {
+		Sprite sprite = new Sprite(500, 500, COLOR);
+		for (int i : sprite.getPixels()) {
+			Assert.assertTrue("One of the colors was not equal!", i == COLOR);
+		}
+	}
 }

@@ -21,39 +21,39 @@ package io.github.aritzhack.aritzh.awt.render;
  */
 public class Background {
 
-    protected final Sprite sprite;
-    protected final boolean alignToBottom;
-    protected final int speed;
-    protected int xPos = 0;
-    protected long delta = 0;
+	protected final Sprite sprite;
+	protected final boolean alignToBottom;
+	protected final int speed;
+	protected int xPos = 0;
+	protected long delta = 0;
 
-    public Background(Sprite sprite, boolean alignToBottom, int speed) {
-        this.sprite = sprite;
-        this.alignToBottom = alignToBottom;
-        this.speed = speed;
-    }
+	public Background(Sprite sprite, boolean alignToBottom, int speed) {
+		this.sprite = sprite;
+		this.alignToBottom = alignToBottom;
+		this.speed = speed;
+	}
 
-    public void render(IRender render, long deltaNS) {
-        final int yPos = alignToBottom ? render.getHeight() - this.sprite.getHeight() : 0;
+	public void render(IRender render, long deltaNS) {
+		final int yPos = alignToBottom ? render.getHeight() - this.sprite.getHeight() : 0;
 
-        delta += deltaNS;
+		delta += deltaNS;
 
-        final int period = 100000000 / speed;
+		final int period = 100000000 / speed;
 
-        int xPos = this.xPos;
+		int xPos = this.xPos;
 
-        if (delta > period) {
-            delta -= period;
-            xPos--;
-        }
+		if (delta > period) {
+			delta -= period;
+			xPos--;
+		}
 
-        this.xPos = xPos;
+		this.xPos = xPos;
 
-        render.draw(xPos, yPos, sprite);
+		render.draw(xPos, yPos, sprite);
 
-        while (xPos + sprite.getWidth() < render.getWidth()) {
-            xPos += sprite.getWidth();
-            render.draw(xPos, yPos, sprite);
-        }
-    }
+		while (xPos + sprite.getWidth() < render.getWidth()) {
+			xPos += sprite.getWidth();
+			render.draw(xPos, yPos, sprite);
+		}
+	}
 }

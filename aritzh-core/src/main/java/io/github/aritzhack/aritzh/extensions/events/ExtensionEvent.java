@@ -26,34 +26,34 @@ import io.github.aritzhack.aritzh.extensions.Extension;
  */
 public abstract class ExtensionEvent {
 
-    protected final ExtensibleApp app;
-    protected final Extension e;
+	protected final ExtensibleApp app;
+	protected final Extension e;
 
-    public ExtensionEvent(ExtensibleApp app, Extension e) {
-        super();
-        this.app = app;
-        this.e = e;
-    }
+	public ExtensionEvent(ExtensibleApp app, Extension e) {
+		super();
+		this.app = app;
+		this.e = e;
+	}
 
-    public ExtensibleApp getApp() {
-        return app;
-    }
+	public ExtensibleApp getApp() {
+		return app;
+	}
 
-    public Extension getExtension() {
-        return e;
-    }
+	public Extension getExtension() {
+		return e;
+	}
 
-    public static class ExtensionLoadEvent extends ExtensionEvent {
+	public static class ExtensionLoadEvent extends ExtensionEvent {
 
-        public ExtensionLoadEvent(ExtensibleApp app, Extension e) {
-            super(app, e);
-        }
-    }
+		public ExtensionLoadEvent(ExtensibleApp app, Extension e) {
+			super(app, e);
+		}
+	}
 
-    public static class ExtensionUnloadEvent extends ExtensionEvent {
+	public static class ExtensionUnloadEvent extends ExtensionEvent {
 
-        public ExtensionUnloadEvent(ExtensibleApp app, Extension e) {
-            super(app, e);
-        }
-    }
+		public ExtensionUnloadEvent(ExtensibleApp app, Extension e) {
+			super(app, e);
+		}
+	}
 }

@@ -28,41 +28,41 @@ import java.io.IOException;
  */
 public class IOUtilTest {
 
-    @Test
-    public void deleteTest() {
-        try {
-            File folder1 = new File("folder1");
-            IOUtil.delete(folder1);
+	@Test
+	public void deleteTest() {
+		try {
+			File folder1 = new File("folder1");
+			IOUtil.delete(folder1);
 
-            Assert.assertTrue("Folder 1 not be created", folder1.mkdirs());
+			Assert.assertTrue("Folder 1 not be created", folder1.mkdirs());
 
-            File folder11 = new File(folder1, "folder11");
-            Assert.assertTrue("Folder 11 not be created", folder11.mkdirs());
+			File folder11 = new File(folder1, "folder11");
+			Assert.assertTrue("Folder 11 not be created", folder11.mkdirs());
 
-            File file1 = new File(folder1, "file1.txt");
-            Assert.assertTrue("File 1 not be created", file1.createNewFile());
+			File file1 = new File(folder1, "file1.txt");
+			Assert.assertTrue("File 1 not be created", file1.createNewFile());
 
-            File file11 = new File(folder11, "file11.txt");
-            Assert.assertTrue("File 11 could not be created", file11.createNewFile());
+			File file11 = new File(folder11, "file11.txt");
+			Assert.assertTrue("File 11 could not be created", file11.createNewFile());
 
-            Assert.assertTrue(folder1.exists());
-            Assert.assertTrue(folder11.exists());
-            Assert.assertTrue(file1.exists());
-            Assert.assertTrue(file11.exists());
+			Assert.assertTrue(folder1.exists());
+			Assert.assertTrue(folder11.exists());
+			Assert.assertTrue(file1.exists());
+			Assert.assertTrue(file11.exists());
 
-            boolean deleted = IOUtil.delete(folder1);
+			boolean deleted = IOUtil.delete(folder1);
 
-            Assert.assertTrue(deleted);
+			Assert.assertTrue(deleted);
 
-            Assert.assertFalse(folder1.exists());
-            Assert.assertFalse(folder11.exists());
-            Assert.assertFalse(file1.exists());
-            Assert.assertFalse(file11.exists());
+			Assert.assertFalse(folder1.exists());
+			Assert.assertFalse(folder11.exists());
+			Assert.assertFalse(file1.exists());
+			Assert.assertFalse(file11.exists());
 
-        } catch (IOException e) {
-            e.printStackTrace();
-            Assert.fail();
-        }
-    }
+		} catch (IOException e) {
+			e.printStackTrace();
+			Assert.fail();
+		}
+	}
 
 }

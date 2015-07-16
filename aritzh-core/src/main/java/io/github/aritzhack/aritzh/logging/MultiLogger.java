@@ -27,79 +27,79 @@ import java.util.Set;
  */
 public class MultiLogger extends ALogger {
 
-    private final Set<ILogger> loggers;
+	private final Set<ILogger> loggers;
 
-    public MultiLogger(ILogger... loggers) {
-        this.loggers = Sets.newHashSet(loggers);
-    }
+	public MultiLogger(ILogger... loggers) {
+		this.loggers = Sets.newHashSet(loggers);
+	}
 
-    @Override
-    public void t(String msg) {
-        for (ILogger l : this.loggers) {
-            l.t(msg);
-        }
-    }
+	@Override
+	public void t(String msg) {
+		for (ILogger l : this.loggers) {
+			l.t(msg);
+		}
+	}
 
-    @Override
-    public void t(String msg, Throwable t) {
-        for (ILogger l : this.loggers) {
-            l.t(msg, t);
-        }
-    }
+	@Override
+	public void t(String msg, Throwable t) {
+		for (ILogger l : this.loggers) {
+			l.t(msg, t);
+		}
+	}
 
-    @Override
-    public void d(String msg) {
-        for (ILogger l : this.loggers) {
-            l.d(msg);
-        }
-    }
+	@Override
+	public void d(String msg) {
+		for (ILogger l : this.loggers) {
+			l.d(msg);
+		}
+	}
 
-    @Override
-    public void d(String msg, Throwable t) {
-        for (ILogger l : this.loggers) {
-            l.d(msg, t);
-        }
-    }
+	@Override
+	public void d(String msg, Throwable t) {
+		for (ILogger l : this.loggers) {
+			l.d(msg, t);
+		}
+	}
 
-    @Override
-    public void i(String msg) {
-        for (ILogger l : this.loggers) {
-            l.i(msg);
-        }
-    }
+	@Override
+	public void i(String msg) {
+		for (ILogger l : this.loggers) {
+			l.i(msg);
+		}
+	}
 
-    @Override
-    public void i(String msg, Throwable t) {
-        for (ILogger l : this.loggers) {
-            l.i(msg, t);
-        }
-    }
+	@Override
+	public void i(String msg, Throwable t) {
+		for (ILogger l : this.loggers) {
+			l.i(msg, t);
+		}
+	}
 
-    @Override
-    public void w(String msg) {
-        for (ILogger l : this.loggers) {
-            l.w(msg);
-        }
-    }
+	@Override
+	public void w(String msg) {
+		for (ILogger l : this.loggers) {
+			l.w(msg);
+		}
+	}
 
-    @Override
-    public void w(String msg, Throwable t) {
-        for (ILogger l : this.loggers) {
-            l.w(msg, t);
-        }
-    }
+	@Override
+	public void w(String msg, Throwable t) {
+		for (ILogger l : this.loggers) {
+			l.w(msg, t);
+		}
+	}
 
-    @Override
-    public void e(String msg) {
-        for (ILogger l : this.loggers) {
-            l.e(msg);
-        }
-    }
+	@Override
+	public void e(String msg) {
+		for (ILogger l : this.loggers) {
+			l.e(msg);
+		}
+	}
 
-    @Override
-    public void e(String msg, Throwable t) {
-        for (ILogger l : this.loggers) {
-            l.e(msg, t);
-        }
-    }
+	@Override
+	public void e(String msg, Throwable t) {
+		for (ILogger l : this.loggers) {
+			l.e(msg, t);
+		}
+	}
 }

@@ -23,14 +23,14 @@ package io.github.aritzhack.aritzh.collections;
  *
  * @author Aritz Lopez
  */
-public interface ParameterizedFunction<I, R> {
+public interface ParametrizedFunction<I, R> {
 
-    /**
-     * Apply this ParametrizedFunction to {@code input} with {@code args} as parameters
-     *
-     * @param input The object to which this ParametrizedFunction will be applied
-     * @param args  The extra arguments needed to run the function
-     * @return The return value of applying {@code this} to {@code input}
-     */
-    public R apply(I input, Object... args);
+	/**
+	 * Apply this ParametrizedFunction to {@code input} with {@code args} as parameters
+	 *
+	 * @param input The object to which this ParametrizedFunction will be applied
+	 * @param args  The extra arguments needed to run the function
+	 * @return The return value of applying {@code this} to {@code input}
+	 */
+	public R apply(I input, Object... args);
 }
