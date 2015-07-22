@@ -1,5 +1,7 @@
 package io.github.aritzhack.aritzh.util.math;
 
+import java.awt.*;
+
 /**
  * @author Aritz Lopez
  */
@@ -14,6 +16,10 @@ public class Vec2i {
 	public Vec2i(int x, int y) {
 		this.x = x;
 		this.y = y;
+	}
+
+	public static Vec2i fromPoint(Point p) {
+		return new Vec2i(p.x, p.y);
 	}
 
 	public int getX() {
@@ -42,5 +48,35 @@ public class Vec2i {
 
 	public Vec2i negate() {
 		return new Vec2i(-this.x, -this.y);
+	}
+
+	public Point toPoint() {
+		return new Point(this.x, this.y);
+	}
+
+	public int max() {
+		return Math.max(this.x, this.y);
+	}
+
+	public int min() {
+		return Math.min(this.x, this.y);
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		Vec2i vec2i = (Vec2i) o;
+		return x == vec2i.x && y == vec2i.y;
+	}
+
+	@Override
+	public int hashCode() {
+		return 31 * x + y;
+	}
+
+	@Override
+	public String toString() {
+		return "(" + x + ", " + y + ")";
 	}
 }
