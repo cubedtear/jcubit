@@ -131,4 +131,9 @@ if (System.getenv('TRAVIS') == null) {
 
 	task buildAndDeploy(dependsOn: [subprojects.build, subprojects.uploadArchives, closeAndPromoteRepository])
 
+	configure(buildAndDeploy) {
+		group = 'upload'
+		description = 'Builds and deploys to Maven Central, and closes and promotes the repository'
+	}
+
 }
