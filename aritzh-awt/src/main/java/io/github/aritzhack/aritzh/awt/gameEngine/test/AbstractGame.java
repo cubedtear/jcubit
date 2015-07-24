@@ -34,7 +34,6 @@ public abstract class AbstractGame implements IGame {
 	public void onUpdatePS() {
 	}
 
-	public void onPostRender(Graphics g) {
-
+	public void onPostRender() {
 	}
 }

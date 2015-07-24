@@ -22,7 +22,7 @@ public class TestEngine implements IGame {
 	private final Map<String, Sprite> sprites;
 	private final CanvasEngine engine;
 	private final IRender render;
-	private final AbstractGame game;
+	private final IGame game;
 	private final int height, width;
 
 	/**
@@ -45,7 +45,7 @@ public class TestEngine implements IGame {
 	 * @param logger  The logger that the {@link io.github.aritzhack.aritzh.awt.gameEngine.CanvasEngine} will use.
 	 * @param sprites The sprites that the renderer will use.
 	 */
-	public TestEngine(AbstractGame game, int width, int height, @Nullable ILogger logger, @Nullable Map<String, Sprite> sprites) {
+	public TestEngine(IGame game, int width, int height, @Nullable ILogger logger, @Nullable Map<String, Sprite> sprites) {
 		this.game = game;
 		this.sprites = sprites;
 		this.width = width;
@@ -88,8 +88,6 @@ public class TestEngine implements IGame {
 		this.game.onRender();
 
 		this.engine.getGraphics().drawImage(this.render.getImage(), 0, 0, width, height, null);
-
-		this.game.onPostRender(this.engine.getGraphics());
 	}
 
 	@Override
@@ -105,6 +103,11 @@ public class TestEngine implements IGame {
 	@Override
 	public void onUpdatePS() {
 		this.game.onUpdatePS();
+	}
+
+	@Override
+	public void onPostRender() {
+		this.game.onPostRender();
 	}
 
 	public IRender getRender() {

@@ -159,6 +159,7 @@ public class CanvasEngine extends BasicGame {
 		this.graphics = g;
 
 		this.getGame().onRender();
+		this.getGame().onPostRender();
 
 		this.graphics = null;
 
