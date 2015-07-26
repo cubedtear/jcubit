@@ -25,10 +25,6 @@ import io.github.aritzhack.aritzh.util.StringFormatter;
  */
 public abstract class ALogger implements ILogger {
 
-	private String format(String format, Object... args) {
-		return StringFormatter.format(format, args);
-	}
-
 	// region ...Abstracts...
 
 	@Override
@@ -65,52 +61,52 @@ public abstract class ALogger implements ILogger {
 
 	@Override
 	public void t(String format, Object... arguments) {
-		this.t(format(format, arguments));
+		this.t(StringFormatter.format(format, arguments));
 	}
 
 	@Override
 	public void t(String msg, Throwable t, Object... args) {
-		this.t(format(msg, args), t);
+		this.t(StringFormatter.format(msg, args), t);
 	}
 
 	@Override
 	public void d(String format, Object... arguments) {
-		this.d(format(format, arguments));
+		this.d(StringFormatter.format(format, arguments));
 	}
 
 	@Override
 	public void d(String msg, Throwable t, Object... args) {
-		this.d(format(msg, args), t);
+		this.d(StringFormatter.format(msg, args), t);
 	}
 
 	@Override
 	public void i(String format, Object... arguments) {
-		this.i(format(format, arguments));
+		this.i(StringFormatter.format(format, arguments));
 	}
 
 	@Override
 	public void i(String msg, Throwable t, Object... args) {
-		this.i(format(msg, args), t);
+		this.i(StringFormatter.format(msg, args), t);
 	}
 
 	@Override
 	public void w(String format, Object... arguments) {
-		this.w(format(format, arguments));
+		this.w(StringFormatter.format(format, arguments));
 	}
 
 	@Override
 	public void w(String msg, Throwable t, Object... args) {
-		this.w(format(msg, args), t);
+		this.w(StringFormatter.format(msg, args), t);
 	}
 
 	@Override
 	public void e(String format, Object... arguments) {
-		this.e(format(format, arguments));
+		this.e(StringFormatter.format(format, arguments));
 	}
 
 	@Override
 	public void e(String msg, Throwable t, Object... args) {
-		this.e(format(msg, args), t);
+		this.e(StringFormatter.format(msg, args), t);
 	}
 
 

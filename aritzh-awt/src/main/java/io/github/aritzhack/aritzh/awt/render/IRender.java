@@ -33,6 +33,8 @@ public interface IRender {
 
 	void draw(int x, int y, long deltaNS, AnimatedSprite sprite);
 
+	void setBlend(boolean blend);
+
 	BufferedImage getImage();
 
 	int getWidth();

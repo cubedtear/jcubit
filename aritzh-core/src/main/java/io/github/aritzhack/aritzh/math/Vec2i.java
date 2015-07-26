@@ -1,4 +1,4 @@
-package io.github.aritzhack.aritzh.util.math;
+package io.github.aritzhack.aritzh.math;
 
 import java.awt.*;
 

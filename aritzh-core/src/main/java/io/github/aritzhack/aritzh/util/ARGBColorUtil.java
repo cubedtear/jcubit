@@ -87,15 +87,20 @@ public class ARGBColorUtil {
 	 * @return A composition of both colors, in ARGB format
 	 */
 	public static int composite(final int foreground, final int background) {
+		double fA = getAlpha(foreground) / 256.0;
+		double bA = getAlpha(background) / 256.0;
 
-		double alpha1 = (foreground >>> ALPHA_SHIFT) / 256.0;
-		double alpha2 = (background >>> ALPHA_SHIFT) / 256.0;
+		if (bA <= 0.0001) return foreground;
+		else if (fA <= 0.0001) return background;
 
-		if (alpha2 == 0) return foreground;
-		else if (alpha1 == 0) return background;
+		final double alphaA = bA * (1 - fA);
+		final double alphaB = fA + alphaA;
 
-		double cAlpha2 = alpha2 * (1 - alpha1) * 0.5;
-		return ((int) ((alpha1 + alpha2 * (1 - alpha1)) * 256) << ALPHA_SHIFT) | ((int) (((foreground >> RED_SHIFT) & MASK) * alpha1 + ((background >> RED_SHIFT) & MASK) * cAlpha2) << RED_SHIFT) | ((int) (((foreground >> GREEN_SHIFT) & MASK) * alpha1 + ((background >> GREEN_SHIFT) & MASK) * cAlpha2) << GREEN_SHIFT) | (int) ((foreground & MASK) * alpha1 + (background & MASK) * cAlpha2);
+		return getColor(
+				(int) (alphaB * 256),															// ALPHA
+				(int) ((getRed(foreground) * fA + getRed(background) * alphaA) / alphaB),		// RED
+				(int) ((getGreen(foreground) * fA + getGreen(background) * alphaA) / alphaB),	// GREEN
+				(int) ((getBlue(foreground) * fA + getBlue(background) * alphaA) / alphaB));	// BLUE
 	}
 
 	/**

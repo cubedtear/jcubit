@@ -33,6 +33,18 @@ public class MultiLogger extends ALogger {
 		this.loggers = Sets.newHashSet(loggers);
 	}
 
+	public void addLogger(ILogger logger) {
+		this.loggers.add(logger);
+	}
+
+	public void addLoggers(ILogger... loggers) {
+		this.loggers.addAll(Sets.newHashSet(loggers));
+	}
+
+	public Set<ILogger> getLoggers() {
+		return loggers;
+	}
+
 	@Override
 	public void t(String msg) {
 		for (ILogger l : this.loggers) {
