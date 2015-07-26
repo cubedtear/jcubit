@@ -87,20 +87,19 @@ public class ARGBColorUtil {
 	 * @return A composition of both colors, in ARGB format
 	 */
 	public static int composite(final int foreground, final int background) {
-		double fA = getAlpha(foreground) / 256.0;
-		double bA = getAlpha(background) / 256.0;
+		double fA = getAlpha(foreground) / 255.0;
+		double bA = getAlpha(background) / 255.0;
 
 		if (bA <= 0.0001) return foreground;
 		else if (fA <= 0.0001) return background;
 
 		final double alphaA = bA * (1 - fA);
-		final double alphaB = fA + alphaA;
 
 		return getColor(
-				(int) (alphaB * 256),															// ALPHA
-				(int) ((getRed(foreground) * fA + getRed(background) * alphaA) / alphaB),		// RED
-				(int) ((getGreen(foreground) * fA + getGreen(background) * alphaA) / alphaB),	// GREEN
-				(int) ((getBlue(foreground) * fA + getBlue(background) * alphaA) / alphaB));	// BLUE
+				(int) (255 * (fA + alphaA)),                                       // ALPHA
+				(int) (fA * getRed(foreground) + alphaA * getRed(background)),     // RED
+				(int) (fA * getGreen(foreground) + alphaA * getGreen(background)), // GREEN
+				(int) (fA * getBlue(foreground) + alphaA * getBlue(background)));  // BLUE
 	}
 
 	/**
