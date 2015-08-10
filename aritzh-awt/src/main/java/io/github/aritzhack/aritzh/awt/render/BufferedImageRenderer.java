@@ -35,6 +35,7 @@ public class BufferedImageRenderer implements IRender {
 	private final int height;
 	private final Map<String, Sprite> sprites;
 	private final int[] pixels;
+	private boolean blend = false;
 
 	public BufferedImageRenderer(int width, int height) {
 		this(width, height, new HashMap<String, Sprite>());
@@ -49,9 +50,13 @@ public class BufferedImageRenderer implements IRender {
 		this.pixels = ((DataBufferInt) this.image.getRaster().getDataBuffer()).getData();
 	}
 
+	public void setBlend(boolean blend) {
+		this.blend = blend;
+	}
+
 	@Override
 	public void clear() {
-		Arrays.fill(this.pixels, 0x00_00_00_FF);
+		Arrays.fill(this.pixels, 0xFF_00_00_00);
 	}
 
 	@Override
@@ -68,7 +73,9 @@ public class BufferedImageRenderer implements IRender {
 				if (beforeX < 0) continue;
 				int color = colors[xp + yp * width];
 				if (ARGBColorUtil.getAlpha(color) == 0) continue;
-				this.pixels[beforeX + beforeY * this.width] = color;
+				final int index = beforeX + beforeY * this.width;
+				if (!blend) this.pixels[(index)] = color;
+				else this.pixels[(index)] = ARGBColorUtil.composite(color, this.pixels[(index)]);
 			}
 		}
 	}
