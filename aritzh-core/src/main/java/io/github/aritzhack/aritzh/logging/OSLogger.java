@@ -55,9 +55,17 @@ public class OSLogger extends ALogger {
 		return OUT_LOGGER;
 	}
 
+	public static ILogger getSysoutLogger(String name) {
+		return new OSLogger(System.out, name);
+	}
+
 	public static ILogger getSyserrLogger() {
 		if (ERR_LOGGER == null) ERR_LOGGER = new OSLogger(System.err, "");
 		return ERR_LOGGER;
+	}
+
+	public static ILogger getSyserrLogger(String name) {
+		return new OSLogger(System.err, name);
 	}
 
 	@Override
