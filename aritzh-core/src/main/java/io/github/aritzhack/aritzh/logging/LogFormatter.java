@@ -87,7 +87,7 @@ public enum LogFormatter {
 						out.append(message);
 						break;
 					case TOKEN_DATE:
-						if (notLast && chars[i + 1] == DELIMITER_LEFT) {
+						if (chars[i + 1] == DELIMITER_LEFT) {
 							i++;
 							String dFormat = "";
 							while (i < chars.length - 1) {

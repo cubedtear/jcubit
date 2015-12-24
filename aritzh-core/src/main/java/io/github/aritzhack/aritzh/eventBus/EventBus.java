@@ -22,6 +22,7 @@ import com.google.common.cache.LoadingCache;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Sets;
+import io.github.aritzhack.aritzh.util.NotNull;
 
 import java.lang.reflect.Method;
 import java.util.Collections;
@@ -39,7 +40,7 @@ public class EventBus {
 	private final String name; // For now useless, will add use for this "shortly"
 	private final LoadingCache<Class, Set<Class>> flattenHierarchy = CacheBuilder.newBuilder().weakKeys().build(new CacheLoader<Class, Set<Class>>() {
 		@Override
-		public Set<Class> load(Class concreteClass) throws Exception {
+		public Set<Class> load(@NotNull Class concreteClass) throws Exception {
 			Set<Class> ret = Sets.newHashSet();
 			for (Class c = concreteClass; c != null; c = c.getSuperclass()) {
 				ret.add(c);

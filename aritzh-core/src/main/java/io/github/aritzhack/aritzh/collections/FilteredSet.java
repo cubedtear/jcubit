@@ -65,7 +65,8 @@ public class FilteredSet<E> implements Set<E> {
 
 	@Override
 	@NotNull
-	public <T> T[] toArray(T[] a) {
+	@SuppressWarnings("SuspiciousToArrayCall")
+	public <T> T[] toArray(@NotNull T[] a) {
 		return this.set.toArray(a);
 	}
 

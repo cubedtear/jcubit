@@ -18,8 +18,8 @@ import java.util.Map;
  */
 public class TestEngine implements IGame {
 
-	private final ILogger LOGGER;
-	private final Map<String, Sprite> sprites;
+	protected final ILogger LOGGER;
+	protected final Map<String, Sprite> sprites;
 	private final CanvasEngine engine;
 	private final IRender render;
 	private final IGame game;

@@ -58,7 +58,7 @@ public class Matrix<E> implements Collection<ArrayList<E>> {
 	private void init(int startWidth, int startHeight) {
 		this.columns = new ArrayList<>();
 		for (int x = 0; x < startWidth; x++) {
-			this.columns.add(new ArrayList<E>(startHeight));
+			this.columns.add(new ArrayList<>(startHeight));
 			for (int y = 0; y < startHeight; y++) {
 				this.columns.get(x).add(this.defaultElement);
 			}
@@ -110,7 +110,7 @@ public class Matrix<E> implements Collection<ArrayList<E>> {
 	 */
 	public Matrix<E> set(E element, int x, int y) {
 		if (this.columns.size() < x) {
-			columns.set(x, new ArrayList<E>());
+			columns.set(x, new ArrayList<>());
 		}
 		this.columns.get(x).set(y, element);
 		return this;
@@ -125,7 +125,7 @@ public class Matrix<E> implements Collection<ArrayList<E>> {
 	 */
 	public E get(int x, int y) {
 		if (columns.size() < x) {
-			columns.set(x, new ArrayList<E>());
+			columns.set(x, new ArrayList<>());
 		}
 		ArrayList<E> columnList = columns.get(x);
 		if (columnList.size() < y) {
@@ -193,9 +193,7 @@ public class Matrix<E> implements Collection<ArrayList<E>> {
 	 */
 	public ArrayList<E> toFlatArrayList() {
 		ArrayList<E> ret = new ArrayList<>();
-		for (ArrayList<E> col : this.columns) {
-			ret.addAll(col);
-		}
+		this.columns.forEach(ret::addAll);
 		return ret;
 	}
 

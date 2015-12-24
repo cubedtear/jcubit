@@ -21,6 +21,12 @@ import com.google.common.base.Function;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.function.BinaryOperator;
+import java.util.function.Consumer;
+import java.util.stream.DoubleStream;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 /**
  * @author Aritz Lopez
@@ -35,9 +41,11 @@ public enum CollectionUtil {
 	 * @param coll     The collection of elements to apply the function to.
 	 * @param function The function to apply.
 	 * @param <I>      Collection content type.
+	 * @deprecated Use {@link Collection#forEach(Consumer)} instead.
 	 */
+	@Deprecated
 	public static <I> void applyToAll(Collection<I> coll, Function<I, ?> function) {
-		for (I input : coll) function.apply(input);
+		coll.forEach(function::apply);
 	}
 
 	/**
@@ -46,9 +54,10 @@ public enum CollectionUtil {
 	 * @param map      The map with the keys the function will be applied to.
 	 * @param function The function to apply.
 	 * @param <K>      The type of the keys of the map.
+	 * @deprecated Use {@link Collection#forEach(Consumer) map.keySet().forEach()} instead.
 	 */
 	public static <K> void applyToKeys(Map<K, ?> map, Function<? super K, ?> function) {
-		for (K key : map.keySet()) function.apply(key);
+		map.keySet().forEach(function::apply);
 	}
 
 	/**
@@ -57,9 +66,10 @@ public enum CollectionUtil {
 	 * @param map      The map with the values the function will be applied to.
 	 * @param function The function to apply.
 	 * @param <V>      The type of the values of the map.
+	 * @deprecated Use {@link Collection#forEach(Consumer) map.values().forEach()} instead.
 	 */
 	public static <V> void applyToValues(Map<?, V> map, Function<? super V, ?> function) {
-		for (V value : map.values()) function.apply(value);
+		map.values().forEach(function::apply);
 	}
 
 	/**
@@ -67,13 +77,11 @@ public enum CollectionUtil {
 	 *
 	 * @param iter The iterable
 	 * @return the sum of all integers from the iterable
+	 * @deprecated Use {@link IntStream#sum()} instead
 	 */
+	@Deprecated
 	public static int integerSum(Iterable<Integer> iter) {
-		int ret = 0;
-		for (Integer i : iter) {
-			ret += i;
-		}
-		return ret;
+		return StreamSupport.stream(iter.spliterator(), false).mapToInt(i -> i).sum();
 	}
 
 	/**
@@ -81,13 +89,11 @@ public enum CollectionUtil {
 	 *
 	 * @param iter The iterable
 	 * @return the sum of all floats from the iterable
+	 * @deprecated Use {@link DoubleStream#sum()} instead
 	 */
+	@Deprecated
 	public static float floatSum(Iterable<Float> iter) {
-		float ret = 0;
-		for (Float i : iter) {
-			ret += i;
-		}
-		return ret;
+		return (float) StreamSupport.stream(iter.spliterator(), false).mapToDouble(i -> i).sum();
 	}
 
 	/**
@@ -95,13 +101,11 @@ public enum CollectionUtil {
 	 *
 	 * @param iter The iterable
 	 * @return the sum of all doubles from the iterable
+	 * @deprecated Use {@link DoubleStream#sum()} instead
 	 */
+	@Deprecated
 	public static double doubleSum(Iterable<Double> iter) {
-		double ret = 0;
-		for (Double i : iter) {
-			ret += i;
-		}
-		return ret;
+		return StreamSupport.stream(iter.spliterator(), false).mapToDouble(i -> i).sum();
 	}
 
 	/**

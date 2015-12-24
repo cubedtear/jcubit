@@ -16,18 +16,15 @@
 
 package io.github.aritzhack.aritzh.awt.render;
 
-import com.google.common.base.Charsets;
 import com.google.common.base.Preconditions;
-import com.google.common.io.Files;
-import io.github.aritzhack.aritzh.awt.util.SpriteUtil;
-import io.github.aritzhack.aritzh.util.Set2;
 
 import javax.imageio.ImageIO;
-import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
