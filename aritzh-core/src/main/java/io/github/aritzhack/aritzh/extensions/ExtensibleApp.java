@@ -32,12 +32,12 @@ public interface ExtensibleApp {
 	 *
 	 * @return an instance of Reflections used to load the extensions
 	 */
-	public Reflections getReflections();
+	Reflections getReflections();
 
 	/**
 	 * Returns EventBus into which the extension-related events should be posted
 	 *
 	 * @return the EventBus for the extension-related events
 	 */
-	public EventBus getExtensionsEventBus();
+	EventBus getExtensionsEventBus();
 }

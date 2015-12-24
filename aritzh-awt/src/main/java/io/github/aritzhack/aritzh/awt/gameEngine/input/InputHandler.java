@@ -31,7 +31,7 @@ import java.util.Queue;
 public class InputHandler implements KeyListener, FocusListener, MouseInputListener {
 
 	private final boolean[] keys = new boolean[65536];
-	private final List<Integer> checked = new ArrayList<Integer>();
+	private final List<Integer> checked = new ArrayList<>();
 	private final Queue<MouseInputEvent> mouseEvents = new LinkedList<>();
 	private boolean focus;
 	private Point lastMousePos = new Point();
@@ -171,7 +171,7 @@ public class InputHandler implements KeyListener, FocusListener, MouseInputListe
 
 	// endregion
 
-	public static enum MouseButton {
+	public enum MouseButton {
 		LEFT, MIDDLE, RIGHT, NONE;
 
 		public static MouseButton getFromEvent(int eventButton) {
@@ -188,7 +188,7 @@ public class InputHandler implements KeyListener, FocusListener, MouseInputListe
 		}
 	}
 
-	public static enum MouseAction {
+	public enum MouseAction {
 		PRESSED, RELEASED, DRAGGED, CLICKED
 	}
 

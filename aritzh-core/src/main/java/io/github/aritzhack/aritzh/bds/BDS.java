@@ -25,6 +25,7 @@ import java.util.Set;
  * @author Aritz Lopez
  */
 @SuppressWarnings("unused")
+@Deprecated
 public class BDS {
 
 	private final static byte[] SIGNATURE = ".BDS\r\n".getBytes(Charsets.UTF_8);

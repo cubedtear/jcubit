@@ -46,6 +46,18 @@ public class LogEvent {
 	public LogEvent(LogLevel level, String format, @Nullable Throwable throwable, Object... args) {
 		this(level, StringFormatter.format(format, args), throwable);
 	}
+
+	public String getMessage() {
+		return message;
+	}
+
+	public LogLevel getLevel() {
+		return level;
+	}
+
+	public Throwable getThrowable() {
+		return throwable;
+	}
 }
 
 

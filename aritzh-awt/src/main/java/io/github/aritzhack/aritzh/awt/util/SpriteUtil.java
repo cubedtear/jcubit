@@ -179,9 +179,7 @@ public class SpriteUtil {
 
 		for (int y = 0; y < original.getHeight(); y++) {
 			int newY = original.getHeight() - y - 1;
-			for (int x = 0; x < original.getWidth(); x++) {
-				newPix[x + newY * original.getWidth()] = original.getPixels()[x + y * original.getWidth()];
-			}
+			System.arraycopy(original.getPixels(), y * original.getWidth(), newPix, newY * original.getWidth(), original.getWidth());
 		}
 		return new Sprite(original.getWidth(), original.getHeight(), newPix);
 	}
@@ -213,12 +211,7 @@ public class SpriteUtil {
 	public static Set2<Sprite, Map<String, Rectangle>> packSprites(Map<Sprite, String> sprites) {
 		int heightSum = 0, widthSum = 0;
 		ArrayList<Sprite> spriteList = new ArrayList<>(sprites.keySet());
-		Collections.sort(spriteList, new Comparator<Sprite>() {
-			@Override
-			public int compare(Sprite o1, Sprite o2) {
-				return o1.getWidth() - o2.getWidth();
-			}
-		});
+		Collections.sort(spriteList, (o1, o2) -> o1.getWidth() - o2.getWidth());
 
 		for (Sprite s : spriteList) {
 			heightSum += s.getHeight();

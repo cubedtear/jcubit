@@ -34,7 +34,7 @@ public class OSUtil {
 								EnumOS.UNKNOWN;
 	}
 
-	public static enum EnumOS {
+	public enum EnumOS {
 		WINDOWS, UNIX, MACOS, UNKNOWN
 	}
 }

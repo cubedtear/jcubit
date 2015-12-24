@@ -29,7 +29,7 @@ public class AnimatedSprite {
 	private final long delay;
 	private final int spriteAmount;
 	List<Sprite> sprites = Lists.newArrayList();
-	private long currentDelta = 0;
+	private long currentDelta;
 	private int currentSprite = 0;
 
 	public AnimatedSprite(Map<String, Sprite> sprites, String name, int frameCount, long delayInMillis) {
@@ -41,6 +41,7 @@ public class AnimatedSprite {
 			this.sprites.add(s);
 		}
 		this.spriteAmount = this.sprites.size();
+		currentDelta = 0;
 	}
 
 	public Sprite getCurrentFrame(long delta) {

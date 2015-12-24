@@ -39,7 +39,7 @@ public class ReflectionUtilTest {
 
 	@Target(ElementType.TYPE)
 	@Retention(RetentionPolicy.RUNTIME)
-	private static @interface Annotation {
+	private @interface Annotation {
 	}
 
 	@Annotation
