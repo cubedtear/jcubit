@@ -9,11 +9,10 @@ import io.github.aritzhack.aritzh.collections.ArrayUtil;
 import io.github.aritzhack.aritzh.util.NotNull;
 import io.github.aritzhack.aritzh.util.Set2;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 import java.nio.file.Path;
 import java.util.Map;
 import java.util.Set;
@@ -21,11 +20,12 @@ import java.util.Set;
 /**
  * Binary Data Storage
  * Used to store different data types in byte arrays,
- * put them to a file, and then read them back.
+ * write them to a file, and then read them back.
  *
  * @author Aritz Lopez
  */
 @SuppressWarnings("unused")
+@Deprecated
 public class BDS {
 
 	private final static byte[] SIGNATURE = ".BDS\r\n".getBytes(Charsets.UTF_8);
@@ -166,14 +166,14 @@ public class BDS {
 		return Set2.of(new String(data, offset, length, Charsets.UTF_8), length + offset);
 	}
 
-	private static void putString(String nameStr, ByteBuffer buffer) {
+	private static void writeString(String nameStr, ByteArrayOutputStream baos) {
 		byte[] name = nameStr.getBytes(Charsets.UTF_8);
 		if (name.length > Math.pow(2, 9)) {
 			throw new ArrayIndexOutOfBoundsException("Tag name is too long!");
 		}
-		buffer.put((byte) (name.length >> 8));
-		buffer.put((byte) name.length);
-		for (byte b : name) buffer.put(b);
+		baos.write((byte) (name.length >> 8));
+		baos.write((byte) name.length);
+		for (byte b : name) baos.write(b);
 	}
 
 	private static short getShort(byte[] data, int offset) {
@@ -190,25 +190,25 @@ public class BDS {
 		return Longs.fromByteArray(longData);
 	}
 
-	private static void putShort(short s, ByteBuffer buffer) {
-		buffer.put((byte) (s >> 8));
-		buffer.put((byte) s);
+	private static void writeShort(short s, ByteArrayOutputStream baos) {
+		baos.write((byte) (s >> 8));
+		baos.write((byte) s);
 	}
 
-	private static void putInt(int i, ByteBuffer buffer) {
-		for (byte b : Ints.toByteArray(i)) buffer.put(b);
+	private static void writeInt(int i, ByteArrayOutputStream baos) {
+		for (byte b : Ints.toByteArray(i)) baos.write(b);
 	}
 
-	private static void putLong(long l, ByteBuffer buffer) {
-		for (byte b : Longs.toByteArray(l)) buffer.put(b);
+	private static void writeLong(long l, ByteArrayOutputStream baos) {
+		for (byte b : Longs.toByteArray(l)) baos.write(b);
 	}
 
-	private static void putFloat(float f, ByteBuffer buffer) {
-		for (byte b : Ints.toByteArray(Float.floatToIntBits(f))) buffer.put(b);
+	private static void writeFloat(float f, ByteArrayOutputStream baos) {
+		for (byte b : Ints.toByteArray(Float.floatToIntBits(f))) baos.write(b);
 	}
 
-	private static void putDouble(double d, ByteBuffer buffer) {
-		for (byte b : Longs.toByteArray(Double.doubleToLongBits(d))) buffer.put(b);
+	private static void writeDouble(double d, ByteArrayOutputStream baos) {
+		for (byte b : Longs.toByteArray(Double.doubleToLongBits(d))) baos.write(b);
 	}
 
 	private int parseByte(byte[] data, int offset) {
@@ -412,9 +412,9 @@ public class BDS {
 	}
 
 	/**
-	 * puts the BDS to the given file.
+	 * Writes the BDS to the given file.
 	 *
-	 * @param f The file to put the BDS to.
+	 * @param f The file to write the BDS to.
 	 * @see BDS#loadFromFile(File)
 	 */
 	public void writeToFile(File f) {
@@ -443,135 +443,130 @@ public class BDS {
 		this.name = name;
 	}
 
-	private byte[] putInternal() {
-		ByteBuffer buffer = ByteBuffer.allocateDirect(10000000); // FIXME!
-		buffer.order(ByteOrder.BIG_ENDIAN);
+	private byte[] writeInternal() {
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
-		buffer.put(BDSType.BDS.signature);
+		baos.write(BDSType.BDS.signature);
 
-		putString(this.name, buffer);
+		writeString(this.name, baos);
 
 		for (Map.Entry<String, Byte> bite : bytes.entrySet()) {
-			buffer.put(BDSType.BYTE.signature);
-			putString(bite.getKey(), buffer);
-			buffer.put(bite.getValue());
+			baos.write(BDSType.BYTE.signature);
+			writeString(bite.getKey(), baos);
+			baos.write(bite.getValue());
 		}
 
 		for (Map.Entry<String, Short> sort : shorts.entrySet()) {
-			buffer.put(BDSType.SHORT.signature);
-			putString(sort.getKey(), buffer);
-			putShort(sort.getValue(), buffer);
+			baos.write(BDSType.SHORT.signature);
+			writeString(sort.getKey(), baos);
+			writeShort(sort.getValue(), baos);
 		}
 
 		for (Map.Entry<String, Integer> integer : ints.entrySet()) {
-			buffer.put(BDSType.INT.signature);
-			putString(integer.getKey(), buffer);
-			putInt(integer.getValue(), buffer);
+			baos.write(BDSType.INT.signature);
+			writeString(integer.getKey(), baos);
+			writeInt(integer.getValue(), baos);
 		}
 
 		for (Map.Entry<String, Long> loong : longs.entrySet()) {
-			buffer.put(BDSType.LONG.signature);
-			putString(loong.getKey(), buffer);
-			putLong(loong.getValue(), buffer);
+			baos.write(BDSType.LONG.signature);
+			writeString(loong.getKey(), baos);
+			writeLong(loong.getValue(), baos);
 		}
 
 		for (Map.Entry<String, Float> flot : floats.entrySet()) {
-			buffer.put(BDSType.FLOAT.signature);
-			putString(flot.getKey(), buffer);
-			putFloat(flot.getValue(), buffer);
+			baos.write(BDSType.FLOAT.signature);
+			writeString(flot.getKey(), baos);
+			writeFloat(flot.getValue(), baos);
 		}
 
 		for (Map.Entry<String, Double> doble : doubles.entrySet()) {
-			buffer.put(BDSType.DOUBLE.signature);
-			putString(doble.getKey(), buffer);
-			putDouble(doble.getValue(), buffer);
+			baos.write(BDSType.DOUBLE.signature);
+			writeString(doble.getKey(), baos);
+			writeDouble(doble.getValue(), baos);
 
 		}
 
 		for (Map.Entry<String, String> str : strings.entrySet()) {
-			buffer.put(BDSType.STRING.signature);
-			putString(str.getKey(), buffer);
-			putString(str.getValue(), buffer);
+			baos.write(BDSType.STRING.signature);
+			writeString(str.getKey(), baos);
+			writeString(str.getValue(), baos);
 		}
 
 		for (Map.Entry<String, BDS> bds : bdss.entrySet()) {
-			for (byte b : bds.getValue().putInternal()) buffer.put(b);
+			for (byte b : bds.getValue().writeInternal()) baos.write(b);
 		}
 
 		for (Map.Entry<String, Byte[]> byteArray : byteArrays.entrySet()) {
-			buffer.put(BDSType.LIST.signature);
-			buffer.put(BDSType.BYTE.signature);
-			putString(byteArray.getKey(), buffer);
-			putInt(byteArray.getValue().length, buffer);
-			for (Byte b : byteArray.getValue()) buffer.put(b);
+			baos.write(BDSType.LIST.signature);
+			baos.write(BDSType.BYTE.signature);
+			writeString(byteArray.getKey(), baos);
+			writeInt(byteArray.getValue().length, baos);
+			for (Byte b : byteArray.getValue()) baos.write(b);
 		}
 
 		for (Map.Entry<String, Short[]> shortArray : shortArrays.entrySet()) {
-			buffer.put(BDSType.LIST.signature);
-			buffer.put(BDSType.SHORT.signature);
-			putString(shortArray.getKey(), buffer);
-			putInt(shortArray.getValue().length, buffer);
-			for (Short s : shortArray.getValue()) putShort(s, buffer);
+			baos.write(BDSType.LIST.signature);
+			baos.write(BDSType.SHORT.signature);
+			writeString(shortArray.getKey(), baos);
+			writeInt(shortArray.getValue().length, baos);
+			for (Short s : shortArray.getValue()) writeShort(s, baos);
 		}
 
 		for (Map.Entry<String, Integer[]> intArray : intArrays.entrySet()) {
-			buffer.put(BDSType.LIST.signature);
-			buffer.put(BDSType.INT.signature);
-			putString(intArray.getKey(), buffer);
-			putInt(intArray.getValue().length, buffer);
-			for (Integer i : intArray.getValue()) putInt(i, buffer);
+			baos.write(BDSType.LIST.signature);
+			baos.write(BDSType.INT.signature);
+			writeString(intArray.getKey(), baos);
+			writeInt(intArray.getValue().length, baos);
+			for (Integer i : intArray.getValue()) writeInt(i, baos);
 		}
 
 		for (Map.Entry<String, Long[]> longArray : longArrays.entrySet()) {
-			buffer.put(BDSType.LIST.signature);
-			buffer.put(BDSType.LONG.signature);
-			putString(longArray.getKey(), buffer);
-			putInt(longArray.getValue().length, buffer);
-			for (Long l : longArray.getValue()) putLong(l, buffer);
+			baos.write(BDSType.LIST.signature);
+			baos.write(BDSType.LONG.signature);
+			writeString(longArray.getKey(), baos);
+			writeInt(longArray.getValue().length, baos);
+			for (Long l : longArray.getValue()) writeLong(l, baos);
 		}
 
 		for (Map.Entry<String, Float[]> floatArray : floatArrays.entrySet()) {
-			buffer.put(BDSType.LIST.signature);
-			buffer.put(BDSType.FLOAT.signature);
-			putString(floatArray.getKey(), buffer);
-			putInt(floatArray.getValue().length, buffer);
-			for (Float f : floatArray.getValue()) putFloat(f, buffer);
+			baos.write(BDSType.LIST.signature);
+			baos.write(BDSType.FLOAT.signature);
+			writeString(floatArray.getKey(), baos);
+			writeInt(floatArray.getValue().length, baos);
+			for (Float f : floatArray.getValue()) writeFloat(f, baos);
 		}
 
 		for (Map.Entry<String, Double[]> doubleArray : doubleArrays.entrySet()) {
-			buffer.put(BDSType.LIST.signature);
-			buffer.put(BDSType.DOUBLE.signature);
-			putString(doubleArray.getKey(), buffer);
-			putInt(doubleArray.getValue().length, buffer);
-			for (Double d : doubleArray.getValue()) putDouble(d, buffer);
+			baos.write(BDSType.LIST.signature);
+			baos.write(BDSType.DOUBLE.signature);
+			writeString(doubleArray.getKey(), baos);
+			writeInt(doubleArray.getValue().length, baos);
+			for (Double d : doubleArray.getValue()) writeDouble(d, baos);
 		}
 
 		for (Map.Entry<String, String[]> stringArray : stringArrays.entrySet()) {
-			buffer.put(BDSType.LIST.signature);
-			buffer.put(BDSType.STRING.signature);
-			putString(stringArray.getKey(), buffer);
-			putInt(stringArray.getValue().length, buffer);
-			for (String s : stringArray.getValue()) putString(s, buffer);
+			baos.write(BDSType.LIST.signature);
+			baos.write(BDSType.STRING.signature);
+			writeString(stringArray.getKey(), baos);
+			writeInt(stringArray.getValue().length, baos);
+			for (String s : stringArray.getValue()) writeString(s, baos);
 		}
 
 		for (Map.Entry<String, BDS[]> bdsArray : bdsArrays.entrySet()) {
-			buffer.put(BDSType.LIST.signature);
-			buffer.put(BDSType.BDS.signature);
-			putString(bdsArray.getKey(), buffer);
-			putInt(bdsArray.getValue().length, buffer);
+			baos.write(BDSType.LIST.signature);
+			baos.write(BDSType.BDS.signature);
+			writeString(bdsArray.getKey(), baos);
+			writeInt(bdsArray.getValue().length, baos);
 			for (BDS b : bdsArray.getValue()) {
-				byte[] data = b.putInternal();
-				buffer.put(data, 0, data.length);
+				byte[] data = b.writeInternal();
+				baos.write(data, 0, data.length);
 			}
 		}
 
-		buffer.put(BDSType.END.signature);
+		baos.write(BDSType.END.signature);
 
-		byte[] result = new byte[buffer.position()];
-		buffer.rewind();
-		buffer.get(result);
-
-		return result;
+		return baos.toByteArray();
 	}
 
 	/**
@@ -582,7 +577,7 @@ public class BDS {
 	 * @see BDS#load(byte[])
 	 */
 	public byte[] write() {
-		byte[] data = putInternal();
+		byte[] data = writeInternal();
 		byte[] newData = new byte[data.length + SIGNATURE.length + NEW_LINE.length];
 		System.arraycopy(SIGNATURE, 0, newData, 0, SIGNATURE.length);
 		System.arraycopy(data, 0, newData, SIGNATURE.length, data.length);
