@@ -1,4 +1,8 @@
 rootProject.name = 'aritzh'
 include 'aritzh-core'
-include 'aritzh-awt'
+include 'aritzh-gameEngine'
+include 'aritzh-logging'
+include 'aritzh-bds'
+include 'aritzh-eventBus'
+include 'aritzh-extensions'
 
