@@ -7,6 +7,7 @@ import java.util.Set;
 /**
  * @author Aritz Lopez
  */
+@Deprecated
 public class UndirectedGraph<T> {
 
 	private final HashMultiBiMap<T, T> graph = HashMultiBiMap.create();

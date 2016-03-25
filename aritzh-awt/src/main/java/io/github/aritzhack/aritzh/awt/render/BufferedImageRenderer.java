@@ -38,7 +38,7 @@ public class BufferedImageRenderer implements IRender {
 	private boolean blend = false;
 
 	public BufferedImageRenderer(int width, int height) {
-		this(width, height, new HashMap<String, Sprite>());
+		this(width, height, new HashMap<>());
 	}
 
 	public BufferedImageRenderer(int width, int height, Map<String, Sprite> sprites) {
