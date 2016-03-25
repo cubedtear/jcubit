@@ -1,0 +1,4 @@
+dependencies {
+    compile project(':aritzh-eventBus')
+    testCompile group: 'junit', name: 'junit', version: '4.11'
+}
