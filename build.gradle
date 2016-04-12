@@ -7,7 +7,7 @@ if (!javaV.java8Compatible) {
 
 subprojects {
 
-	version '3.2.0'
+	version '3.2.1'
 
 	group 'io.github.aritzhack'
 
@@ -15,7 +15,7 @@ subprojects {
 
 	apply plugin: 'me.tatarka.retrolambda'
 	retrolambda {
-		javaVersion JavaVersion.VERSION_1_6
+		javaVersion JavaVersion.VERSION_1_7
 	}
 
 
