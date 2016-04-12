@@ -16,7 +16,7 @@
 
 package io.github.aritzhack.aritzh.logging.core;
 
-import io.github.aritzhack.aritzh.util.StringFormatter;
+import io.github.aritzhack.aritzh.logging.StringFormatter;
 
 /**
  * Abstract Logger that does nothing. Useful if you want to implement only part of the logging system

@@ -14,7 +14,10 @@
  *    limitations under the License.
  */
 
-package io.github.aritzhack.aritzh.util;
+package io.github.aritzhack.aritzh.logging;
+
+import io.github.aritzhack.aritzh.util.NotNull;
+import io.github.aritzhack.aritzh.util.Nullable;
 
 /**
  * @author Aritz Lopez
