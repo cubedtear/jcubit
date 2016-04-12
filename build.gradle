@@ -15,7 +15,7 @@ subprojects {
 
 	apply plugin: 'me.tatarka.retrolambda'
 	retrolambda {
-		javaVersion JavaVersion.VERSION_1_6
+		javaVersion JavaVersion.VERSION_1_7
 	}
 
 
