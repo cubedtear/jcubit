@@ -18,7 +18,7 @@ package io.github.aritzhack.aritzh.eventBus.logging;
 
 import io.github.aritzhack.aritzh.logging.core.LogLevel;
 import io.github.aritzhack.aritzh.util.Nullable;
-import io.github.aritzhack.aritzh.util.StringFormatter;
+import io.github.aritzhack.aritzh.logging.StringFormatter;
 
 /**
  * @author Aritz Lopez

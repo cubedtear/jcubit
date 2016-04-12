@@ -5,4 +5,5 @@ include 'aritzh-logging'
 include 'aritzh-bds'
 include 'aritzh-eventBus'
 include 'aritzh-extensions'
+include 'aritzh-annotations'
 
