@@ -1,23 +1,25 @@
 import org.gradle.internal.jvm.Jvm
 
 def javaV = Jvm.current().javaVersion
-if (!javaV.java8Compatible) {
-	throw new GradleException('Gradle is not running with a Java 8-compatible JDK')
+if (!javaV.java7Compatible) {
+	throw new GradleException('Gradle is not running with a Java 7-compatible JDK')
+}
+
+if (!hasProperty('ossrhUsername') || !hasProperty('ossrhPassword')) {
+	ext.ossrhUsername = ''
+	ext.ossrhPassword = ''
 }
 
 subprojects {
 
-	version '3.2.1'
+	version '3.4.0'
 
 	group 'io.github.aritzhack'
 
 	apply plugin: 'java'
 
-	apply plugin: 'me.tatarka.retrolambda'
-	retrolambda {
-		javaVersion JavaVersion.VERSION_1_7
-	}
-
+	sourceCompatibility = 1.7
+	targetCompatibility = 1.7
 
 	repositories {
 		mavenCentral()
@@ -46,6 +48,7 @@ subprojects {
 		}
 
 		signing {
+			required { gradle.taskGraph.hasTask("uploadArchives") }
 			sign configurations.archives
 		}
 

@@ -32,6 +32,13 @@ import java.util.*;
  */
 public class SpriteUtil {
 
+	private static final Comparator<Sprite> spriteComparator = new Comparator<Sprite>() {
+		@Override
+		public int compare(Sprite o1, Sprite o2) {
+			return o1.getWidth() - o2.getWidth();
+		}
+	};
+
 	/**
 	 * Creates a new Sprite with a cicle drawn onto it
 	 *
@@ -211,7 +218,7 @@ public class SpriteUtil {
 	public static Set2<Sprite, Map<String, Rectangle>> packSprites(Map<Sprite, String> sprites) {
 		int heightSum = 0, widthSum = 0;
 		ArrayList<Sprite> spriteList = new ArrayList<>(sprites.keySet());
-		Collections.sort(spriteList, (o1, o2) -> o1.getWidth() - o2.getWidth());
+		Collections.sort(spriteList, spriteComparator);
 
 		for (Sprite s : spriteList) {
 			heightSum += s.getHeight();
