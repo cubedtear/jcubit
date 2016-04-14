@@ -17,6 +17,7 @@
 package io.github.aritzhack.aritzh.timing;
 
 import com.google.common.collect.Lists;
+import io.github.aritzhack.aritzh.collections.CollectionUtil;
 
 import java.util.List;
 
@@ -69,10 +70,10 @@ public class GameTimer {
 	}
 
 	public int getAverageFPS() {
-		return this.fpss.size() > 0 ? this.fpss.stream().mapToInt(i -> i).sum() / this.fpss.size() : 0;
+		return this.fpss.size() > 0 ? CollectionUtil.integerSum(this.fpss) / this.fpss.size() : 0;
 	}
 
 	public int getAverageUPS() {
-		return this.upss.size() > 0 ? this.upss.stream().mapToInt(i -> i).sum() / this.upss.size() : 0;
+		return this.upss.size() > 0 ? CollectionUtil.integerSum(this.upss) / this.upss.size() : 0;
 	}
 }

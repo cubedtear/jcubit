@@ -20,7 +20,16 @@ public class OSLogger extends ALogger {
 	private static ILogger ERR_LOGGER;
 
 	static {
-		Runtime.getRuntime().addShutdownHook(new Thread(() -> OS_LOGGERS.stream().filter(l -> !l.isClosed()).forEach(OSLogger::close), "Logger-closing thread"));
+		Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+			@Override
+			public void run() {
+				for (OSLogger l : OS_LOGGERS) {
+					if (!l.isClosed()) {
+						l.close();
+					}
+				}
+			}
+		}, "Logger-closing thread"));
 	}
 
 	private final LogLevel level;
