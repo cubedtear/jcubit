@@ -25,7 +25,7 @@ public class OSLogger extends ALogger {
 			public void run() {
 				for (OSLogger l : OS_LOGGERS) {
 					if (!l.isClosed()) {
-						l.close();
+						l.close(false);
 					}
 				}
 			}
@@ -132,9 +132,13 @@ public class OSLogger extends ALogger {
 	}
 
 	public void close() {
-		this.ps.close();
-		OS_LOGGERS.remove(this);
+        this.close(true);
 	}
+
+    private void close(boolean remove) {
+        this.ps.close();
+        if (remove) OS_LOGGERS.remove(this);
+    }
 
 	public static class Builder {
 		private final OutputStream os;
