@@ -17,7 +17,6 @@
 package io.github.aritzhack.aritzh.awt.render;
 
 import com.google.common.base.Preconditions;
-import com.google.common.collect.Maps;
 import io.github.aritzhack.aritzh.util.ARGBColorUtil;
 
 import java.awt.image.BufferedImage;
@@ -39,7 +38,7 @@ public class BufferedImageRenderer implements IRender {
 	private boolean blend = false;
 
 	public BufferedImageRenderer(int width, int height) {
-		this(width, height, Maps.<String, Sprite>newHashMap());
+		this(width, height, new HashMap<>());
 	}
 
 	public BufferedImageRenderer(int width, int height, Map<String, Sprite> sprites) {

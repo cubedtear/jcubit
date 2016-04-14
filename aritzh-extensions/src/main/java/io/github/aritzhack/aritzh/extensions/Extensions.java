@@ -84,6 +84,7 @@ public class Extensions {
 	public Extension register(Class extensionClass) throws IllegalAccessException, InstantiationException {
 		Preconditions.checkNotNull(extensionClass);
 		Preconditions.checkArgument(ReflectionUtil.classHasAnnotation(extensionClass, ExtensionData.class), "Tried to register non-extension class " + extensionClass + "!");
+		//noinspection unchecked
 		Set<Field> instanceFields = ReflectionUtils.getAllFields(extensionClass, withAnnotation(ExtensionInstance.class), ReflectionUtils.withModifier(Modifier.STATIC));
 
 		Object instance = null;
