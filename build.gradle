@@ -5,14 +5,9 @@ if (!javaV.java7Compatible) {
 	throw new GradleException('Gradle is not running with a Java 7-compatible JDK')
 }
 
-if (!hasProperty('ossrhUsername') || !hasProperty('ossrhPassword')) {
-	ext.ossrhUsername = ''
-	ext.ossrhPassword = ''
-}
-
 subprojects {
 
-	version '4.0.0'
+	version '4.1.0'
 
 	group 'io.github.aritzhack'
 
@@ -144,4 +139,16 @@ if (System.getenv('TRAVIS') == null) {
 		description = 'Builds and deploys to Maven Central, and closes and promotes the repository'
 	}
 
+	gradle.taskGraph.addTaskExecutionGraphListener { graph ->
+		Task uploadTask = graph.allTasks.find { t -> t.name.equalsIgnoreCase('uploadArchives') }
+		if (uploadTask != null && (!hasProperty('ossrhUsername') || !hasProperty('ossrhPassword'))) {
+			ext.ossrhUsername = ''
+			ext.ossrhPassword = ''
+			throw new GradleException("You don't have OSS credentials in your gradle.properties")
+		}
+		Task signTask = graph.allTasks.find { t -> t.name.equalsIgnoreCase('signArchives') }
+		if (signTask != null && (!properties.containsKey('signing.keyId') || !properties.containsKey('signing.password') || !properties.containsKey('signing.secretKeyRingFile'))) {
+			throw new GradleException("You want to sign, but have not specified the required properties!")
+		}
+	}
 }
