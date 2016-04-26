@@ -141,7 +141,7 @@ if (System.getenv('TRAVIS') == null) {
 
 	gradle.taskGraph.addTaskExecutionGraphListener { graph ->
 		Task uploadTask = graph.allTasks.find { t -> t.name.equalsIgnoreCase('uploadArchives') }
-		if (uploadTask != null && (!hasProperty('ossrhUsername') || !hasProperty('ossrhPassword'))) {
+		if (uploadTask != null && (!properties.containsKey('ossrhUsername') || !properties.containsKey('ossrhPassword'))) {
 			ext.ossrhUsername = ''
 			ext.ossrhPassword = ''
 			throw new GradleException("You don't have OSS credentials in your gradle.properties")
