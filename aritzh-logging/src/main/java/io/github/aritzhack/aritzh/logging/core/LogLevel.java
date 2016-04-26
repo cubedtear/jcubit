@@ -40,8 +40,14 @@ public enum LogLevel implements Comparable<LogLevel> {
 		return levels.containsKey(level.toLowerCase()) ? levels.get(level.toLowerCase()) : null;
 	}
 
+	/**
+	 * Returns whether a message with level {@code log} should be logged if
+	 * the logger is set with {@code this} level.
+	 * @param log The level of the message.
+	 * @return {@code true} iff a message with level log should be logged with this level.
+	 */
 	public boolean shouldBeLogged(LogLevel log) {
-		return this.level >= log.level;
+		return this.level <= log.level;
 	}
 
 	public String getTag() {
