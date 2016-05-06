@@ -34,7 +34,7 @@ import java.util.regex.Pattern;
 
 /**
  * Kind of {@link java.util.Properties}, but with category names, and returning {@link String}, not
- * {@link Object}
+ * {@link Object}.
  *
  * @author Aritz Lopez
  */
@@ -49,33 +49,38 @@ public class Configuration {
 	private final boolean compressedSpaces;
 	private final Map<String, LinkedHashMap<String, String>> categories = Maps.newLinkedHashMap();
 
+	private Configuration(boolean compressedSpaces) {
+		this.configFile = null;
+		this.compressedSpaces = compressedSpaces;
+	}
+
 	private Configuration(OneOrOther<File, Path> configFile, boolean compressedSpaces) {
 		this.configFile = configFile;
 		this.compressedSpaces = compressedSpaces;
 	}
 
 	/**
-	 * Loads the configuration file <br>
-	 * If the config file did not exist, it will be created
+	 * Loads the configuration file. <br>
+	 * If the config file did not exist, it will be created.
 	 * <p>
-	 * Equivalent to calling {@code Configuration.loadConfig(configFile, false)}
+	 * Equivalent to calling {@code Configuration.loadConfig(configFile, false)}.
 	 * </p>
 	 *
-	 * @param configFile File to read the configuration from
-	 * @return A new configuration object, already parsed from {@code configFile}
-	 * @see Configuration#loadConfig(java.io.File, boolean)
+	 * @param configFile File to read the configuration from.
+	 * @return A new configuration object, already parsed from {@code configFile}.
+	 * @see Configuration#loadConfig(java.io.File, boolean).
 	 */
 	public static Configuration loadConfig(File configFile) {
 		return Configuration.loadConfig(configFile, false);
 	}
 
 	/**
-	 * Loads the configuration file, specifying if spaces should be compressed or not ({@code currentLine.replaceAll("\\s+", " ")})
-	 * If the config file did not exist, it will be created
+	 * Loads the configuration file, specifying if spaces should be compressed or not ({@code currentLine.replaceAll("\\s+", " ")}).
+	 * If the config file did not exist, it will be created.
 	 *
-	 * @param configFile     File to read the configuration from
-	 * @param compressSpaces If true subsequent whitespaces will be replaced with a single one (defaults to {@code false})
-	 * @return A new configuration object, already parsed, from {@code configFile}
+	 * @param configFile     File to read the configuration from.
+	 * @param compressSpaces If true subsequent whitespaces will be replaced with a single one (defaults to {@code false}).
+	 * @return A new configuration object, already parsed, from {@code configFile}.
 	 */
 	public static Configuration loadConfig(File configFile, boolean compressSpaces) {
 		if (!configFile.exists()) {
@@ -85,6 +90,22 @@ public class Configuration {
 		Configuration config = new Configuration(OneOrOther.<File, Path>ofOne(configFile), compressSpaces);
 
 		try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(configFile)))) {
+			loadConfig(config, reader, compressSpaces);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		return config;
+	}
+
+	public static Configuration loadConfig(InputStream is, boolean compressSpaces) {
+		if (is == null) {
+			throw new IllegalArgumentException("InputStream is null!");
+		}
+
+		Configuration config = new Configuration(compressSpaces);
+
+		try (BufferedReader reader = new BufferedReader(new InputStreamReader(is))) {
 			loadConfig(config, reader, compressSpaces);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -126,27 +147,27 @@ public class Configuration {
 	}
 
 	/**
-	 * Loads the configuration from the given path <br>
-	 * If the config path did not exist, it will be created
+	 * Loads the configuration from the given path <br>.
+	 * If the config path did not exist, it will be created.
 	 * <p>
-	 * Equivalent to calling {@code Configuration.loadConfig(configFile, false)}
+	 * Equivalent to calling {@code Configuration.loadConfig(configFile, false)}.
 	 * </p>
 	 *
-	 * @param configFile Path to read the configuration from
-	 * @return A new configuration object, already parsed from {@code configFile}
-	 * @see Configuration#loadConfig(java.nio.file.Path, boolean)
+	 * @param configFile Path to read the configuration from.
+	 * @return A new configuration object, already parsed from {@code configFile}.
+	 * @see Configuration#loadConfig(java.nio.file.Path, boolean).
 	 */
 	public static Configuration loadConfig(Path configFile) {
 		return Configuration.loadConfig(configFile, false);
 	}
 
 	/**
-	 * Loads the configuration path, specifying if spaces should be compressed or not ({@code currentLine.replaceAll("\\s+", " ")})
-	 * If the config path did not exist, it will be created
+	 * Loads the configuration path, specifying if spaces should be compressed or not ({@code currentLine.replaceAll("\\s+", " ")}).
+	 * If the config path did not exist, it will be created.
 	 *
-	 * @param configFile     Path to read the configuration from
-	 * @param compressSpaces If true subsequent whitespaces will be replaced with a single one (defaults to {@code false})
-	 * @return A new configuration object, already parsed, from {@code configFile}
+	 * @param configFile     Path to read the configuration from.
+	 * @param compressSpaces If true subsequent whitespaces will be replaced with a single one (defaults to {@code false}).
+	 * @return A new configuration object, already parsed, from {@code configFile}.
 	 */
 	public static Configuration loadConfig(Path configFile, boolean compressSpaces) {
 		if (Files.notExists(configFile)) {
@@ -164,20 +185,20 @@ public class Configuration {
 	}
 
 	/**
-	 * Creates a new empty configuration object for the specified file
+	 * Creates a new empty configuration object for the specified file.
 	 *
-	 * @param configFile the config file (doesn't need to exist)
-	 * @return A new empty configuration object
+	 * @param configFile the config file (doesn't need to exist).
+	 * @return A new empty configuration object.
 	 */
 	public static Configuration newConfig(@NotNull File configFile) {
 		return new Configuration(OneOrOther.<File, Path>ofOne(configFile), false);
 	}
 
 	/**
-	 * Creates a new empty configuration object for the specified file
+	 * Creates a new empty configuration object for the specified file.
 	 *
-	 * @param configFile the config file (doesn't need to exist)
-	 * @return A new empty configuration object
+	 * @param configFile the config file (doesn't need to exist).
+	 * @return A new empty configuration object.
 	 */
 	public static Configuration newConfig(@NotNull Path configFile) {
 		return new Configuration(OneOrOther.<File, Path>ofOther(configFile), false);
@@ -206,22 +227,22 @@ public class Configuration {
 	}
 
 	/**
-	 * Sets a property in the configuration
+	 * Sets a property in the configuration.
 	 *
-	 * @param category The category of the property
-	 * @param key      The key to identify the property
-	 * @param value    The value associated with it
+	 * @param category The category of the property.
+	 * @param key      The key to identify the property.
+	 * @param value    The value associated with it.
 	 */
 	public void setProperty(String category, String key, Object value) {
 		this.setProperty(category, key, value.toString());
 	}
 
 	/**
-	 * Sets a property in the configuration
+	 * Sets a property in the configuration.
 	 *
-	 * @param category The category of the property
-	 * @param key      The key to identify the property
-	 * @param value    The value associated with it
+	 * @param category The category of the property.
+	 * @param key      The key to identify the property.
+	 * @param value    The value associated with it.
 	 */
 	public void setProperty(String category, String key, String value) {
 		category = (this.compressedSpaces ? category.replaceAll("\\s+", " ") : category).trim();
@@ -241,11 +262,11 @@ public class Configuration {
 	}
 
 	/**
-	 * Sets the property, unless it already had a value
+	 * Sets the property, unless it already had a value.
 	 *
-	 * @param category The category of the property
-	 * @param key      The identifier of the property
-	 * @param value    The value to set to the property
+	 * @param category The category of the property.
+	 * @param key      The identifier of the property.
+	 * @param value    The value to set to the property.
 	 */
 	public void setDefault(String category, String key, String value) {
 		if (this.hasProperty(category, key)) return;
@@ -253,11 +274,11 @@ public class Configuration {
 	}
 
 	/**
-	 * Checks whether the specified key is present in the specified category
+	 * Checks whether the specified key is present in the specified category.
 	 *
-	 * @param category The category to look into for the key
-	 * @param key      The key to look for
-	 * @return {@code true} if the key was found in the category, {@code false} otherwise
+	 * @param category The category to look into for the key.
+	 * @param key      The key to look for.
+	 * @return {@code true} if the key was found in the category, {@code false} otherwise.
 	 */
 	public boolean hasProperty(String category, String key) {
 		return this.categories.containsKey(category) && this.categories.get(category).containsKey(key);
@@ -266,9 +287,9 @@ public class Configuration {
 	/**
 	 * Same as {@link Configuration#getProperty(String, String)}, but a boolean is parsed.
 	 *
-	 * @param category The category of the property
-	 * @param key      The key (identifier) of the property
-	 * @return {@code true} if the property can be parsed to boolean, or equals (ignoring case) {@code "on"}
+	 * @param category The category of the property.
+	 * @param key      The key (identifier) of the property.
+	 * @return {@code true} if the property can be parsed to boolean, or equals (ignoring case) {@code "on"}.
 	 */
 	public boolean getBoolean(String category, String key) {
 		String value = this.getProperty(category, key);
@@ -277,23 +298,23 @@ public class Configuration {
 
 	/**
 	 * Gets a property with an empty string as default value. <br>
-	 * Equivalent to calling {@code config.getProperty(category, key, "")}
+	 * Equivalent to calling {@code config.getProperty(category, key, "")}.
 	 *
-	 * @param category The category in which the property is
-	 * @param key      The key of the property
-	 * @return The value associated with {@code key} in {@code category}, or {@code ""} (an empty string) if not found
+	 * @param category The category in which the property is.
+	 * @param key      The key of the property.
+	 * @return The value associated with {@code key} in {@code category}, or {@code ""} (an empty string) if not found.
 	 */
 	public String getProperty(String category, String key) {
 		return this.getProperty(category, key, "");
 	}
 
 	/**
-	 * Gets a property
+	 * Gets a property.
 	 *
-	 * @param category     The category in which the property is
-	 * @param key          The key of the property
-	 * @param defaultValue If the property couldn't be found, this will be returned
-	 * @return The value associated with {@code key} in {@code category}, or {@code defaultValue} if not found
+	 * @param category     The category in which the property is.
+	 * @param key          The key of the property.
+	 * @param defaultValue If the property couldn't be found, this will be returned.
+	 * @return The value associated with {@code key} in {@code category}, or {@code defaultValue} if not found.
 	 */
 	public String getProperty(String category, String key, String defaultValue) {
 		category = (this.compressedSpaces ? category.replaceAll("\\s+", " ") : category).trim();
@@ -309,9 +330,9 @@ public class Configuration {
 	/**
 	 * Same as {@link Configuration#getProperty(String, String)}, but a integer is parsed.
 	 *
-	 * @param category The category of the property
-	 * @param key      The key (identifier) of the property
-	 * @return the integer value parsed from the property
+	 * @param category The category of the property.
+	 * @param key      The key (identifier) of the property.
+	 * @return the integer value parsed from the property.
 	 */
 	public int getInt(String category, String key) {
 		String value = this.getProperty(category, key).toLowerCase().trim();
@@ -321,9 +342,9 @@ public class Configuration {
 	/**
 	 * Same as {@link Configuration#getProperty(String, String)}, but a double is parsed.
 	 *
-	 * @param category The category of the property
-	 * @param key      The key (identifier) of the property
-	 * @return the double value parsed from the property
+	 * @param category The category of the property.
+	 * @param key      The key (identifier) of the property.
+	 * @return the double value parsed from the property.
 	 */
 	public double getDouble(String category, String key) {
 		String value = this.getProperty(category, key).toLowerCase().trim();
@@ -331,29 +352,52 @@ public class Configuration {
 	}
 
 	/**
-	 * Saves the configuration to the file it was created with <br>
+	 * Saves the configuration to the file it was created with. <br>
 	 * Equivalent to calling {@code config.save(configFile)}, if {@code config} was created with {@code configFile}
 	 *
-	 * @throws IOException if an I/O error occurs
+	 * @throws IOException if an I/O error occurs.
 	 */
 	public void save() throws IOException {
+		if(this.configFile == null) throw new IllegalStateException("Cannot save if constructed without a file!");
 		this.save(configFile);
 	}
 
 	/**
-	 * Saves the configuration to {@code configFile}
+	 * Saves the configuration to {@code f}.
+	 * @param f The file to save the configuration to.
+	 * @throws IOException if an I/O error occurs.
+	 */
+	public void save(File f) throws IOException {
+		this.saveToWriter(getFileWriter(f));
+	}
+
+	/**
+	 * Saves the configuration to {@code p}.
+	 * @param p The file to save the configuration to.
+	 * @throws IOException if an I/O error occurs.
+	 */
+	public void save(Path p) throws IOException {
+		this.saveToWriter(getPathWriter(p));
+	}
+
+	/**
+	 * Saves the configuration to {@code os}.
+	 * @param os The {@link OutputStream} to save the configuration to.
+	 * @throws IOException if an I/O error occurs.
+	 */
+	public void save(OutputStream os) throws IOException {
+		this.saveToWriter(new BufferedWriter(new OutputStreamWriter(os)));
+	}
+
+	/**
+	 * Saves the configuration to {@code configFile}.
 	 *
 	 * @param configFile The file to save the configuration to.
-	 * @throws IOException if an I/O error occurs
+	 * @throws IOException if an I/O error occurs.
 	 */
 	private void save(OneOrOther<File, Path> configFile) throws IOException {
-		if (configFile.isOne()) {
-			File config = configFile.getOne();
-			this.saveToWriter(getFileWriter(config));
-		} else {
-			Path config = configFile.getOther();
-			this.saveToWriter(getPathWriter(config));
-		}
+		if (configFile.isOne()) save(configFile.getOne());
+		else save(configFile.getOther());
 	}
 
 	private void saveToWriter(BufferedWriter writer) throws IOException {
