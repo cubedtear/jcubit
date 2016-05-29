@@ -76,7 +76,7 @@ public class OSLogger extends ALogger {
 	@Override
 	public void t(String msg, Throwable t) {
 		if (this.level.shouldBeLogged(LogLevel.TRACE))
-			ps.println(LogFormatter.formatLogMessage(LogLevel.TRACE, this.format, msg, loggerName));
+			ps.println(LogFormatter.formatLogMessage(LogLevel.TRACE, this.format, msg, t, loggerName));
 	}
 
 	@Override
@@ -88,7 +88,7 @@ public class OSLogger extends ALogger {
 	@Override
 	public void d(String msg, Throwable t) {
 		if (this.level.shouldBeLogged(LogLevel.DEBUG))
-			ps.println(LogFormatter.formatLogMessage(LogLevel.DEBUG, this.format, msg, loggerName));
+			ps.println(LogFormatter.formatLogMessage(LogLevel.DEBUG, this.format, msg, t, loggerName));
 	}
 
 	@Override
@@ -100,7 +100,7 @@ public class OSLogger extends ALogger {
 	@Override
 	public void i(String msg, Throwable t) {
 		if (this.level.shouldBeLogged(LogLevel.INFO))
-			ps.println(LogFormatter.formatLogMessage(LogLevel.INFO, this.format, msg, loggerName));
+			ps.println(LogFormatter.formatLogMessage(LogLevel.INFO, this.format, msg, t, loggerName));
 	}
 
 	@Override
@@ -112,7 +112,7 @@ public class OSLogger extends ALogger {
 	@Override
 	public void w(String msg, Throwable t) {
 		if (this.level.shouldBeLogged(LogLevel.WARN))
-			ps.println(LogFormatter.formatLogMessage(LogLevel.WARN, this.format, msg, loggerName));
+			ps.println(LogFormatter.formatLogMessage(LogLevel.WARN, this.format, msg, t, loggerName));
 	}
 
 	@Override
@@ -124,7 +124,7 @@ public class OSLogger extends ALogger {
 	@Override
 	public void e(String msg, Throwable t) {
 		if (this.level.shouldBeLogged(LogLevel.ERROR))
-			ps.println(LogFormatter.formatLogMessage(LogLevel.ERROR, this.format, msg, loggerName));
+			ps.println(LogFormatter.formatLogMessage(LogLevel.ERROR, this.format, msg, t, loggerName));
 	}
 
 	public boolean isClosed() {
