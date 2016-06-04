@@ -7,8 +7,6 @@ if (!javaV.java7Compatible) {
 
 subprojects {
 
-	version '4.2.4'
-
 	group 'io.github.aritzhack'
 
 	apply plugin: 'java'
@@ -68,9 +66,9 @@ subprojects {
 						url 'https://github.com/aritzhack/aritzh'
 
 						scm {
-							connection 'scm:git:git@github.com/aritzhack/aritzh/'
-							developerConnection 'scm:git:git@github.com/aritzhack/aritzh/'
-							url 'https://github.com/aritzhack/aritzh'
+							connection 'scm:git:git@gitlab.com:aritzh/aritzh.git'
+							developerConnection 'scm:git:git@gitlab.com:aritzh/aritzh.git'
+							url 'https://gitlab.com/aritzh/aritzh'
 						}
 
 						licenses {
