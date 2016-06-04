@@ -7,7 +7,7 @@ if (!javaV.java7Compatible) {
 
 subprojects {
 
-	version '4.2.3'
+	version '4.2.4'
 
 	group 'io.github.aritzhack'
 

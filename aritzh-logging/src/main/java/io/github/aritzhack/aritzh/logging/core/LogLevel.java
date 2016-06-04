@@ -7,7 +7,7 @@ import io.github.aritzhack.aritzh.util.Nullable;
 import java.util.Map;
 
 public enum LogLevel implements Comparable<LogLevel> {
-	NONE(0, "n"), TRACE(1, "t"), DEBUG(2, "d"), INFO(3, "i"), WARN(4, "w"), ERROR(5, "e"), ALL(6, "a");
+	ALL(0, "a"), TRACE(1, "t"), DEBUG(2, "d"), INFO(3, "i"), WARN(4, "w"), ERROR(5, "e"), NONE(6, "n");
 
 	public static final int maxNameLength;
 	private static final Map<String, LogLevel> levels;
