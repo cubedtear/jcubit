@@ -26,8 +26,10 @@ public class BDSTest {
 
 		final double doble = 2.056d;
 		final int[] ints = new int[]{10, 9, 8, 7, 6, 5, 4, 3, 2, 1, -12, -1, 0};
+		final char[] chars = new char[]{10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 12, 1, 0};
 		final String str = "Adios";
 		final byte bite = (byte) 5648;
+		final char shar = (char) 158;
 		final short sort = (short) 5;
 		final long loong = 15164613213165L;
 		final long[] longs = {16346141614L, 46168416416L, 4681464641486L};
@@ -36,6 +38,8 @@ public class BDSTest {
 		nested1.addDouble("double", doble);
 		nested1.addString("str", str);
 		nested2.addByte("byte", bite);
+		nested2.addChar("char", shar);
+		nested2.addChars("chars", chars);
 		nested2.addShort("short", sort);
 		bds1.addLongs("longs", longs);
 		nested1.addInts("ints", ints);
@@ -51,6 +55,8 @@ public class BDSTest {
 		assertEquals(str, nestedOut1.getString("str"));
 		assertEquals(bite, (byte) nestedOut2.getByte("byte"));
 		assertEquals(sort, (short) nestedOut2.getShort("short"));
+		assertEquals(shar, (char) nestedOut2.getChar("char"));
+		assertArrayEquals(chars, nestedOut2.getCharArray("chars"));
 		assertArrayEquals(longs, bds2.getLongArray("longs"));
 		assertArrayEquals(ints, nested1.getIntArray("ints"));
 	}
