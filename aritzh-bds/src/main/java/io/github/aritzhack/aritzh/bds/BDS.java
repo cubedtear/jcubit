@@ -1,6 +1,5 @@
 package io.github.aritzhack.aritzh.bds;
 
-import com.google.common.base.Charsets;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
@@ -13,6 +12,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.Map;
 import java.util.Set;
@@ -27,8 +27,8 @@ import java.util.Set;
 @SuppressWarnings("unused")
 public class BDS {
 
-    private final static byte[] SIGNATURE = ".BDS\r\n".getBytes(Charsets.UTF_8);
-    private final static byte[] NEW_LINE = "\r\n".getBytes(Charsets.UTF_8);
+    private final static byte[] SIGNATURE = ".BDS\r\n".getBytes(StandardCharsets.UTF_8);
+    private final static byte[] NEW_LINE = "\r\n".getBytes(StandardCharsets.UTF_8);
 
     private String name;
     private transient Set<String> takenNames = Sets.newHashSet();
@@ -166,20 +166,14 @@ public class BDS {
     }
 
     private static Set2<String, Integer> parseString(byte[] data, int offset) {
-        byte top = data[offset++];
-        byte bot = data[offset++];
-        int length = top << 8 | bot;
+        int length = Ints.fromBytes(data[offset++], data[offset++], data[offset++], data[offset++]);
         if (length == 0) return Set2.of("", offset);
-        return Set2.of(new String(data, offset, length, Charsets.UTF_8), length + offset);
+        return Set2.of(new String(data, offset, length, StandardCharsets.UTF_8), offset + length);
     }
 
     private static void writeString(String nameStr, ByteArrayOutputStream baos) {
-        byte[] name = nameStr.getBytes(Charsets.UTF_8);
-        if (name.length > Math.pow(2, 9)) {
-            throw new ArrayIndexOutOfBoundsException("Tag name is too long!");
-        }
-        baos.write((byte) (name.length >> 8));
-        baos.write((byte) name.length);
+        byte[] name = nameStr.getBytes(StandardCharsets.UTF_8);
+        for (byte b : Ints.toByteArray(name.length)) baos.write(b);
         for (byte b : name) baos.write(b);
     }
 
@@ -421,7 +415,7 @@ public class BDS {
     }
 
     private int parseStringArray(byte[] data, int offset) {
-        if (data[offset] != BDSType.LIST.signature || data[offset + 1] != BDSType.FLOAT.signature)
+        if (data[offset] != BDSType.LIST.signature || data[offset + 1] != BDSType.STRING.signature)
             throw new IllegalArgumentException("Given data is not in the appropriate format!");
 
         Set2<String, Integer> name = parseString(data, offset + 2);
