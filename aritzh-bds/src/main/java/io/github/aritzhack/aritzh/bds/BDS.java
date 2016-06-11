@@ -1072,6 +1072,78 @@ public class BDS {
         return this.bdsArrays.get(name);
     }
 
+    public Set<String> getAllLongs() {
+        return longs.keySet();
+    }
+
+    public Set<String> getAllBDSArrays() {
+        return bdsArrays.keySet();
+    }
+
+    public Set<String> getAllBDSs() {
+        return bdss.keySet();
+    }
+
+    public Set<String> getAllByteArrays() {
+        return byteArrays.keySet();
+    }
+
+    public Set<String> getAllBytes() {
+        return bytes.keySet();
+    }
+
+    public Set<String> getAllCharArrays() {
+        return charArrays.keySet();
+    }
+
+    public Set<String> getAllChars() {
+        return chars.keySet();
+    }
+
+    public Set<String> getAllDoubleArrays() {
+        return doubleArrays.keySet();
+    }
+
+    public Set<String> getAllDoubles() {
+        return doubles.keySet();
+    }
+
+    public Set<String> getAllFloatArrays() {
+        return floatArrays.keySet();
+    }
+
+    public Set<String> getAllFloats() {
+        return floats.keySet();
+    }
+
+    public Set<String> getAllIntArrays() {
+        return intArrays.keySet();
+    }
+
+    public Set<String> getAllInts() {
+        return ints.keySet();
+    }
+
+    public Set<String> getAllLongArrays() {
+        return longArrays.keySet();
+    }
+
+    public Set<String> getAllShortArrays() {
+        return shortArrays.keySet();
+    }
+
+    public Set<String> getAllShorts() {
+        return shorts.keySet();
+    }
+
+    public Set<String> getAllStringArrays() {
+        return stringArrays.keySet();
+    }
+
+    public Set<String> getAllStrings() {
+        return strings.keySet();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
