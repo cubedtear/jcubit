@@ -6,6 +6,8 @@ import org.junit.After;
 import org.junit.Test;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
@@ -19,11 +21,12 @@ public class BDSTest {
 
 	@Test
 	public void testBDS() throws Exception {
-		BDS bds1 = BDS.createEmpty("");
 
-		BDS nested1 = BDS.createEmpty("C");
-		BDS nested2 = BDS.createEmpty("D");
-		bds1.addBDSs("bdss", new BDS[]{nested1, nested2});
+		BDS bds1 = BDS.createEmpty("Parent");
+
+		BDS nested1 = BDS.createEmpty("Nested1");
+		BDS nested2 = BDS.createEmpty("Nested2");
+		bds1.addBDSs("BDS Array", new BDS[]{nested1, nested2});
 
 		final byte bite = (byte) -35;
 		final byte[] bytes = new byte[]{-12, 35, 0, -1, Byte.MAX_VALUE, Byte.MIN_VALUE};
@@ -80,8 +83,8 @@ public class BDSTest {
 		bds1.writeToFile(file);
 
 		BDS bds1Out = BDS.loadFromFile(file);
-		BDS nestedOut1 = bds1Out.getBDSArray("bdss")[0];
-		BDS nestedOut2 = bds1Out.getBDSArray("bdss")[1];
+		BDS nestedOut1 = bds1Out.getBDSArray("BDS Array")[0];
+		BDS nestedOut2 = bds1Out.getBDSArray("BDS Array")[1];
 
 		assertEquals(bite, (byte) nestedOut1.getByte("byte"));
 		assertEquals(shar, (char) nestedOut1.getChar("char"));
@@ -100,6 +103,8 @@ public class BDSTest {
 		assertArrayEquals(floats, nestedOut2.getFloatArray("floats"), 0.0001f);
 		assertArrayEquals(doubles, nestedOut2.getDoubleArray("doubles"), 0.0001);
 		assertArrayEquals(strings, nestedOut2.getStringArray("strings"));
+
+		BDSUtil.debug(bds1Out, System.out);
 	}
 
 	@After
