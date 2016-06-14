@@ -23,6 +23,7 @@ import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
@@ -30,6 +31,7 @@ import java.net.URLClassLoader;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
@@ -128,13 +130,14 @@ public class ReflectionUtil {
      * @return true if and only if the class or any of its supertypes has the annotation
      */
     public static boolean classHasAnnotation(Class clazz, Class<? extends Annotation> annotation) {
-        try {
-            Set<Class> hierarchy = ReflectionUtil.flattenHierarchy(clazz);
-            for (Class c : hierarchy) {
-                if (c.isAnnotationPresent(annotation)) return true;
-            }
-        } catch (Throwable t) {
-            t.printStackTrace();
+        if (clazz == null || annotation == null) return false;
+        if (clazz.isArray()) return classHasAnnotation(clazz.getComponentType(), annotation);
+        for (Annotation anno : clazz.getAnnotations()) {
+            if (anno.annotationType().equals(annotation)) return true;
+        }
+        if (classHasAnnotation(clazz.getSuperclass(), annotation)) return true;
+        for (Class inter : clazz.getInterfaces()) {
+            if (classHasAnnotation(inter, annotation)) return true;
         }
         return false;
     }
@@ -152,5 +155,15 @@ public class ReflectionUtil {
         }
 
         return ret;
+    }
+
+    public static Set<Field> getAllFields(Class c) {
+        Set<Field> res = Sets.newHashSet();
+        Collections.addAll(res, c.getDeclaredFields());
+        if (c.getSuperclass() != null) res.addAll(getAllFields(c.getSuperclass()));
+        for (Class inter : c.getInterfaces()) {
+            res.addAll(getAllFields(inter));
+        }
+        return res;
     }
 }
