@@ -2,6 +2,7 @@ package io.github.aritzhack.aritzh.bds;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.HashMultimap;
+import com.google.common.collect.ListMultimap;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Sets;
@@ -19,6 +20,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -32,7 +34,7 @@ public class BDSUtil {
     private static final String ARRAY_LENGTH_TAG = "0__arrayLength";
     private static final String PRIMITIVE_VALUE_TAG = "0__value";
     private static final String ROOT_OBJ_TAG = "0__root";
-    private static final String BACKREF_PREFIX = "0__back_";
+    private static final String BACKREF_TAG = "0__back_";
     private static final String IDX_TAG = "0__ID";
     private static final String NULL_TAG = "0__null__";
 
@@ -46,18 +48,26 @@ public class BDSUtil {
     }
 
     @API
-    public static <T> T deserialize(BDS data) throws SerializationException {
-        return deserializeInternal(data, Maps.<Integer, Object>newHashMap(), Sets.<UnresolvedReference>newHashSet());
+    public static Object deserialize(BDS data) throws SerializationException {
+        try {
+            return deserializeInternal(data, Maps.<Integer, Object>newHashMap(), Sets.<UnresolvedReference>newHashSet());
+        } catch (CannotDeserializeYet cannotDeserializeYet) {
+            throw new AssertionError("Should never happen");
+        }
     }
 
     public static boolean isNull(BDS bds) {
-        return bds == null || NULL_TAG.equals(bds.getName());
+        return bds == null || NULL_TAG.equals(bds.getString(CLASS_NAME_TAG));
     }
 
     private static BDS serializeInternal2(String name, Object instance, Multimap<Map.Entry<String, Integer>, Map.Entry<Integer, Object>> alreadyWritten, IntRef biggest) throws SerializationException {
-        if (instance == null) return NULL_BDS;
-        Class<?> type = instance.getClass();
         BDS bds = BDS.createEmpty(name);
+        if (instance == null) {
+            bds.addString(CLASS_NAME_TAG, NULL_TAG);
+            return bds;
+        }
+
+        Class<?> type = instance.getClass();
 
         bds.addInt(IDX_TAG, ++biggest.value);
         if (Byte.class.equals(type) || byte.class.equals(type)) {
@@ -89,7 +99,7 @@ public class BDSUtil {
             bds.addString(PRIMITIVE_VALUE_TAG, ((File) instance).getAbsolutePath());
         } else {
             int idx = findCycle(instance, type, alreadyWritten);
-            if (idx != -1) bds.addInt(BACKREF_PREFIX + type.getName(), idx);
+            if (idx != -1) bds.addInt(BACKREF_TAG, idx);
             else {
                 alreadyWritten.put(Maps.immutableEntry(type.getName(), instance.hashCode()), Maps.immutableEntry(biggest.value, instance));
 
@@ -114,6 +124,7 @@ public class BDSUtil {
                         bds.addBDS(serializeInternal2("Item" + i++, iter.next(), alreadyWritten, biggest));
                     }
                 } else {
+                    bds.addString(CLASS_NAME_TAG, type.getName());
                     for (Field f : ReflectionUtil.getAllFields(type)) {
                         if (f.isAnnotationPresent(Transient.class)) break;
                         if (!f.isAccessible()) {
@@ -127,7 +138,7 @@ public class BDSUtil {
                             try {
                                 bds.addBDS(serializeInternal2(f.getName(), f.get(instance), alreadyWritten, biggest));
                             } catch (IllegalAccessException e) {
-                                e.printStackTrace();
+                                throw new AssertionError("This should never happen");
                             }
                         } catch (StackOverflowError e) {
                             throw new SerializationException("Most probably a cycle exists in the object structure, and it could not be fixed. Provide a good hashCode and equals to your classes to fix it", e);
@@ -155,98 +166,168 @@ public class BDSUtil {
         return -1;
     }
 
-    private static <T> T deserializeInternal(BDS bds, Map<Integer, Object> pastInstances, Set<UnresolvedReference> unresolvedReferences) throws SerializationException {
+    private static Object deserializeInternal(BDS bds, Map<Integer, Object> pastInstances, Set<UnresolvedReference> unresolvedReferences) throws SerializationException, CannotDeserializeYet {
         if (isNull(bds)) return null;
 
-        String className = bds.getString(CLASS_NAME_TAG);
-        Class<?> clazz;
-        try {
-            clazz = Class.forName(className);
-        } catch (ClassNotFoundException e) {
-            throw new SerializationException("Error deserializing: Class " + className + " could not be found", e);
-        }
-        T instance;
-        try {
-            instance = (T) clazz.newInstance();
-        } catch (InstantiationException | IllegalAccessException e) {
-            throw new SerializationException("Error deserializing: Class " + className + " could not be instantiated. Add a public empty constructor", e);
-        } catch (ClassCastException e) {
-            throw new SerializationException("Error deserializing: Tried to cast class " + className + ", but failed!", e);
-        }
-        for (Field f : ReflectionUtil.getAllFields(instance.getClass())) {
-            if (f.isAnnotationPresent(Transient.class)) continue;
-            Class<?> fType = f.getType();
-            String fName = f.getName();
-            if (!f.isAccessible()) {
-                try {
-                    f.setAccessible(true);
-                } catch (SecurityException e) {
-                    throw new SerializationException("Error deserializing: Cannot access field " + f.getName() + " from class " + className, e);
-                }
-            }
-            Object value;
-            if (Byte.class.equals(fType) || byte.class.equals(fType)) {
-                value = bds.getByte(fName);
-            } else if (Character.class.equals(fType) || byte.class.equals(fType)) {
-                value = bds.getChar(fName);
-            } else if (Short.class.equals(fType) || short.class.equals(fType)) {
-                value = bds.getShort(fName);
-            } else if (Integer.class.equals(fType) || int.class.equals(fType)) {
-                value = bds.getInt(fName);
-            } else if (Long.class.equals(fType) || long.class.equals(fType)) {
-                value = bds.getLong(fName);
-            } else if (Float.class.equals(fType) || float.class.equals(fType)) {
-                value = bds.getFloat(fName);
-            } else if (Double.class.equals(fType) || double.class.equals(fType)) {
-                value = bds.getDouble(fName);
-            } else if (String.class.equals(fType)) {
-                value = bds.getString(fName);
+        Object result;
+
+        String type = bds.getString(CLASS_NAME_TAG);
+
+        if (type == null) {
+            if (bds.getInt(BACKREF_TAG) == null) {
+                throw new SerializationException("Error deserializing: Something went wrong");
             } else {
-                BDS child = bds.getBDS(fName);
-                if (child == null) {
-                    Integer ref = bds.getInt(BACKREF_PREFIX + className + fName);
-                    if (ref == null) {
-                        throw new SerializationException("Error deserializing: Field " + fName + " of class " + className + " cannot be deserialized!");
-                    } else if (pastInstances.containsKey(ref)) {
-                        value = pastInstances.get(ref);
-                    } else {
-                        value = null;
-                        unresolvedReferences.add(new UnresolvedReference(instance, f, ref));
-                    }
-                } else {
-                    value = deserializeInternal(child, pastInstances, unresolvedReferences);
-                }
-            }
-            try {
-                f.set(instance, value);
-            } catch (IllegalAccessException e) {
-                throw new SerializationException("Error deserializing: Could not set value of the field " + fName + " of the class " + className, e);
+                throw new CannotDeserializeYet(bds.getInt(BACKREF_TAG));
             }
         }
+
+        int refId = bds.getInt(IDX_TAG);
+
+        if ("Byte".equals(type)) {
+            result =  bds.getByte(PRIMITIVE_VALUE_TAG);
+            pastInstances.put(refId, result);
+        } else if ("Char".equals(type)) {
+            result = bds.getChar(PRIMITIVE_VALUE_TAG);
+            pastInstances.put(refId, result);
+        } else if ("Short".equals(type)) {
+            result = bds.getShort(PRIMITIVE_VALUE_TAG);
+            pastInstances.put(refId, result);
+        } else if ("Int".equals(type)) {
+            result = bds.getInt(PRIMITIVE_VALUE_TAG);
+            pastInstances.put(refId, result);
+        } else if ("Long".equals(type)) {
+            result = bds.getLong(PRIMITIVE_VALUE_TAG);
+            pastInstances.put(refId, result);
+        } else if ("Float".equals(type)) {
+            result = bds.getFloat(PRIMITIVE_VALUE_TAG);
+            pastInstances.put(refId, result);
+        } else if ("Double".equals(type)) {
+            result = bds.getDouble(PRIMITIVE_VALUE_TAG);
+            pastInstances.put(refId, result);
+        } else if ("String".equals(type)) {
+            result = bds.getString(PRIMITIVE_VALUE_TAG);
+            pastInstances.put(refId, result);
+        } else if ("File".equals(type)) {
+            result = new File(bds.getString(PRIMITIVE_VALUE_TAG));
+            pastInstances.put(refId, result);
+        } else if ("Array".equals(type)) {
+            String componentType = bds.getString(ARRAY_TYPE_TAG);
+            if (componentType != null) {
+                int length = bds.getInt(ARRAY_LENGTH_TAG);
+                try {
+                    Class<?> cType = Class.forName(componentType);
+                    result = Array.newInstance(cType, length);
+                    pastInstances.put(refId, result);
+                    for (int i = 0; i<length; i++) {
+                        try {
+                            Object element = deserializeInternal(bds.getBDS("Item" + i), pastInstances, unresolvedReferences);
+                            Array.set(result, i, element);
+                        } catch (CannotDeserializeYet e) {
+                            unresolvedReferences.add(new UnresolvedArray(result, i, e.refId));
+                        }
+                    }
+                } catch (ClassNotFoundException e) {
+                    throw new SerializationException("Error deserializing: Class " + type + " could not be found.");
+                }
+            } else {
+                int backref = bds.getInt(BACKREF_TAG);
+                if (pastInstances.containsKey(backref)) {
+                    result =  pastInstances.get(backref);
+                } else throw new CannotDeserializeYet(backref);
+            }
+        } else if ("Collection".equals(type)) {
+            String collectionType = bds.getString(ARRAY_TYPE_TAG);
+            if (collectionType != null) {
+                int length = bds.getInt(ARRAY_LENGTH_TAG);
+                try {
+                    Class<?> cType = Class.forName(collectionType);
+                    try {
+                        Collection collection = (Collection) cType.newInstance();
+                        pastInstances.put(refId, collection);
+                        for (int i = 0; i<length; i++) {
+                            try {
+                                Object element = deserializeInternal(bds.getBDS("Item" + i), pastInstances, unresolvedReferences);
+                                //noinspection unchecked
+                                collection.add(element);
+                            } catch (CannotDeserializeYet e) {
+                                unresolvedReferences.add(new UnresolvedCol(collection, i, e.refId));
+                            }
+                        }
+                        result =  collection;
+                    } catch (InstantiationException e) {
+                        throw new SerializationException("Error deserializing: Class " + type + " cannot be instantiated. Add a default constructor.", e);
+                    } catch (IllegalAccessException e) {
+                        throw new SerializationException("Error deserializing: Empty constructor for class " + type + " is not public.", e);
+                    }
+                } catch (ClassNotFoundException e) {
+                    throw new SerializationException("Error deserializing: Class " + type + " could not be found.");
+                }
+            } else {
+                int backref = bds.getInt(BACKREF_TAG);
+                if (pastInstances.containsKey(backref)) {
+                    result =  pastInstances.get(backref);
+                } else throw new CannotDeserializeYet(backref);
+            }
+        } else {
+            try {
+                Class<?> clazz = Class.forName(type);
+                try {
+                    result = clazz.newInstance();
+                    pastInstances.put(refId, result);
+
+                    for (Field f : ReflectionUtil.getAllFields(clazz)) {
+                        if (f.isAnnotationPresent(Transient.class)) continue;
+                        BDS fieldBDS = bds.getBDS(f.getName());
+                        try {
+                            Object value = deserializeInternal(fieldBDS, pastInstances, unresolvedReferences);
+                            f.set(result, value);
+                        } catch (CannotDeserializeYet e) {
+                            unresolvedReferences.add(new UnresolvedField(result, f, e.refId));
+                        }
+                    }
+                } catch (InstantiationException e) {
+                    throw new SerializationException("Error deserializing: Class " + type + " cannot be instantiated. Add a default constructor.", e);
+                } catch (IllegalAccessException e) {
+                    throw new SerializationException("Error deserializing: Empty constructor for class " + type + " is not public.", e);
+                }
+            } catch (ClassNotFoundException e) {
+                throw new SerializationException("Error deserializing: Class " + type + " could not be found.");
+            }
+        }
+
         if (ROOT_OBJ_TAG.equals(bds.getName())) {
             Set<UnresolvedReference> toReSolve = new HashSet<>(unresolvedReferences);
             while (!toReSolve.isEmpty()) {
                 unresolvedReferences = toReSolve;
                 toReSolve = Sets.newHashSet();
                 for (UnresolvedReference ur : unresolvedReferences) {
-                    if (pastInstances.containsKey(ur.idx)) {
-                        try {
-                            ur.f.set(ur.instance, pastInstances.get(ur.idx));
-                        } catch (IllegalAccessException e) {
-                            assert false; // Should never happen, as we have made it accessible before
-                        }
-                    } else if (ur.idx == 0) {
-                        try {
-                            ur.f.set(ur.instance, instance);
-                        } catch (IllegalAccessException e) {
-                            assert false; // Should never happen, as we have made it accessible before
+                    if (pastInstances.containsKey(ur.refId) || ur.refId == 0) {
+                        Object value = pastInstances.get(ur.refId);
+                        if (ur instanceof UnresolvedField) {
+                            UnresolvedField urf = (UnresolvedField) ur;
+                            try {
+                                urf.f.set(urf.instance, value);
+                            } catch (IllegalAccessException e) {
+                                throw new AssertionError("How did this even happen?");
+                            }
+                        } else if (ur instanceof UnresolvedArray) {
+                            UnresolvedArray ura = (UnresolvedArray) ur;
+                            Array.set(ura.array, ura.idx, value);
+                        } else if (ur instanceof UnresolvedCol) {
+                            UnresolvedCol urc = ((UnresolvedCol) ur);
+                            if (urc.collection instanceof List) {
+                                //noinspection unchecked
+                                ((List) urc.collection).add(urc.idx, value);
+                            } else {
+                                //noinspection unchecked
+                                urc.collection.add(value);
+                            }
                         }
                     } else toReSolve.add(ur);
                 }
             }
         }
-        pastInstances.put(bds.getInt(IDX_TAG), instance);
-        return instance;
+        return result;
     }
 
     public static void debug(BDS bds, PrintStream out) {
@@ -401,15 +482,48 @@ public class BDSUtil {
         }
     }
 
-    private static class UnresolvedReference {
+    protected abstract static class UnresolvedReference {
+        protected int refId;
+    }
+
+    private static class UnresolvedField extends UnresolvedReference {
         final Object instance;
         final Field f;
-        final int idx;
 
-        public UnresolvedReference(Object instance, Field f, int idx) {
+        public UnresolvedField(Object instance, Field f, int refId) {
             this.instance = instance;
             this.f = f;
+            this.refId = refId;
+        }
+    }
+
+    private static class UnresolvedCol extends UnresolvedReference {
+        final Collection collection;
+        final int idx;
+
+        private UnresolvedCol(Collection collection, int idx, int refId) {
+            this.collection = collection;
             this.idx = idx;
+            this.refId = refId;
+        }
+    }
+
+    private static class UnresolvedArray extends UnresolvedReference {
+        final Object array;
+        final int idx;
+
+        private UnresolvedArray(Object array, int idx, int refId) {
+            this.array = array;
+            this.idx = idx;
+            this.refId = refId;
+        }
+    }
+
+    private static class CannotDeserializeYet extends Exception {
+        final int refId;
+
+        public CannotDeserializeYet(int refId) {
+            this.refId = refId;
         }
     }
 }
