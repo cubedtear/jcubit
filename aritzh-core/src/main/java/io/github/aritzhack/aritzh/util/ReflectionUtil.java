@@ -28,7 +28,11 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.nio.file.*;
+import java.nio.file.FileVisitResult;
+import java.nio.file.FileVisitor;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Arrays;
 import java.util.Collections;
@@ -39,7 +43,40 @@ import java.util.Set;
  * @author Aritz Lopez
  */
 @SuppressWarnings({"unused", "ThrowableResultOfMethodCallIgnored"})
-public class ReflectionUtil {
+public class ReflectionUtil extends SecurityManager {
+
+    private static final ReflectionUtil INSTANCE = new ReflectionUtil();
+    private static final int OFFSET = 1;
+
+    /**
+     * Returns the {@link java.lang.Class} that called the method calling this method.
+     * @return The caller of the method that called this method.
+     */
+    public static Class<?> getCallingClass() {
+        return INSTANCE.getClassContext()[OFFSET + 1];
+    }
+
+    /**
+     * Returns the {@link java.lang.Class} at {@code depth} position in the stack trace.
+     * @param depth The number of classes to go back.
+     *              -1 will be {@link io.github.aritzhack.aritzh.util.ReflectionUtil},
+     *              0 will be the caller to this method,
+     *              and so on.
+     * @return the {@link java.lang.Class} at {@code depth} position in the stack trace.
+     */
+    public static Class<?> getCallingClass(int depth) {
+        return INSTANCE.getClassContext()[OFFSET + depth];
+    }
+
+    public static boolean isCalledByClass(Class<?> clazz) {
+        Class<?>[] classes = INSTANCE.getClassContext();
+        for (int i = OFFSET + 1; i < classes.length; i++) {
+            if (classes[i] == clazz) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     private static final FileFilter jarAndZips = new FileFilter() {
         @Override

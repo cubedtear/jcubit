@@ -2,7 +2,6 @@ package io.github.aritzhack.aritzh.bds;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.HashMultimap;
-import com.google.common.collect.ListMultimap;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Sets;
@@ -16,8 +15,10 @@ import java.io.File;
 import java.io.PrintStream;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -37,20 +38,40 @@ public class BDSUtil {
     private static final String BACKREF_TAG = "0__back_";
     private static final String IDX_TAG = "0__ID";
     private static final String NULL_TAG = "0__null__";
+    private static final String PRIMITIVE_ARRAY_VALUE_TAG = "0__primVal";
+    private static final String DATE_VALUE_TAG = "0__date__";
 
-    public static final BDS NULL_BDS = BDS.createEmpty(NULL_TAG);
+    private static final Map<String, Serializer> serializers = Maps.newHashMap();
 
     private static ILogger LOG = new OSLogger.Builder(System.out, "SAWS-Serialization").setLevel(LogLevel.INFO).build();
 
     @API
+    public static void registerSerializer(String type, Serializer serializer) {
+        serializers.put(type, serializer);
+    }
+
+    @API
     public static BDS serialize(Object instance) throws SerializationException {
-        return instance == null ? NULL_BDS : serializeInternal2(ROOT_OBJ_TAG, instance, HashMultimap.<Map.Entry<String, Integer>, Map.Entry<Integer, Object>>create(), new IntRef(-1));
+        return serialize(instance, null);
+    }
+
+    public static BDS serialize(Object instance, BackrefFixer fixer) throws SerializationException {
+        if (instance == null) {
+            BDS result = BDS.createEmpty(NULL_TAG);
+            result.addString(CLASS_NAME_TAG, NULL_TAG);
+            return result;
+        } else
+            return serializeInternal2(ROOT_OBJ_TAG, instance, fixer != null ? fixer.alreadyWritten : HashMultimap.<Map.Entry<String, Integer>, Map.Entry<Integer, Object>>create(), fixer != null ? fixer.biggest : new IntRef(-1));
     }
 
     @API
     public static Object deserialize(BDS data) throws SerializationException {
         try {
-            return deserializeInternal(data, Maps.<Integer, Object>newHashMap(), Sets.<UnresolvedReference>newHashSet());
+            String oldName = data.getName();
+            data.setName(ROOT_OBJ_TAG);
+            Object o = deserializeInternal(data, Maps.<Integer, Object>newHashMap(), Sets.<UnresolvedReference>newHashSet());
+            data.setName(oldName);
+            return o;
         } catch (CannotDeserializeYet cannotDeserializeYet) {
             throw new AssertionError("Should never happen");
         }
@@ -70,7 +91,22 @@ public class BDSUtil {
         Class<?> type = instance.getClass();
 
         bds.addInt(IDX_TAG, ++biggest.value);
-        if (Byte.class.equals(type) || byte.class.equals(type)) {
+
+        if (serializers.containsKey(type.getName())) {
+            int idx = findCycle(instance, type, alreadyWritten);
+            if (idx != -1) bds.addInt(BACKREF_TAG, idx);
+            else {
+                alreadyWritten.put(Maps.immutableEntry(type.getName(), instance.hashCode()), Maps.immutableEntry(biggest.value, instance));
+                Serializer serializer = serializers.get(type.getName());
+                serializer.serialize(instance, bds, new BackrefFixer(alreadyWritten, biggest));
+                if (!bds.addString(CLASS_NAME_TAG, type.getName())) {
+                    throw new IllegalStateException("BDS String \"" + CLASS_NAME_TAG + "\" cannot be used when serializing!");
+                }
+            }
+        } else if (Boolean.class.equals(type) || boolean.class.equals(type)) {
+            bds.addString(CLASS_NAME_TAG, "Boolean");
+            bds.addInt(PRIMITIVE_VALUE_TAG, (Boolean) instance ? 1 : 0);
+        } else if (Byte.class.equals(type) || byte.class.equals(type)) {
             bds.addString(CLASS_NAME_TAG, "Byte");
             bds.addByte(PRIMITIVE_VALUE_TAG, (Byte) instance);
         } else if (Character.class.equals(type) || byte.class.equals(type)) {
@@ -97,6 +133,10 @@ public class BDSUtil {
         } else if (File.class.equals(type)) {
             bds.addString(CLASS_NAME_TAG, "File");
             bds.addString(PRIMITIVE_VALUE_TAG, ((File) instance).getAbsolutePath());
+        } else if (instance instanceof Date) {
+            long time = ((Date) instance).getTime();
+            bds.addString(CLASS_NAME_TAG, "Date");
+            bds.addLong(DATE_VALUE_TAG, time);
         } else {
             int idx = findCycle(instance, type, alreadyWritten);
             if (idx != -1) bds.addInt(BACKREF_TAG, idx);
@@ -105,13 +145,41 @@ public class BDSUtil {
 
                 if (type.isArray()) {
                     bds.addString(CLASS_NAME_TAG, "Array");
-                    bds.addString(ARRAY_TYPE_TAG, type.getComponentType().getName());
+                    String componentType = type.getComponentType().getName();
+                    bds.addString(ARRAY_TYPE_TAG, componentType);
                     int length = Array.getLength(instance);
                     bds.addInt(ARRAY_LENGTH_TAG, length);
-                    for (int i = 0; i < length; i++) {
-                        Object o = Array.get(instance, i);
-                        BDS element = serializeInternal2("Item" + i, o, alreadyWritten, biggest);
-                        bds.addBDS(element);
+                    if (type.getComponentType().isPrimitive()) {
+                        if ("boolean".equals(componentType)) {
+                            boolean[] bArray = (boolean[]) instance;
+                            int[] b2i = new int[bArray.length];
+                            for (int i = 0; i < bArray.length; i++) {
+                                b2i[i] = bArray[i] ? 1 : 0;
+                            }
+                            bds.addInts(PRIMITIVE_ARRAY_VALUE_TAG, b2i);
+                        } else if ("byte".equals(componentType)) {
+                            bds.addBytes(PRIMITIVE_ARRAY_VALUE_TAG, (byte[]) instance);
+                        } else if ("short".equals(componentType)) {
+                            bds.addShorts(PRIMITIVE_ARRAY_VALUE_TAG, (short[]) instance);
+                        } else if ("char".equals(componentType)) {
+                            bds.addChars(PRIMITIVE_ARRAY_VALUE_TAG, (char[]) instance);
+                        } else if ("int".equals(componentType)) {
+                            bds.addInts(PRIMITIVE_ARRAY_VALUE_TAG, (int[]) instance);
+                        } else if ("long".equals(componentType)) {
+                            bds.addLongs(PRIMITIVE_ARRAY_VALUE_TAG, (long[]) instance);
+                        } else if ("float".equals(componentType)) {
+                            bds.addFloats(PRIMITIVE_ARRAY_VALUE_TAG, (float[]) instance);
+                        } else if ("double".equals(componentType)) {
+                            bds.addDoubles(PRIMITIVE_ARRAY_VALUE_TAG, (double[]) instance);
+                        } else {
+                            throw new AssertionError("Unknown primitive type: " + componentType);
+                        }
+                    } else {
+                        for (int i = 0; i < length; i++) {
+                            Object o = Array.get(instance, i);
+                            BDS element = serializeInternal2("Item" + i, o, alreadyWritten, biggest);
+                            bds.addBDS(element);
+                        }
                     }
                 } else if (Collection.class.isAssignableFrom(type)) {
                     Collection c = (Collection) instance;
@@ -121,12 +189,13 @@ public class BDSUtil {
                     Iterator<?> iter = c.iterator();
                     int i = 0;
                     while (iter.hasNext()) {
-                        bds.addBDS(serializeInternal2("Item" + i++, iter.next(), alreadyWritten, biggest));
+                        Object next = iter.next();
+                        bds.addBDS(serializeInternal2("Item" + i++, next, alreadyWritten, biggest));
                     }
                 } else {
                     bds.addString(CLASS_NAME_TAG, type.getName());
                     for (Field f : ReflectionUtil.getAllFields(type)) {
-                        if (f.isAnnotationPresent(Transient.class)) break;
+                        if (f.isAnnotationPresent(Transient.class) || Modifier.isStatic(f.getModifiers())) continue;
                         if (!f.isAccessible()) {
                             try {
                                 f.setAccessible(true);
@@ -166,6 +235,7 @@ public class BDSUtil {
         return -1;
     }
 
+    @SuppressWarnings("unchecked")
     private static Object deserializeInternal(BDS bds, Map<Integer, Object> pastInstances, Set<UnresolvedReference> unresolvedReferences) throws SerializationException, CannotDeserializeYet {
         if (isNull(bds)) return null;
 
@@ -183,8 +253,14 @@ public class BDSUtil {
 
         int refId = bds.getInt(IDX_TAG);
 
-        if ("Byte".equals(type)) {
-            result =  bds.getByte(PRIMITIVE_VALUE_TAG);
+        if (serializers.containsKey(type)) {
+            result = serializers.get(type).deserialize(bds);
+            pastInstances.put(refId, result);
+        } else if ("Boolean".equals(type)) {
+            result = bds.getInt(PRIMITIVE_VALUE_TAG) == 1;
+            pastInstances.put(refId, result);
+        } else if ("Byte".equals(type)) {
+            result = bds.getByte(PRIMITIVE_VALUE_TAG);
             pastInstances.put(refId, result);
         } else if ("Char".equals(type)) {
             result = bds.getChar(PRIMITIVE_VALUE_TAG);
@@ -210,29 +286,56 @@ public class BDSUtil {
         } else if ("File".equals(type)) {
             result = new File(bds.getString(PRIMITIVE_VALUE_TAG));
             pastInstances.put(refId, result);
+        } else if ("Date".equals(type)) {
+            result = new Date();
+            ((Date) result).setTime(bds.getLong(DATE_VALUE_TAG));
+            pastInstances.put(refId, result);
         } else if ("Array".equals(type)) {
             String componentType = bds.getString(ARRAY_TYPE_TAG);
             if (componentType != null) {
                 int length = bds.getInt(ARRAY_LENGTH_TAG);
-                try {
-                    Class<?> cType = Class.forName(componentType);
-                    result = Array.newInstance(cType, length);
-                    pastInstances.put(refId, result);
-                    for (int i = 0; i<length; i++) {
-                        try {
-                            Object element = deserializeInternal(bds.getBDS("Item" + i), pastInstances, unresolvedReferences);
-                            Array.set(result, i, element);
-                        } catch (CannotDeserializeYet e) {
-                            unresolvedReferences.add(new UnresolvedArray(result, i, e.refId));
-                        }
+
+                if ("boolean".equals(componentType)) {
+                    result = new boolean[length];
+                    int[] ints = bds.getIntArray(PRIMITIVE_ARRAY_VALUE_TAG);
+                    for (int i = 0; i < ints.length; i++) {
+                        ((boolean[]) result)[i] = ints[i] == 1;
                     }
-                } catch (ClassNotFoundException e) {
-                    throw new SerializationException("Error deserializing: Class " + type + " could not be found.");
+                } else if ("byte".equals(componentType)) {
+                    result = bds.getByteArray(PRIMITIVE_ARRAY_VALUE_TAG);
+                } else if ("short".equals(componentType)) {
+                    result = bds.getShortArray(PRIMITIVE_ARRAY_VALUE_TAG);
+                } else if ("char".equals(componentType)) {
+                    result = bds.getCharArray(PRIMITIVE_ARRAY_VALUE_TAG);
+                } else if ("int".equals(componentType)) {
+                    result = bds.getIntArray(PRIMITIVE_ARRAY_VALUE_TAG);
+                } else if ("long".equals(componentType)) {
+                    result = bds.getLongArray(PRIMITIVE_ARRAY_VALUE_TAG);
+                } else if ("float".equals(componentType)) {
+                    result = bds.getFloatArray(PRIMITIVE_ARRAY_VALUE_TAG);
+                } else if ("double".equals(componentType)) {
+                    result = bds.getDoubleArray(PRIMITIVE_ARRAY_VALUE_TAG);
+                } else {
+                    try {
+                        Class<?> cType = Class.forName(componentType);
+                        result = Array.newInstance(cType, length);
+                        pastInstances.put(refId, result);
+                        for (int i = 0; i < length; i++) {
+                            try {
+                                Object element = deserializeInternal(bds.getBDS("Item" + i), pastInstances, unresolvedReferences);
+                                Array.set(result, i, element);
+                            } catch (CannotDeserializeYet e) {
+                                unresolvedReferences.add(new UnresolvedArray(result, i, e.refId));
+                            }
+                        }
+                    } catch (ClassNotFoundException e) {
+                        throw new SerializationException("Error deserializing: Class " + componentType + " could not be found.", e);
+                    }
                 }
             } else {
                 int backref = bds.getInt(BACKREF_TAG);
                 if (pastInstances.containsKey(backref)) {
-                    result =  pastInstances.get(backref);
+                    result = pastInstances.get(backref);
                 } else throw new CannotDeserializeYet(backref);
             }
         } else if ("Collection".equals(type)) {
@@ -244,28 +347,27 @@ public class BDSUtil {
                     try {
                         Collection collection = (Collection) cType.newInstance();
                         pastInstances.put(refId, collection);
-                        for (int i = 0; i<length; i++) {
+                        for (int i = 0; i < length; i++) {
                             try {
                                 Object element = deserializeInternal(bds.getBDS("Item" + i), pastInstances, unresolvedReferences);
-                                //noinspection unchecked
                                 collection.add(element);
                             } catch (CannotDeserializeYet e) {
                                 unresolvedReferences.add(new UnresolvedCol(collection, i, e.refId));
                             }
                         }
-                        result =  collection;
+                        result = collection;
                     } catch (InstantiationException e) {
                         throw new SerializationException("Error deserializing: Class " + type + " cannot be instantiated. Add a default constructor.", e);
                     } catch (IllegalAccessException e) {
                         throw new SerializationException("Error deserializing: Empty constructor for class " + type + " is not public.", e);
                     }
                 } catch (ClassNotFoundException e) {
-                    throw new SerializationException("Error deserializing: Class " + type + " could not be found.");
+                    throw new SerializationException("Error deserializing: Class " + type + " could not be found.", e);
                 }
             } else {
                 int backref = bds.getInt(BACKREF_TAG);
                 if (pastInstances.containsKey(backref)) {
-                    result =  pastInstances.get(backref);
+                    result = pastInstances.get(backref);
                 } else throw new CannotDeserializeYet(backref);
             }
         } else {
@@ -276,7 +378,14 @@ public class BDSUtil {
                     pastInstances.put(refId, result);
 
                     for (Field f : ReflectionUtil.getAllFields(clazz)) {
-                        if (f.isAnnotationPresent(Transient.class)) continue;
+                        if (f.isAnnotationPresent(Transient.class) || Modifier.isStatic(f.getModifiers())) continue;
+                        if (!f.isAccessible()) {
+                            try {
+                                f.setAccessible(true);
+                            } catch (SecurityException e) {
+                                throw new SerializationException("Field " + f.getName() + " of class " + type + " could not be made accesible!", e);
+                            }
+                        }
                         BDS fieldBDS = bds.getBDS(f.getName());
                         try {
                             Object value = deserializeInternal(fieldBDS, pastInstances, unresolvedReferences);
@@ -291,7 +400,7 @@ public class BDSUtil {
                     throw new SerializationException("Error deserializing: Empty constructor for class " + type + " is not public.", e);
                 }
             } catch (ClassNotFoundException e) {
-                throw new SerializationException("Error deserializing: Class " + type + " could not be found.");
+                throw new SerializationException("Error deserializing: Class " + type + " could not be found.", e);
             }
         }
 
@@ -316,10 +425,8 @@ public class BDSUtil {
                         } else if (ur instanceof UnresolvedCol) {
                             UnresolvedCol urc = ((UnresolvedCol) ur);
                             if (urc.collection instanceof List) {
-                                //noinspection unchecked
                                 ((List) urc.collection).add(urc.idx, value);
                             } else {
-                                //noinspection unchecked
                                 urc.collection.add(value);
                             }
                         }
@@ -330,6 +437,7 @@ public class BDSUtil {
         return result;
     }
 
+    @API
     public static void debug(BDS bds, PrintStream out) {
         debug(bds, out, 0);
     }
@@ -475,8 +583,20 @@ public class BDSUtil {
         out.println();
     }
 
+    public static class BackrefFixer {
+
+        private final Multimap<Map.Entry<String, Integer>, Map.Entry<Integer, Object>> alreadyWritten;
+        private final IntRef biggest;
+
+        private BackrefFixer(Multimap<Map.Entry<String, Integer>, Map.Entry<Integer, Object>> alreadyWritten, IntRef biggest) {
+            this.alreadyWritten = alreadyWritten;
+            this.biggest = biggest;
+        }
+    }
+
     private static class IntRef {
         int value;
+
         public IntRef(int value) {
             this.value = value;
         }
