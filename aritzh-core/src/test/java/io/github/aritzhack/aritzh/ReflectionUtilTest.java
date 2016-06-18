@@ -37,6 +37,12 @@ public class ReflectionUtilTest {
 		Assert.assertTrue("Class does not have the annotation!", ReflectionUtil.classHasAnnotation(ToTest.class, Annotation.class));
 	}
 
+	@Test
+	public void testGetCaller() throws Exception {
+        Class<?> callingClass = ReflectionUtil.getCallingClass(0);
+        Assert.assertTrue("Caller is " + callingClass.getName() + " not ReflectionUtilTest", callingClass.equals(this.getClass()));
+	}
+
 	@Target(ElementType.TYPE)
 	@Retention(RetentionPolicy.RUNTIME)
 	private @interface Annotation {
