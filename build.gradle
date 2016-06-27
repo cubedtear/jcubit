@@ -7,7 +7,7 @@ if (!javaV.java7Compatible) {
 
 subprojects {
 
-	group 'io.github.aritzhack'
+	group 'io.github.cubedtear'
 
 	apply plugin: 'java'
 
@@ -63,12 +63,12 @@ subprojects {
 						packaging 'jar'
 						artifactId project.name
 						description 'Utility library to help making any kind of app or game.'
-						url 'https://github.com/aritzhack/aritzh'
+						url 'https://github.com/cubedtear/jcubit'
 
 						scm {
-							connection 'scm:git:git@gitlab.com:aritzh/aritzh.git'
-							developerConnection 'scm:git:git@gitlab.com:aritzh/aritzh.git'
-							url 'https://gitlab.com/aritzh/aritzh'
+							connection 'scm:git:git@github.com:cubedtear/jcubit.git'
+							developerConnection 'scm:git:git@github.com:cubedtear/jcubit.git'
+							url 'https://github.com/cubedtear/jcubit'
 						}
 
 						licenses {
@@ -80,9 +80,9 @@ subprojects {
 
 						developers {
 							developer {
-								id 'aritzh'
+								id 'cubedtear'
 								name 'Aritz Lopez'
-								email 'aritzhack@gmail.com'
+								email 'cubedtear@gmail.com'
 							}
 						}
 					}
@@ -108,7 +108,7 @@ if (System.getenv('TRAVIS') == null) {
 	apply plugin: 'maven'
 
 	nexusStaging {
-		packageGroup = "io.github.aritzhack"
+		packageGroup = "io.github.cubedtear"
 	}
 
 	uploadArchives {

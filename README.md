@@ -1,6 +1,5 @@
-Aritzh
+JCubit
 ======
-[![Build Status](https://travis-ci.org/aritzhack/aritzh.svg?branch=develop)](https://travis-ci.org/aritzhack/aritzh)
 
 Utility library to help making any kind of app or game.
 
