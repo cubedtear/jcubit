@@ -5,11 +5,17 @@ if (!javaV.java7Compatible) {
 	throw new GradleException('Gradle is not running with a Java 7-compatible JDK')
 }
 
+def majorConf = new ConfigSlurper().parse(new File(project.projectDir, "version.groovy").toURI().toURL());
+ext.majorVersion = majorConf.major as String;
+
 subprojects {
 
-	group 'io.github.cubedtear'
-
 	apply plugin: 'java'
+
+	def versionConfig = new ConfigSlurper().parse(new File(project.projectDir, "version.groovy").toURI().toURL());
+	project.version = "${parent.majorVersion}.${versionConfig.minor}.${versionConfig.build}"
+
+	group 'io.github.cubedtear'
 
 	sourceCompatibility = 1.7
 	targetCompatibility = 1.7
@@ -129,11 +135,10 @@ if (System.getenv('TRAVIS') == null) {
 
 	closeAndPromoteRepository {}.mustRunAfter subprojects.uploadArchives
 
-	task buildAndDeploy(dependsOn: [subprojects.build, subprojects.uploadArchives, closeAndPromoteRepository])
-
-	configure(buildAndDeploy) {
-		group = 'upload'
-		description = 'Builds and deploys to Maven Central, and closes and promotes the repository'
+	task buildAndDeploy {
+		dependsOn = [subprojects.build, subprojects.uploadArchives, closeAndPromoteRepository]
+		group = BasePlugin.UPLOAD_GROUP
+		description = "Builds and deploys to Maven Central, and closes and promotes the repository"
 	}
 
 	gradle.taskGraph.addTaskExecutionGraphListener { graph ->
