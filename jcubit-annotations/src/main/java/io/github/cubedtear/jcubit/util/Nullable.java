@@ -19,6 +19,7 @@ package io.github.cubedtear.jcubit.util;
 import java.lang.annotation.*;
 
 /**
+ * Elements annotated with this might be {@code null}, and therefore should be checked before using. Used by smart IDEs.
  * @author Aritz Lopez
  */
 @Documented

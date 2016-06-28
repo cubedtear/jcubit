@@ -1,6 +1,7 @@
 package io.github.cubedtear.jcubit.bds;
 
 /**
+ * Used when a problem happens when serializing or deserializing an object.
  * @author Aritz Lopez
  */
 public class SerializationException extends Exception {

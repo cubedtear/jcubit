@@ -5,9 +5,6 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Sets;
-import io.github.cubedtear.jcubit.logging.OSLogger;
-import io.github.cubedtear.jcubit.logging.core.ILogger;
-import io.github.cubedtear.jcubit.logging.core.LogLevel;
 import io.github.cubedtear.jcubit.util.API;
 import io.github.cubedtear.jcubit.util.ReflectionUtil;
 
@@ -16,17 +13,13 @@ import java.io.PrintStream;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
+ * Collection of utility methods using BDS.
+ *
  * @author Aritz Lopez
+ * @see BDS
  */
 public class BDSUtil {
 
@@ -43,27 +36,85 @@ public class BDSUtil {
 
     private static final Map<String, Serializer> serializers = Maps.newHashMap();
 
-    private static ILogger LOG = new OSLogger.Builder(System.out, "SAWS-Serialization").setLevel(LogLevel.INFO).build();
-
+    /**
+     * Registers a serializer to be used when (de)serializing the specified type.
+     *
+     * @param type       The type that has to be serialized by the given serializer.
+     * @param serializer The serializer.
+     */
     @API
-    public static void registerSerializer(String type, Serializer serializer) {
-        serializers.put(type, serializer);
+    public static void registerSerializer(Class<?> type, Serializer serializer) {
+        serializers.put(type.getName(), serializer);
     }
 
+    /**
+     * Serializes the given object into a BDS.
+     * <p>
+     * The following types have a special treatment:
+     * <ul>
+     * <li>Primitive types</li>
+     * <li>Wrapper types</li>
+     * <li>{@link Date java.util.Date}</li>
+     * <li>{@link File java.io.File}</li>
+     * <li>All subclasses of {@link Collection java.util.Collection&lt;E&gt;} (See below)</li>
+     * </ul>
+     * <p>
+     * All other types will be serialized by writing each field (private fields included), provided they are not
+     * annotated with {@link Transient @Transient}.
+     * <p>
+     * In order for subclasses of collections to serialize correctly with the default serialization, the class implementing the
+     * collection must have a public no-argument constructor. Moreover, if the order is important, the collection must implement
+     * the {@link List List&lt;E&gt;} interface. In case this is not possible or it does not work, a custom serialization must be
+     * provided.
+     * <p>
+     * When a type has to be specially serialized, both to minimize the resulting BDS size (because maybe some fields are redundant)
+     * or because the default serialization does not work, a {@link Serializer} must be written for the type, and registered through
+     * {@link BDSUtil#registerSerializer(Class, Serializer)}.
+     * <p>
+     * Note: If this method is run from a {@link Serializer}, the usage of the method {@link BDSUtil#serialize(Object, BackrefFixer)} is highly recommended
+     * to reduce the size of the result, if there are any cycles in the references.
+     *
+     * @param instance The object to serialize.
+     * @return The BDS version of the given object.
+     * @throws SerializationException If an exception occurs when serializing (e.g. There is a cycle that cannot be solved, or a field cannot be accesed).
+     * @see BDSUtil#serialize(Object, BackrefFixer)
+     * @see BDSUtil#registerSerializer(Class, Serializer)
+     */
     @API
     public static BDS serialize(Object instance) throws SerializationException {
         return serialize(instance, null);
     }
 
+    /**
+     * Serializes the given object into a BDS. This method may only be run from a {@link Serializer}.
+     * Uses the given {@link BackrefFixer} to fix future cycles. Useful when deserializing a custom object requires deserializing
+     * another child object.
+     * <p>
+     * For a full explanation of how serialization works, see {@link BDSUtil#serialize(Object)}
+     *
+     * @param instance The object to serialize.
+     * @param fixer    Reference used internally to fix past references.
+     * @return The BDS version of the given object.
+     * @throws SerializationException If an exception occurs when serializing (e.g. there is a cycle that cannot be solved, or a field cannot be accessed).
+     * @see BDSUtil#serialize(Object)
+     */
+    @API
     public static BDS serialize(Object instance, BackrefFixer fixer) throws SerializationException {
         if (instance == null) {
-            BDS result = BDS.createEmpty(NULL_TAG);
+            BDS result = new BDS(NULL_TAG);
             result.addString(CLASS_NAME_TAG, NULL_TAG);
             return result;
         } else
             return serializeInternal2(ROOT_OBJ_TAG, instance, fixer != null ? fixer.alreadyWritten : HashMultimap.<Map.Entry<String, Integer>, Map.Entry<Integer, Object>>create(), fixer != null ? fixer.biggest : new IntRef(-1));
     }
 
+    /**
+     * Deserializes an object serialized with {@link BDSUtil#serialize(Object)}.
+     *
+     * @param data The serialized object.
+     * @return The deserialized object.
+     * @throws SerializationException If an exception occurs when deserializing (e.g. there is a cycle that cannot be solved, or a field cannot be accessed).
+     */
     @API
     public static Object deserialize(BDS data) throws SerializationException {
         try {
@@ -77,12 +128,18 @@ public class BDSUtil {
         }
     }
 
+    /**
+     * Checks whether the given BDS corresponds to what this class uses to represent null values.
+     *
+     * @param bds The BDS to check if is the <i>null BDS</i>.
+     * @return {@code true} if it is the <i>null BDS</i>.
+     */
     public static boolean isNull(BDS bds) {
         return bds == null || NULL_TAG.equals(bds.getString(CLASS_NAME_TAG));
     }
 
     private static BDS serializeInternal2(String name, Object instance, Multimap<Map.Entry<String, Integer>, Map.Entry<Integer, Object>> alreadyWritten, IntRef biggest) throws SerializationException {
-        BDS bds = BDS.createEmpty(name);
+        BDS bds = new BDS(name);
         if (instance == null) {
             bds.addString(CLASS_NAME_TAG, NULL_TAG);
             return bds;
@@ -228,11 +285,7 @@ public class BDSUtil {
                 break;
             }
         }
-        if (idx != null) {
-            LOG.d("A cycle has been detected! Object of class {} has already been serialized!", type.getName());
-            return idx;
-        }
-        return -1;
+        return idx != null ? idx : -1;
     }
 
     @SuppressWarnings("unchecked")
@@ -245,7 +298,7 @@ public class BDSUtil {
 
         if (type == null) {
             if (bds.getInt(BACKREF_TAG) == null) {
-                throw new SerializationException("Error deserializing: Something went wrong");
+                throw new SerializationException("Error deserializing: BDS was not in the correct format.");
             } else {
                 throw new CannotDeserializeYet(bds.getInt(BACKREF_TAG));
             }
@@ -437,6 +490,12 @@ public class BDSUtil {
         return result;
     }
 
+    /**
+     * Pretty-prints the given BDS into the provided PrintStream.
+     *
+     * @param bds The BDS to pretty-print.
+     * @param out The stream to which the BDS should be printed.
+     */
     @API
     public static void debug(BDS bds, PrintStream out) {
         debug(bds, out, 0);
@@ -583,6 +642,14 @@ public class BDSUtil {
         out.println();
     }
 
+    /**
+     * This class is used in {@link Serializer Serializers} in order to fix cycles in compound objects (made of several others).
+     * The only way to get an instance of this class is through the {@link Serializer#serialize(Object, BDS, BackrefFixer)} method.
+     * The instance given to the Serializer should be used to call {@link BDSUtil#serialize(Object, BackrefFixer)}, and not the method without
+     * the last parameter.
+     *
+     * @author Aritz Lopez
+     */
     public static class BackrefFixer {
 
         private final Multimap<Map.Entry<String, Integer>, Map.Entry<Integer, Object>> alreadyWritten;
