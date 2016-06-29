@@ -17,12 +17,15 @@
 package io.github.cubedtear.jcubit.collections;
 
 import com.google.common.base.Function;
+import io.github.cubedtear.jcubit.util.API;
+import io.github.cubedtear.jcubit.util.Nullable;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
 /**
+ * Set of methods related to collections. Most of these methods do not need to exist if using JRE 1.8+.
  * @author Aritz Lopez
  */
 public enum CollectionUtil {
@@ -36,7 +39,7 @@ public enum CollectionUtil {
      * @param function The function to apply.
      * @param <I>      Collection content type.
      */
-    @Deprecated
+    @API
     public static <I> void applyToAll(Collection<I> coll, Function<I, ?> function) {
         for (I t : coll) function.apply(t);
     }
@@ -48,6 +51,7 @@ public enum CollectionUtil {
      * @param function The function to apply.
      * @param <K>      The type of the keys of the map.
      */
+    @API
     public static <K> void applyToKeys(Map<K, ?> map, Function<? super K, ?> function) {
         for (K key : map.keySet()) function.apply(key);
     }
@@ -59,6 +63,7 @@ public enum CollectionUtil {
      * @param function The function to apply.
      * @param <V>      The type of the values of the map.
      */
+    @API
     public static <V> void applyToValues(Map<?, V> map, Function<? super V, ?> function) {
         for (V v : map.values()) function.apply(v);
     }
@@ -69,6 +74,7 @@ public enum CollectionUtil {
      * @param iter The iterable
      * @return the sum of all integers from the iterable
      */
+    @API
     public static int integerSum(Iterable<Integer> iter) {
         int sum = 0;
         for (Integer i : iter)
@@ -82,6 +88,7 @@ public enum CollectionUtil {
      * @param iter The iterable
      * @return the sum of all floats from the iterable
      */
+    @API
     public static float floatSum(Iterable<Float> iter) {
         float sum = 0;
         for (Float f : iter)
@@ -95,6 +102,7 @@ public enum CollectionUtil {
      * @param iter The iterable
      * @return the sum of all doubles from the iterable
      */
+    @API
     public static double doubleSum(Iterable<Double> iter) {
         double sum = 0;
         for (Double d : iter)
@@ -109,6 +117,8 @@ public enum CollectionUtil {
      * @param <T>  The type of the contents of the list
      * @return the last element of a list, or null if it is empty
      */
+    @API
+    @Nullable
     public static <T> T getLast(List<T> list) {
         return list.isEmpty() ? null : list.get(list.size() - 1);
     }

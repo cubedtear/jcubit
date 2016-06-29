@@ -1,6 +1,7 @@
 package io.github.cubedtear.jcubit.collections;
 
 /**
+ * Collection of utility methods related to arrays.
  * @author Aritz Lopez
  */
 public enum ArrayUtil {

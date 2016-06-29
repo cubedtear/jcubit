@@ -9,6 +9,8 @@ import java.util.Iterator;
 import java.util.Set;
 
 /**
+ * {@link Set Set&lt;E&gt;} whrapper that only adds the elements if the predicate is true for that element.
+ * In addition, if the given set is not empty, all elements that do not meet the predicate are removed.
  * @author Aritz Lopez
  */
 public class FilteredSet<E> implements Set<E> {
@@ -28,10 +30,25 @@ public class FilteredSet<E> implements Set<E> {
 		}
 	}
 
+	/**
+	 * Removes all elements of the set that do not meet the predicate, and returns a FilteredSet that will
+	 * only add elements if the predicate is met for it.
+	 * @param other The set to filter.
+	 * @param filter The predicate to apply to each element.
+	 * @param <T> The type of the elements of the set, and the type accepted by the filter.
+     * @return A filtered set wrapped around the given set, and filtered by the given predicate.
+     */
 	public static <T> FilteredSet<T> newFilteredSetOf(Set<T> other, Predicate<T> filter) {
 		return new FilteredSet<>(other, filter);
 	}
 
+	/**
+	 * Equivalent to calling {@link FilteredSet#newFilteredSetOf(Set, Predicate)} with the first parameter
+	 * being the result of {@link Sets#newHashSet()}.
+	 * @param filter The filter to apply to the new hash set.
+	 * @param <T> The type of the contents of the set, and the type accepted by the filter.
+     * @return A new filtered set wrapped around an empty hash set, filtered by the given predicate.
+     */
 	public static <T> FilteredSet<T> newFilteredHashSet(Predicate<T> filter) {
 		return new FilteredSet<>(Sets.<T>newHashSet(), filter);
 	}
