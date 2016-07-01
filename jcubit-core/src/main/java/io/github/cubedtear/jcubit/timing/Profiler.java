@@ -22,6 +22,8 @@ import java.util.Map;
 import java.util.Stack;
 
 /**
+ * Simple profiler class. Allows to {@link Profiler#startSection(String) start} and {@link Profiler#endSection() end}
+ * sections, and to know the time each section took.
  * @author Aritz Lopez
  */
 @SuppressWarnings("UnusedDeclaration")
@@ -46,10 +48,10 @@ public class Profiler {
 
 	/**
 	 * Returns the default profiler.
-	 * Equivalent to calling {@link Profiler#getInstance(String) getInstance("DEFAULT")}
-	 * The default profiler has verbosity turned off
+	 * Equivalent to calling {@link Profiler#getInstance(String) getInstance("DEFAULT")}.
+	 * The default profiler has verbosity turned off by default.
 	 *
-	 * @return The default profiler
+	 * @return The default profiler.
 	 * @see Profiler#getInstance(String, boolean)
 	 */
 	public static Profiler getInstance() {
@@ -57,31 +59,29 @@ public class Profiler {
 	}
 
 	/**
-	 * Returns a specific instance of profiler, with no verbosity <br>
-	 * <p style="color: #191919">
-	 * NOTE: Non-verbosity is not guaranteed. since loggers are cached, if there was another
+	 * Returns a specific instance of profiler, with no verbosity.
+	 * <p>
+	 * NOTE: Non-verbosity is not guaranteed. since profilers are cached, if there was another
 	 * profiler with the specified name and it was verbose, that instance will be
-	 * returned. To set the verbosity afterwards see {@link Profiler#setVerbose(boolean)}
-	 * </p>
+	 * returned. To set the verbosity afterwards use {@link Profiler#setVerbose(boolean)}.
 	 *
-	 * @param name The name of the profiler
-	 * @return A profiler with the specified name
+	 * @param name The name of the profiler.
+	 * @return A profiler with the specified name.
+	 * @see Profiler#getInstance(String, boolean)
 	 */
 	public static Profiler getInstance(String name) {
 		return Profiler.getInstance(name, false);
 	}
 
 	/**
-	 * Returns a specific instance of profiler, specifying verbosity
-	 * <br>
-	 * <p style="color: red">
-	 * NOTE: Verbosity is not guaranteed. since loggers are cached, if there was another
+	 * Returns a specific instance of profiler, specifying verbosity.
+	 * <p>
+	 * NOTE: Verbosity is not guaranteed. since profilers are cached, if there was another
 	 * profiler with the specified name and it was not verbose, that instance will be
-	 * returned. To set the verbosity afterwards see {@link Profiler#setVerbose(boolean)}
-	 * </p>
+	 * returned. To set the verbosity afterwards see {@link Profiler#setVerbose(boolean)}.
 	 *
-	 * @param name    The name of the profiler
-	 * @param verbose Whether to print to {@link System#out} when ending a section
+	 * @param name    The name of the profiler.
+	 * @param verbose Whether to print to {@link System#out} when ending a section.
 	 * @return A profiler identified by the specified name.
 	 */
 	public static Profiler getInstance(String name, boolean verbose) {
@@ -95,8 +95,7 @@ public class Profiler {
 
 	/**
 	 * Starts a profiling section.
-	 *
-	 * @param section The name of the section
+	 * @param section The name of the section.
 	 */
 	public synchronized void startSection(String section) {
 		section = section.toLowerCase();
@@ -110,8 +109,8 @@ public class Profiler {
 
 	/**
 	 * Ends the last started section.
-	 * Time elapsed from the call to {@link Profiler#startSection(String)} is stored
-	 * for later use
+	 * Time elapsed from the last call to {@link Profiler#startSection(String)} is stored for later use.
+	 * @see Profiler#endSection(String)
 	 */
 	public synchronized void endSection() {
 		if (this.trace.empty()) throw new IllegalStateException("There are no open sections to close!");
@@ -120,9 +119,8 @@ public class Profiler {
 
 	/**
 	 * Ends the specified section.
-	 * Time elapsed from the call to {@link Profiler#startSection(String)} is stored
-	 *
-	 * @param section The name of the section
+	 * Time elapsed from the call to {@link Profiler#startSection(String)} is stored.
+	 * @param section The name of the section.
 	 */
 	public synchronized void endSection(String section) {
 		long now = System.nanoTime();
@@ -136,11 +134,11 @@ public class Profiler {
 
 	/**
 	 * Gets the time elapsed, from calling {@link Profiler#startSection(String) startSection(section)}
-	 * to calling {@link Profiler#endSection(String) endSection(section)} in milliseconds. <br>
+	 * to calling {@link Profiler#endSection(String) endSection(section)} in milliseconds.
+	 * <p>
 	 * If the elapsed section time was not profiled, returns -1.
-	 *
-	 * @param section The name of the section of which the elapsed time to request
-	 * @return The elapsed section time if the section was profiled, or {@code -1} otherwise
+	 * @param section The name of the section of which the elapsed time to request.
+	 * @return The elapsed section time if the section was profiled, or {@code -1} otherwise.
 	 */
 	public synchronized long getSectionTime(String section) {
 		section = section.toLowerCase();
@@ -149,18 +147,18 @@ public class Profiler {
 	}
 
 	/**
-	 * Whether this profiler will print to {@link System#out} when ending a section
-	 *
-	 * @return {@code true} if this profiler will print to {@link System#out} when ending a section, {@code false} otherwise
+	 * Whether this profiler will print to {@link System#out} when ending a section.
+	 * @return {@code true} if this profiler will print to {@link System#out} when ending a section,
+	 * {@code false} otherwise.
 	 */
 	public boolean isVerbose() {
 		return this.verbose;
 	}
 
 	/**
-	 * Sets the verbosity of this profiler <br>
-	 *
-	 * @param verbose The value to which the verbosity of this profiler will be set
+	 * Sets the verbosity of this profiler.
+	 * <p>
+	 * @param verbose The value to which the verbosity of this profiler will be set.
 	 * @return {@code this}, To ease the builder pattern.
 	 */
 	public synchronized Profiler setVerbose(boolean verbose) {

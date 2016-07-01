@@ -155,6 +155,9 @@ public class ARGBColorUtil {
 		return (color >> ALPHA_SHIFT) & MASK;
 	}
 
+	/**
+	 * Utility class to decompose, recompose and store colors in ARGB format.
+	 */
 	public static class Color {
 		public final int a;
 		public final int r;
@@ -162,6 +165,10 @@ public class ARGBColorUtil {
 		public final int b;
 		public final int color;
 
+		/**
+		 * Decomposes an ARGB integer into its parts.
+		 * @param argbColor The color to decompose.
+         */
 		public Color(int argbColor) {
 			this.color = argbColor;
 
@@ -171,6 +178,13 @@ public class ARGBColorUtil {
 			this.b = getBlue(color);
 		}
 
+		/**
+		 * Creates a color from the different parts.
+		 * @param a The alpha value (0-255).
+		 * @param r The red value (0-255).
+         * @param g The green value (0-255).
+         * @param b The blue value (0-255).
+         */
 		public Color(int a, int r, int g, int b) {
 			this.a = a;
 			this.r = r;

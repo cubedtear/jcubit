@@ -24,6 +24,9 @@ public class OSUtil {
 
 	private static EnumOS OS = null;
 
+	/**
+	 * @return the current operating system.
+     */
 	public static EnumOS getOs() {
 		if (OSUtil.OS != null) return OS;
 

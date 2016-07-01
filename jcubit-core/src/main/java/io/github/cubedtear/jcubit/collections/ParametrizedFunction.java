@@ -32,5 +32,5 @@ public interface ParametrizedFunction<I, R> {
 	 * @param args  The extra arguments needed to run the function
 	 * @return The return value of applying {@code this} to {@code input}
 	 */
-	public R apply(I input, Object... args);
+	R apply(I input, Object... args);
 }

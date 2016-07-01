@@ -17,10 +17,17 @@
 package io.github.cubedtear.jcubit.config;
 
 /**
+ * Thrown when an exception happens when parsing a config.
  * @author Aritz Lopez
+ * @see Configuration
  */
 public class ParseException extends RuntimeException {
 
+	/**
+	 * Creates a ParseException
+	 * @param message The message.
+	 * @param e The cause.
+     */
 	public ParseException(String message, Throwable e) {
 		super(message, e);
 	}

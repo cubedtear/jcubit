@@ -18,6 +18,7 @@ package io.github.cubedtear.jcubit.util;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
+import com.google.common.io.Files;
 
 import javax.swing.*;
 import java.io.File;
@@ -73,8 +74,9 @@ public class IOUtil {
 	 *
 	 * @param title      The title of the file-chooser window.
 	 * @param currentDir The root directory. If null, {@code new File(".")} will be used.
-	 * @return The chosen file, or null if none was chosen.
+	 * @return The chosen file, or {@code null} if none was chosen.
 	 */
+	@Nullable
 	public static File chooseFile(String title, File currentDir) {
 		if (currentDir == null) currentDir = new File(".");
 		JFileChooser fileChooser = new JFileChooser();
@@ -93,8 +95,9 @@ public class IOUtil {
 	 *
 	 * @param title      The title of the file-chooser window.
 	 * @param currentDir The root directory. If null, {@code new File(".")} will be used.
-	 * @return The chosen file(s), or null if none was chosen.
+	 * @return The chosen file(s), or {@code null} if none was chosen.
 	 */
+	@Nullable
 	public static File[] chooseFiles(String title, File currentDir) {
 		if (currentDir == null) currentDir = new File(".");
 		JFileChooser fileChooser = new JFileChooser();
@@ -113,8 +116,9 @@ public class IOUtil {
 	 *
 	 * @param title      The title of the file-chooser window.
 	 * @param currentDir The root directory. If null, {@code new File(".")} will be used.
-	 * @return The chosen folder, or null if none was chosen.
+	 * @return The chosen folder, or {@code null} if none was chosen.
 	 */
+	@Nullable
 	public static File chooseFolder(String title, File currentDir) {
 		if (currentDir == null) currentDir = new File(".");
 		JFileChooser fileChooser = new JFileChooser();

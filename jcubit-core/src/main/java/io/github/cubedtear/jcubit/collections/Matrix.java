@@ -16,6 +16,8 @@
 
 package io.github.cubedtear.jcubit.collections;
 
+import io.github.cubedtear.jcubit.util.Nullable;
+
 import java.lang.reflect.Array;
 import java.util.*;
 
@@ -50,7 +52,7 @@ public class Matrix<E> implements Collection<ArrayList<E>> {
      * @param startHeight    The amount of rows
      * @param defaultElement The object to set all elements to
      */
-    public Matrix(int startWidth, int startHeight, E defaultElement) {
+    public Matrix(int startWidth, int startHeight, @Nullable E defaultElement) {
         this.defaultElement = defaultElement;
         this.init(startWidth, startHeight);
     }
@@ -313,28 +315,48 @@ public class Matrix<E> implements Collection<ArrayList<E>> {
         }
     }
 
+    /**
+     * Class used to represent an element in a matrix by what the element is, and its coordinates.
+     * @param <T> The type of the element.
+     */
     public class MatrixElement<T extends E> {
         private final T element;
         private final int x, y;
 
-        public MatrixElement(T element, int x, int y) {
+        private MatrixElement(T element, int x, int y) {
             this.element = element;
             this.x = x;
             this.y = y;
         }
 
-        public T getE() {
+        /**
+         * Returns the element.
+         * @return the element.
+         */
+        public T getElement() {
             return element;
         }
 
+        /**
+         * Returns the column where this element is located at.
+         * @return the column where this element is located at.
+         */
         public int getX() {
             return x;
         }
 
+        /**
+         * Returns the row where this element is located at.
+         * @return the row where this element is located at.
+         */
         public int getY() {
             return y;
         }
 
+        /**
+         * Returns the matrix this element is at.
+         * @return the matrix this element is at.
+         */
         public Matrix<E> getMatrix() {
             return Matrix.this;
         }
