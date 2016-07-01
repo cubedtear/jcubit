@@ -37,7 +37,6 @@ import static org.reflections.ReflectionUtils.*;
 
 /**
  * Loads the extensions for a {@link ExtensibleApp}
- *
  * @author Aritz Lopez
  */
 public class Extensions {

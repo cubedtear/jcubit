@@ -20,7 +20,7 @@ import io.github.cubedtear.jcubit.eventBus.EventBus;
 import org.reflections.Reflections;
 
 /**
- * A extensible app.
+ * A extensible app. Any app that may be extended should implement this interface.
  *
  * @author Aritz Lopez
  * @see Extensions

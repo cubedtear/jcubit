@@ -59,7 +59,6 @@ public class EventBus {
 
 	/**
 	 * Creates an EventBus with the specified name.
-	 *
 	 * @param name The name of the EventBus.
 	 */
 	public EventBus(String name) {
@@ -68,7 +67,6 @@ public class EventBus {
 
 	/**
 	 * Registers the object as an event-handler for all methods of its class or superclasses that have the {@link Subscribe} annotation.
-	 *
 	 * @param listener The object to register as an event-handler.
 	 */
 	public void register(final Object listener) {
@@ -91,7 +89,6 @@ public class EventBus {
 
 	/**
 	 * Unregisters the object from the event-handlers.
-	 *
 	 * @param listener The object to unregster.
 	 */
 	public void unregister(final Object listener) {
@@ -105,10 +102,9 @@ public class EventBus {
 	 * If a event is not handled, it will be resent as a {@link DeadEvent}.
 	 * If an exception is thrown in the handler, the exception will be post as an {@link EventException}.
 	 * If handling that EventException more are thrown, they will be ignored.
-	 *
 	 * @param event The event to post
 	 */
-	public void post(final Object event) {
+	public void post(@NotNull final Object event) {
 		Set<Class> eventTypes = flattenHierarchy(event.getClass());
 		boolean handled = false;
 		for (Class c : eventTypes) {

@@ -22,9 +22,9 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Marks a field of the extension as being the instance that should be used. <br>
+ * Marks a field of the extension as being the instance that should be used.
+ * <p>
  * If omitted, empty constructor will be called, through {@link Class#newInstance()}
- *
  * @author Aritz Lopez
  */
 @Retention(RetentionPolicy.RUNTIME)

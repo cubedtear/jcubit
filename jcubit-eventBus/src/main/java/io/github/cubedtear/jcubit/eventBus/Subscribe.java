@@ -24,8 +24,8 @@ import java.lang.annotation.Target;
 /**
  * Annotation all event-handling methods must have in order to be treated as such.
  * If a method does not have this annotation, it will be ignored by the {@link EventBus}.
- *
  * @author Aritz Lopez
+ * @see EventBus
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)

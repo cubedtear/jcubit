@@ -16,6 +16,8 @@
 
 package io.github.cubedtear.jcubit.eventBus;
 
+import io.github.cubedtear.jcubit.util.NotNull;
+
 /**
  * An event wrapper to wrap events that were not handled.
  *
@@ -25,10 +27,17 @@ public class DeadEvent {
 
 	private final Object event;
 
-	public DeadEvent(Object event) {
+	/**
+	 * @deprecated Should have been protected.
+     */
+	@Deprecated
+	public DeadEvent(@NotNull Object event) {
 		this.event = event;
 	}
 
+	/**
+	 * @return the unhandled event.
+     */
 	public Object getEvent() {
 		return event;
 	}
