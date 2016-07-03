@@ -18,6 +18,10 @@ import java.util.Map;
  */
 public class TestEngine implements IGame {
 
+	/**
+	 * @deprecated Use an external logger instead.
+	 */
+	@Deprecated
 	protected final ILogger LOGGER;
 	protected final Map<String, Sprite> sprites;
 	private final CanvasEngine engine;
@@ -59,14 +63,23 @@ public class TestEngine implements IGame {
 		this.engine.start();
 	}
 
+	/**
+	 * Starts the game.
+	 */
 	public void start() {
 		this.engine.start();
 	}
 
+	/**
+	 * @return The width of the game window.
+     */
 	public int getWidth() {
 		return width;
 	}
 
+	/**
+	 * @return The height of the game window.
+     */
 	public int getHeight() {
 		return height;
 	}
@@ -110,10 +123,16 @@ public class TestEngine implements IGame {
 		this.game.onPostRender();
 	}
 
+	/**
+	 * @return The renderer. Used to draw on the screen.
+     */
 	public IRender getRender() {
 		return render;
 	}
 
+	/**
+	 * @return The engine used to run the game.
+     */
 	public CanvasEngine getEngine() {
 		return engine;
 	}

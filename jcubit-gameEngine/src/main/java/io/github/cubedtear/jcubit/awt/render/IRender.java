@@ -23,21 +23,66 @@ import java.awt.image.BufferedImage;
  */
 public interface IRender {
 
+	/**
+	 * Clear the screen to a predefined color.
+	 */
 	void clear();
 
+	/**
+	 * Draws the given array of colors with the given size into the given coordinates.
+	 * @param x The x coordinate of the top-left corner of where the colors should be drawn.
+	 * @param y The y coordinate of the top-left corner of where the colors should be drawn.
+	 * @param width The length of each row in the color array.
+	 * @param height The number of rows in the color array.
+     * @param colors The color array. Its size must be at least {@code width * height}.
+     */
 	void draw(int x, int y, int width, int height, int[] colors);
 
+	/**
+	 * Draws the given sprite in the given position.
+	 * @param x The x coordinate of the top-left corner of where the sprite should be drawn.
+	 * @param y The y coordinate of the top-left corner of where the sprite should be drawn.
+	 * @param sprite The sprite to draw.
+     */
 	void draw(int x, int y, Sprite sprite);
 
+	/**
+	 * Draws the sprite with the given name in the given position.
+	 * @param x The x coordinate of the top-left corner of where the sprite should be drawn.
+	 * @param y The y coordinate of the top-left corner of where the sprite should be drawn.
+	 * @param spriteName The name of the sprite to be drawn.
+     */
 	void draw(int x, int y, String spriteName);
 
+	/**
+	 * Draws an {@link AnimatedSprite} at the given coordinates, and passes the elapsed time since the last frame,
+	 * in order to animate the sprite.
+	 * @param x The x coordinate of the top-left corner of where the sprite should be drawn.
+	 * @param y The y coordinate of the top-left corner of where the sprite should be drawn.
+	 * @param deltaNS The elapsed nanoseconds since the last frame.
+     * @param sprite The animates sprite to be drawn.
+     */
 	void draw(int x, int y, long deltaNS, AnimatedSprite sprite);
 
+	/**
+	 * Sets whether semi-transparent colors should be blended together. My slow the rendering considerably.
+	 * @param blend {@code true} if blending is desired.
+     */
 	void setBlend(boolean blend);
 
+	/**
+	 * @deprecated If s BufferedImage is desired, use a {@link BufferedImageRenderer} instead.
+     */
+	@Deprecated
 	BufferedImage getImage();
 
+	/**
+	 * @return the width of this renderer (i.e. The width of the area that can be drawn onto).
+     */
 	int getWidth();
 
+	/**
+	 * @return the height of this renderer (i.e. The width of the area that can be drawn onto).
+	 */
 	int getHeight();
 }

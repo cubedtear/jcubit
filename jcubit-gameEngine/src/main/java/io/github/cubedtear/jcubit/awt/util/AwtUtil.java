@@ -24,6 +24,11 @@ import java.awt.*;
  */
 public class AwtUtil {
 
+	/**
+	 * Returs the window that holds the given component.
+	 * @param component The component.
+	 * @return The window the component is into.
+     */
 	public static Window getWindow(Component component) {
 		if (component == null) return JOptionPane.getRootFrame();
 		else if (component instanceof Window) return (Window) component;

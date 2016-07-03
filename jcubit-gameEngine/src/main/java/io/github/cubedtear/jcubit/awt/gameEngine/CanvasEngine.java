@@ -108,6 +108,10 @@ public class CanvasEngine extends BasicGame {
 		});
 	}
 
+	/**
+	 * Sets the title of the window.
+	 * @param title The title.
+     */
 	public void setTitle(String title) {
 		if (this.hasFrame) this.frame.setTitle(title);
 	}

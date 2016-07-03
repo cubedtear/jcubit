@@ -17,21 +17,43 @@
 package io.github.cubedtear.jcubit.awt.gameEngine.core;
 
 /**
+ * Interface to implement the basic characteristics of a game.
  * @author Aritz Lopez
  */
 public interface IGame {
 
+	/**
+	 * Called when the game is starting.
+	 */
 	void onStart();
 
+	/**
+	 * Called when the game is being stopped.
+	 */
 	void onStop();
 
+	/**
+	 * Called each time the game should be rendered in the screen.
+	 */
 	void onRender();
 
+	/**
+	 * Called each time the game should be updated. Usually a consistent number of times per second.
+	 */
 	void onUpdate();
 
+	/**
+	 * @return The name of the game.
+     */
 	String getGameName();
 
+	/**
+	 * Called each second.
+	 */
 	void onUpdatePS();
 
+	/**
+	 * Called after normal rendering. Usefult to add UI stuff.
+	 */
 	void onPostRender();
 }

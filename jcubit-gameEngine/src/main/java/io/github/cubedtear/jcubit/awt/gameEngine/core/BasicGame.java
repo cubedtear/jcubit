@@ -17,8 +17,10 @@
 package io.github.cubedtear.jcubit.awt.gameEngine.core;
 
 import com.google.common.base.Preconditions;
+import io.github.cubedtear.jcubit.util.API;
 
 /**
+ * Simple game logic that delegates the main methods to an {@link IGame}.
  * @author Aritz Lopez
  */
 public class BasicGame implements IGameEngine {
@@ -29,14 +31,33 @@ public class BasicGame implements IGameEngine {
 	protected int fps, ups;
 	private int targetUps;
 
+	/**
+	 * Creates a basic game for the given implementation, with a target of
+	 * 60 updates per second.
+	 * @param game The game implementation.
+     */
 	public BasicGame(IGame game) {
 		this(game, 60);
 	}
 
+	/**
+	 * Creates a basic game for the given implementation, with a target of
+	 * the given updates per second.
+	 * @param game The game implementation.
+	 * @param targetUps The desired updates per second.
+	 */
 	public BasicGame(IGame game, int targetUps) {
 		this(game, targetUps, false);
 	}
 
+	/**
+	 * Creates a basic game for the given implementation, with a target of
+	 * the given updates per second. The frames per second can be locked to the same number as the
+	 * updates.
+	 * @param game The game implementation.
+	 * @param targetUps The desired updates per second.
+	 * @param lockFps Whether to lock the frames per second to the same amount as the updates.
+	 */
 	public BasicGame(IGame game, int targetUps, boolean lockFps) {
 		Preconditions.checkArgument(game != null, "Game cannot be null!");
 		this.gameHandler = game;
@@ -44,6 +65,13 @@ public class BasicGame implements IGameEngine {
 		this.targetUps = Math.max(targetUps, -1);
 	}
 
+	/**
+	 * Creates a basic game with the given implementation, with a target of 60 updates per second.
+	 * Frames per second can be locked to the same number as the updates.
+	 * @param game The game implementation.
+	 * @param lockFps Whether to lock the frames per second to the same amount as the updates.
+     */
+	@API
 	public BasicGame(IGame game, boolean lockFps) {
 		this(game, 60, lockFps);
 	}
@@ -91,10 +119,17 @@ public class BasicGame implements IGameEngine {
 		}
 	}
 
+	/**
+	 * @return The target updates per second.
+     */
 	public int getTargetUps() {
 		return targetUps;
 	}
 
+	/**
+	 * Sets the target updates per second (and if frames per second are locked, these too).
+	 * @param targetUps The target UPS.
+     */
 	public void setTargetUps(int targetUps) {
 		this.targetUps = targetUps;
 	}

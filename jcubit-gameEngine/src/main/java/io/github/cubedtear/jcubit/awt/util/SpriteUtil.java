@@ -40,7 +40,7 @@ public class SpriteUtil {
 	};
 
 	/**
-	 * Creates a new Sprite with a cicle drawn onto it
+	 * Creates a new Sprite with a circle drawn onto it
 	 *
 	 * @param diameter  The diameter of the circle (will be the width and height of the sprite)
 	 * @param color     The color of the circle (in ARGB format: 0xAARRGGBB)
@@ -209,12 +209,23 @@ public class SpriteUtil {
 		return new Sprite(original.getWidth(), original.getHeight(), newPix);
 	}
 
+	/**
+	 * Converts a Sprite into a BufferedImage.
+	 * @param s The sprite
+	 * @return an image representing the given sprite.
+     */
 	public static BufferedImage toImage(Sprite s) {
 		BufferedImage image = new BufferedImage(s.getWidth(), s.getHeight(), BufferedImage.TYPE_INT_ARGB);
 		image.setRGB(0, 0, s.getWidth(), s.getHeight(), s.getPixels(), 0, s.getWidth());
 		return image;
 	}
 
+	/**
+	 * Packs a set of sprites into a single sprite.
+	 * @param sprites The sprites to pack.
+	 * @return A set of two objects: The sprite, where all the given sprites are packed into, and a map of
+	 * sprite name to the rectangle that corresponds to it in the generated spritesheet.
+     */
 	public static Set2<Sprite, Map<String, Rectangle>> packSprites(Map<Sprite, String> sprites) {
 		int heightSum = 0, widthSum = 0;
 		ArrayList<Sprite> spriteList = new ArrayList<>(sprites.keySet());
@@ -278,6 +289,13 @@ public class SpriteUtil {
 		return img.getSubimage(0, 0, img.getWidth(), maxY + 1);
 	}
 
+	/**
+	 * Converts a map of sprite names to regions into a sprite sheet descriptor. Used two write the second output of
+	 * {@link SpriteUtil#packSprites(Map)} int a string, so that it can be written into a file.
+	 *  Careful: The name of the spritesheet image file will have to be written into the file before this is written!
+	 * @param sheet The sheet to write into a string.
+	 * @return The string representing the spritesheet.
+     */
 	public static String sheetMapToString(Map<String, Rectangle> sheet) {
 		StringBuilder result = new StringBuilder();
 		for (Map.Entry<String, Rectangle> e : sheet.entrySet()) {

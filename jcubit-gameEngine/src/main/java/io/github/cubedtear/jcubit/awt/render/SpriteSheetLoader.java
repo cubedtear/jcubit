@@ -29,12 +29,38 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
+ * Utility class to read spritesheets from files.
+ * <p>
+ * A spritesheet is made of two files: The sheet, and the descriptor.
+ * The sheet is an image file (readable by {@link ImageIO#read(InputStream)}.
+ * <p>
+ * The descriptor is a file with several lines, separated as {@link BufferedReader#readLine()}.
+ * <p>
+ * The first line of the file must be the path of the sheet file.
+ * The following lines will have the following format: <p>
+ * {@code spriteName.png x y w h} <p>
+ * Where:
+ * <ul>
+ *     <li>spriteName is the name the sprite will have.</li>
+ *     <li><i>x</i> is the x coordinate of the top-left corner of the sprite, within the sheet</li>
+ *     <li><i>y</i> is the y coordinate of the top-left corner of the sprite, within the sheet</li>
+ *     <li><i>w</i> is the width of the sprite, counted from <i>x</i></li>
+ *     <li><i>h</i> is the height of the sprite, counted from <i>y</i></li>
+ * </ul>
+ *
+ * Each line will therefore denote a sprite.
+ * Note: There is nothing preventing different sprites from overlapping.
  * @author Aritz Lopez
  */
 public class SpriteSheetLoader {
 
 	private static final Pattern spritePattern = Pattern.compile("(\\w+).png (\\d+) (\\d+) (\\d+) (\\d+)");
 
+	/**
+	 * Loads the sprite from the given path in the classpath.
+	 * @param shtFile The path in the classpath for the descriptor.
+	 * @return A spritesheet loaded from the given path.
+     */
 	public static SpriteSheet load(String shtFile) {
 		Preconditions.checkArgument(shtFile != null, "File name cannot be null!");
 		Preconditions.checkArgument(shtFile.length() != 0, "You must specify a valid path");
@@ -70,6 +96,15 @@ public class SpriteSheetLoader {
 		}
 	}
 
+	/**
+	 * Gets part of a BufferedImage as a Sprite.
+	 * @param image The image from which the sprite will be taken.
+	 * @param x The x coordinate of the top-left corner of the image where the sprite begins.
+	 * @param y The y coordinate of the top-left corner of the image where the sprite begins.
+	 * @param w The width of the sprite.
+     * @param h The height of the sprite.
+     * @return A sprite representing a subsection of the given image.
+     */
 	public static Sprite getSprite(BufferedImage image, int x, int y, int w, int h) {
 		int[] pixels = image.getRGB(x, y, w, h, null, 0, w);
 		return new Sprite(w, h, pixels);

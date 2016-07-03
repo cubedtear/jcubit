@@ -142,6 +142,9 @@ public class InputHandler implements KeyListener, FocusListener, MouseInputListe
 		mouseEvents.add(MouseInputEvent.fromMouseEvent(MouseAction.PRESSED, e));
 	}
 
+	/**
+	 * Clears the list of past mouse events. Used to discard old events.
+	 */
 	public void clearMouseEvents() {
 		this.mouseEvents.clear();
 	}
@@ -176,6 +179,10 @@ public class InputHandler implements KeyListener, FocusListener, MouseInputListe
 	public enum MouseButton {
 		LEFT, MIDDLE, RIGHT, NONE;
 
+		/**
+		 * @deprecated Should never have been public.
+         */
+		@Deprecated
 		public static MouseButton getFromEvent(int eventButton) {
 			switch (eventButton) {
 				case MouseEvent.BUTTON1:
@@ -199,24 +206,41 @@ public class InputHandler implements KeyListener, FocusListener, MouseInputListe
 		private final MouseAction action;
 		private final Point position;
 
+		/**
+		 * @deprecated Should never have been public.
+         */
+		@Deprecated
 		public MouseInputEvent(MouseButton button, MouseAction action, Point position) {
 			this.button = button;
 			this.action = action;
 			this.position = position;
 		}
 
+		/**
+		 * @deprecated Should never have been public.
+         */
+		@Deprecated
 		public static MouseInputEvent fromMouseEvent(MouseAction action, MouseEvent e) {
 			return new MouseInputEvent(MouseButton.getFromEvent(e.getButton()), action, new Point(e.getX(), e.getY()));
 		}
 
+		/**
+		 * @return The mouse button that triggered the event.
+         */
 		public MouseButton getButton() {
 			return button;
 		}
 
+		/**
+		 * @return The type of event.
+         */
 		public MouseAction getAction() {
 			return action;
 		}
 
+		/**
+		 * @return The position at which the event happened.
+         */
 		public Point getPosition() {
 			return position;
 		}

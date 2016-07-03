@@ -20,12 +20,14 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Maps;
 import io.github.cubedtear.jcubit.util.ARGBColorUtil;
 
+import java.awt.Canvas;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
 import java.util.Arrays;
 import java.util.Map;
 
 /**
+ * Renders to a BufferedImage, which may then be stored as a file, or drawn into a {@link Canvas}
  * @author Aritz Lopez
  */
 public class BufferedImageRenderer implements IRender {
@@ -37,10 +39,24 @@ public class BufferedImageRenderer implements IRender {
 	private final int[] pixels;
 	private boolean blend = false;
 
+	/**
+	 * Creates a renderer with the given size, and no spritesheet.
+	 * If this constructor is used, the method {@link BufferedImageRenderer#draw(int, int, String)} will not work, and
+	 * will throw an {@link IllegalArgumentException}.
+	 * @param width The width (in pixels) of the renderer.
+	 * @param height The height (in pixels) of the
+	 * @see BufferedImageRenderer#BufferedImageRenderer(int, int, Map)
+     */
 	public BufferedImageRenderer(int width, int height) {
 		this(width, height, Maps.<String, Sprite>newHashMap());
 	}
 
+	/**
+	 * Creates a renderer with the given name and spritesheet.
+	 * @param width The width (in pixels) of the renderer.
+	 * @param height The height (in pixels) of the
+	 * @param sprites The spritesheet.
+     */
 	public BufferedImageRenderer(int width, int height, Map<String, Sprite> sprites) {
 		this.width = width;
 		this.height = height;
