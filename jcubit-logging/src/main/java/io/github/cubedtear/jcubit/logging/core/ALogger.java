@@ -19,8 +19,8 @@ package io.github.cubedtear.jcubit.logging.core;
 import io.github.cubedtear.jcubit.logging.StringFormatter;
 
 /**
- * Abstract Logger that does nothing. Useful if you want to implement only part of the logging system
- *
+ * Abstract Logger that does nothing. Useful if you want to implement only part of the logging system.
+ * Delegates the string formatting to {@link StringFormatter#format(String, Object...)}.
  * @author Aritz Lopez
  */
 public abstract class ALogger implements ILogger {
