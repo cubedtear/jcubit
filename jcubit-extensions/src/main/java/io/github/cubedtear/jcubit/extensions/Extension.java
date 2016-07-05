@@ -19,10 +19,8 @@ package io.github.cubedtear.jcubit.extensions;
 /**
  * This class should not be the extended by mods, it's just used to store the mods' data on runtime
  * @author Aritz Lopez
- * @deprecated Should have never been public.
  */
-@Deprecated
-public class Extension {
+class Extension {
 	public final String name;
 	public final String version;
 	public final String appVersion;

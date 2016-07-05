@@ -75,12 +75,6 @@ public interface IRender {
 	void setBlend(boolean blend);
 
 	/**
-	 * @deprecated If s BufferedImage is desired, use a {@link BufferedImageRenderer} instead.
-     */
-	@Deprecated
-	BufferedImage getImage();
-
-	/**
 	 * @return the width of this renderer (i.e. The width of the area that can be drawn onto).
      */
 	int getWidth();

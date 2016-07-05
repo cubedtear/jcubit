@@ -112,7 +112,6 @@ public class BufferedImageRenderer implements IRender {
 		this.draw(x, y, sprite.getCurrentFrame(deltaNS));
 	}
 
-	@Override
 	public BufferedImage getImage() {
 		return image;
 	}

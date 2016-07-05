@@ -28,11 +28,7 @@ public class DeadEvent {
 
 	private final Object event;
 
-	/**
-	 * @deprecated Should have been protected.
-     */
-	@Deprecated
-	public DeadEvent(@NotNull Object event) {
+	protected DeadEvent(@NotNull Object event) {
 		this.event = event;
 	}
 
