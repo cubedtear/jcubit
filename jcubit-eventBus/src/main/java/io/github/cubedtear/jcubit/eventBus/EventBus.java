@@ -22,6 +22,7 @@ import com.google.common.cache.LoadingCache;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Sets;
+import io.github.cubedtear.jcubit.util.API;
 import io.github.cubedtear.jcubit.util.NotNull;
 
 import java.lang.reflect.Method;
@@ -89,8 +90,9 @@ public class EventBus {
 
 	/**
 	 * Unregisters the object from the event-handlers.
-	 * @param listener The object to unregster.
+	 * @param listener The object to unregister.
 	 */
+	@API
 	public void unregister(final Object listener) {
 		for (Class clazz = listener.getClass(); clazz != null; clazz = clazz.getSuperclass()) {
 			this.handlersByEventType.removeAll(clazz);

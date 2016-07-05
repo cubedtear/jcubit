@@ -16,24 +16,52 @@
 
 package io.github.cubedtear.jcubit.awt.gameEngine.core;
 
+import io.github.cubedtear.jcubit.util.API;
+
 /**
  * @author Aritz Lopez
  */
 public interface IGameEngine extends Runnable {
 
+	/**
+	 * Called when the game should start.
+	 */
 	void start();
 
+	/**
+	 * Called when the game should stop
+	 */
 	void stop();
 
+	/**
+	 * Called each time the game should be updated.
+	 */
 	void update();
 
+	/**
+	 * Called each time the game should be rendered.
+	 */
 	void render();
 
+	/**
+	 * Called once per second.
+	 */
 	void updatePS();
 
+	/**
+	 * @return The game of this engine.
+     */
 	IGame getGame();
 
+	/**
+	 * @return The frames per second. Will probably change between calls.
+     */
+	@API
 	int getFPS();
 
+	/**
+	 * @return The updated per second.  Will probably change between calls.
+     */
+	@API
 	int getUPS();
 }

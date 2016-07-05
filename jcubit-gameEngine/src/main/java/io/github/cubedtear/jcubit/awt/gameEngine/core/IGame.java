@@ -53,7 +53,7 @@ public interface IGame {
 	void onUpdatePS();
 
 	/**
-	 * Called after normal rendering. Usefult to add UI stuff.
+	 * Called after normal rendering. Useful to add UI stuff.
 	 */
 	void onPostRender();
 }

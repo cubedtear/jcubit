@@ -17,11 +17,13 @@
 package io.github.cubedtear.jcubit.awt.render;
 
 import com.google.common.base.Preconditions;
+import io.github.cubedtear.jcubit.util.API;
 
 /**
  * Collection of {@link Background Backgrounds}, used to only have to draw the whole background once.
  * @author Aritz Lopez
  */
+@API
 public class ParallaxBG {
 	private final Background[] backgrounds;
 

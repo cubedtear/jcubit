@@ -16,6 +16,8 @@
 
 package io.github.cubedtear.jcubit.eventBus;
 
+import io.github.cubedtear.jcubit.util.API;
+
 /**
  * A RuntimeException that wraps an exception and saves what EventHandler threw what Throwable because of what event.
  *
@@ -45,6 +47,7 @@ public class EventException extends RuntimeException {
 	 *
 	 * @return the EventHandler that threw the Throwable.
 	 */
+	@API
 	public EventHandler getThrower() {
 		return handler;
 	}
@@ -54,6 +57,7 @@ public class EventException extends RuntimeException {
 	 *
 	 * @return the event that made the EventHandler throw the exception.
 	 */
+	@API
 	public Object getEvent() {
 		return event;
 	}

@@ -6,6 +6,7 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Sets;
 import io.github.cubedtear.jcubit.util.API;
+import io.github.cubedtear.jcubit.util.Nullable;
 import io.github.cubedtear.jcubit.util.ReflectionUtil;
 
 import java.io.File;
@@ -76,7 +77,7 @@ public class BDSUtil {
      *
      * @param instance The object to serialize.
      * @return The BDS version of the given object.
-     * @throws SerializationException If an exception occurs when serializing (e.g. There is a cycle that cannot be solved, or a field cannot be accesed).
+     * @throws SerializationException If an exception occurs when serializing (e.g. There is a cycle that cannot be solved, or a field cannot be accessed).
      * @see BDSUtil#serialize(Object, BackrefFixer)
      * @see BDSUtil#registerSerializer(Class, Serializer)
      */
@@ -99,7 +100,7 @@ public class BDSUtil {
      * @see BDSUtil#serialize(Object)
      */
     @API
-    public static BDS serialize(Object instance, BackrefFixer fixer) throws SerializationException {
+    public static BDS serialize(Object instance, @Nullable BackrefFixer fixer) throws SerializationException {
         if (instance == null) {
             BDS result = new BDS(NULL_TAG);
             result.addString(CLASS_NAME_TAG, NULL_TAG);
@@ -115,6 +116,7 @@ public class BDSUtil {
      * @return The deserialized object.
      * @throws SerializationException If an exception occurs when deserializing (e.g. there is a cycle that cannot be solved, or a field cannot be accessed).
      */
+    @Nullable
     @API
     public static Object deserialize(BDS data) throws SerializationException {
         try {
@@ -288,7 +290,8 @@ public class BDSUtil {
         return idx != null ? idx : -1;
     }
 
-    @SuppressWarnings("unchecked")
+    @Nullable
+    @SuppressWarnings({"unchecked", "ConstantConditions"})
     private static Object deserializeInternal(BDS bds, Map<Integer, Object> pastInstances, Set<UnresolvedReference> unresolvedReferences) throws SerializationException, CannotDeserializeYet {
         if (isNull(bds)) return null;
 
@@ -296,11 +299,12 @@ public class BDSUtil {
 
         String type = bds.getString(CLASS_NAME_TAG);
 
+        Integer backRef = bds.getInt(BACKREF_TAG);
         if (type == null) {
-            if (bds.getInt(BACKREF_TAG) == null) {
+            if (backRef == null) {
                 throw new SerializationException("Error deserializing: BDS was not in the correct format.");
             } else {
-                throw new CannotDeserializeYet(bds.getInt(BACKREF_TAG));
+                throw new CannotDeserializeYet(backRef);
             }
         }
 
@@ -386,7 +390,7 @@ public class BDSUtil {
                     }
                 }
             } else {
-                int backref = bds.getInt(BACKREF_TAG);
+                int backref = backRef;
                 if (pastInstances.containsKey(backref)) {
                     result = pastInstances.get(backref);
                 } else throw new CannotDeserializeYet(backref);
@@ -418,7 +422,7 @@ public class BDSUtil {
                     throw new SerializationException("Error deserializing: Class " + type + " could not be found.", e);
                 }
             } else {
-                int backref = bds.getInt(BACKREF_TAG);
+                int backref = backRef;
                 if (pastInstances.containsKey(backref)) {
                     result = pastInstances.get(backref);
                 } else throw new CannotDeserializeYet(backref);
@@ -436,7 +440,7 @@ public class BDSUtil {
                             try {
                                 f.setAccessible(true);
                             } catch (SecurityException e) {
-                                throw new SerializationException("Field " + f.getName() + " of class " + type + " could not be made accesible!", e);
+                                throw new SerializationException("Field " + f.getName() + " of class " + type + " could not be made accessible!", e);
                             }
                         }
                         BDS fieldBDS = bds.getBDS(f.getName());
@@ -501,6 +505,7 @@ public class BDSUtil {
         debug(bds, out, 0);
     }
 
+    @SuppressWarnings("ConstantConditions")
     private static void debug(BDS bds, PrintStream out, int level) {
         out.println(Strings.repeat("\t", level) + "BDS: " + bds.getName());
         if (bds.getAllBytes().size() != 0) {

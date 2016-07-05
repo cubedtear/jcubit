@@ -17,6 +17,7 @@
 package io.github.cubedtear.jcubit.awt.gameEngine.input;
 
 import io.github.cubedtear.jcubit.awt.gameEngine.CanvasEngine;
+import io.github.cubedtear.jcubit.util.API;
 
 import javax.swing.event.MouseInputListener;
 import java.awt.*;
@@ -45,6 +46,7 @@ public class InputHandler implements KeyListener, FocusListener, MouseInputListe
 	 *
 	 * @return True if the canvas is focused
 	 */
+	@API
 	public boolean hasFocus() {
 		return focus;
 	}
@@ -56,6 +58,7 @@ public class InputHandler implements KeyListener, FocusListener, MouseInputListe
 	 * @param keyCode The code that corresponds to the key, according to {@link java.awt.event.KeyEvent}
 	 * @return True if the key was pressed, but hadn't been previously checked.
 	 */
+	@API
 	public boolean wasKeyTyped(int keyCode) {
 		if (this.isKeyDown(keyCode) && !this.checked.contains(keyCode)) {
 			this.checked.add(keyCode);
@@ -79,6 +82,7 @@ public class InputHandler implements KeyListener, FocusListener, MouseInputListe
 	 *
 	 * @return the position of the mouse.
 	 */
+	@API
 	public Point getMousePos() {
 		return this.lastMousePos;
 	}
@@ -89,6 +93,7 @@ public class InputHandler implements KeyListener, FocusListener, MouseInputListe
 	 *
 	 * @return a stack of mouse events
 	 */
+	@API
 	public Queue<MouseInputEvent> getMouseEvents() {
 		return this.mouseEvents;
 	}
@@ -176,6 +181,9 @@ public class InputHandler implements KeyListener, FocusListener, MouseInputListe
 
 	// endregion
 
+	/**
+	 * Enumerates each button of a normal mouse.
+	 */
 	public enum MouseButton {
 		LEFT, MIDDLE, RIGHT, NONE;
 
@@ -197,10 +205,16 @@ public class InputHandler implements KeyListener, FocusListener, MouseInputListe
 		}
 	}
 
+	/**
+	 * Enumerates the different actions that can be done with a mouse.
+	 */
 	public enum MouseAction {
 		PRESSED, RELEASED, DRAGGED, CLICKED
 	}
 
+	/**
+	 * Represents a mouse event
+	 */
 	public static class MouseInputEvent {
 		private final MouseButton button;
 		private final MouseAction action;
@@ -227,6 +241,7 @@ public class InputHandler implements KeyListener, FocusListener, MouseInputListe
 		/**
 		 * @return The mouse button that triggered the event.
          */
+		@API
 		public MouseButton getButton() {
 			return button;
 		}
@@ -234,6 +249,7 @@ public class InputHandler implements KeyListener, FocusListener, MouseInputListe
 		/**
 		 * @return The type of event.
          */
+		@API
 		public MouseAction getAction() {
 			return action;
 		}
@@ -241,6 +257,7 @@ public class InputHandler implements KeyListener, FocusListener, MouseInputListe
 		/**
 		 * @return The position at which the event happened.
          */
+		@API
 		public Point getPosition() {
 			return position;
 		}

@@ -17,6 +17,7 @@
 package io.github.cubedtear.jcubit.awt.render;
 
 import com.google.common.base.Preconditions;
+import io.github.cubedtear.jcubit.util.API;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -52,6 +53,7 @@ import java.util.regex.Pattern;
  * Note: There is nothing preventing different sprites from overlapping.
  * @author Aritz Lopez
  */
+@API
 public class SpriteSheetLoader {
 
 	private static final Pattern spritePattern = Pattern.compile("(\\w+).png (\\d+) (\\d+) (\\d+) (\\d+)");
@@ -61,7 +63,8 @@ public class SpriteSheetLoader {
 	 * @param shtFile The path in the classpath for the descriptor.
 	 * @return A spritesheet loaded from the given path.
      */
-	public static SpriteSheet load(String shtFile) {
+	@API
+	public static HashMap<String, Sprite> load(String shtFile) {
 		Preconditions.checkArgument(shtFile != null, "File name cannot be null!");
 		Preconditions.checkArgument(shtFile.length() != 0, "You must specify a valid path");
 
@@ -76,7 +79,7 @@ public class SpriteSheetLoader {
 
 			BufferedImage sheet = ImageIO.read(imageStream);
 
-			SpriteSheet sprites = new SpriteSheet();
+			HashMap<String, Sprite> sprites = new HashMap<>();
 
 			while ((line = reader.readLine()) != null) {
 				Matcher matcher = spritePattern.matcher(line);
@@ -110,5 +113,9 @@ public class SpriteSheetLoader {
 		return new Sprite(w, h, pixels);
 	}
 
+	/**
+	 * @deprecated Use {@code HashMap<String, Sprite>} instead.
+	 */
+	@Deprecated
 	public static class SpriteSheet extends HashMap<String, Sprite> {}
 }

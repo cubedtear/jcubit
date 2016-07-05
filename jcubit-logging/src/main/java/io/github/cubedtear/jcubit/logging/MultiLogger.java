@@ -20,6 +20,7 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import io.github.cubedtear.jcubit.logging.core.ALogger;
 import io.github.cubedtear.jcubit.logging.core.ILogger;
+import io.github.cubedtear.jcubit.util.API;
 
 import java.util.Set;
 
@@ -28,6 +29,7 @@ import java.util.Set;
  * but only warnings and errors to a file.
  * @author Aritz Lopez
  */
+@API
 public class MultiLogger extends ALogger {
 
 	private final Set<ILogger> loggers;
@@ -36,6 +38,7 @@ public class MultiLogger extends ALogger {
 	 * Creates a multi-logger from the given loggers. Note: These loggers may be MultiLogger-s themselves.
 	 * @param loggers The loggers.
      */
+	@API
 	public MultiLogger(ILogger... loggers) {
 		this.loggers = Sets.newHashSet(loggers);
 	}
@@ -44,6 +47,7 @@ public class MultiLogger extends ALogger {
 	 * Adds another logger to this multi-logger.
 	 * @param logger The logger to add.
      */
+	@API
 	public void addLogger(ILogger logger) {
 		this.loggers.add(logger);
 	}
@@ -52,6 +56,7 @@ public class MultiLogger extends ALogger {
 	 * Ads the given logger to this multi-logger.
 	 * @param loggers The loggers to add.
      */
+	@API
 	public void addLoggers(ILogger... loggers) {
 		this.loggers.addAll(Sets.newHashSet(loggers));
 	}
@@ -59,6 +64,7 @@ public class MultiLogger extends ALogger {
 	/**
 	 * @return an immutable copy of the loggers this multi-logger logs to.
      */
+	@API
 	public Set<ILogger> getLoggers() {
 		return ImmutableSet.copyOf(loggers);
 	}

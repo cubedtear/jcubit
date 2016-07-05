@@ -18,6 +18,7 @@ package io.github.cubedtear.jcubit.awt.util;
 
 import com.google.common.collect.Maps;
 import io.github.cubedtear.jcubit.awt.render.Sprite;
+import io.github.cubedtear.jcubit.util.API;
 import io.github.cubedtear.jcubit.util.ARGBColorUtil;
 import io.github.cubedtear.jcubit.util.Set2;
 
@@ -30,6 +31,7 @@ import java.util.*;
  *
  * @author Aritz Lopez
  */
+@API
 public class SpriteUtil {
 
 	private static final Comparator<Sprite> spriteComparator = new Comparator<Sprite>() {
@@ -47,6 +49,7 @@ public class SpriteUtil {
 	 * @param lineWidth The thickness of the circle. <span style="color:Aqua; font-weight:bold">Warning: if thickness is bigger than 1, it will not draw a perfectly filled circle</span>
 	 * @return A new Sprite with a circle drawn onto it
 	 */
+	@API
 	public static Sprite circle(int diameter, int color, int lineWidth) {
 
 		int[] pix = new int[diameter * diameter];
@@ -95,6 +98,7 @@ public class SpriteUtil {
 	 * @param method   The scaling method
 	 * @return The scaled sprite
 	 */
+	@API
 	public static Sprite scale(Sprite original, float scale, ScalingMethod method) {
 		if (scale == 1.0f) return original.copy();
 
@@ -181,6 +185,7 @@ public class SpriteUtil {
 	 * @param original The sprite to flip horizontally
 	 * @return The Sprite flipped
 	 */
+	@API
 	public static Sprite flipH(Sprite original) {
 		int[] newPix = new int[original.getPixels().length];
 
@@ -197,6 +202,7 @@ public class SpriteUtil {
 	 * @param original The sprite to flip vertically
 	 * @return The Sprite flipped
 	 */
+	@API
 	public static Sprite flipV(Sprite original) {
 		int[] newPix = new int[original.getPixels().length];
 
@@ -214,6 +220,7 @@ public class SpriteUtil {
 	 * @param s The sprite
 	 * @return an image representing the given sprite.
      */
+	@API
 	public static BufferedImage toImage(Sprite s) {
 		BufferedImage image = new BufferedImage(s.getWidth(), s.getHeight(), BufferedImage.TYPE_INT_ARGB);
 		image.setRGB(0, 0, s.getWidth(), s.getHeight(), s.getPixels(), 0, s.getWidth());
@@ -226,6 +233,7 @@ public class SpriteUtil {
 	 * @return A set of two objects: The sprite, where all the given sprites are packed into, and a map of
 	 * sprite name to the rectangle that corresponds to it in the generated spritesheet.
      */
+	@API
 	public static Set2<Sprite, Map<String, Rectangle>> packSprites(Map<Sprite, String> sprites) {
 		int heightSum = 0, widthSum = 0;
 		ArrayList<Sprite> spriteList = new ArrayList<>(sprites.keySet());
@@ -296,6 +304,7 @@ public class SpriteUtil {
 	 * @param sheet The sheet to write into a string.
 	 * @return The string representing the spritesheet.
      */
+	@API
 	public static String sheetMapToString(Map<String, Rectangle> sheet) {
 		StringBuilder result = new StringBuilder();
 		for (Map.Entry<String, Rectangle> e : sheet.entrySet()) {
@@ -315,6 +324,7 @@ public class SpriteUtil {
 		return result.toString();
 	}
 
+	@API
 	private static int interpolate(int color1, int color2, int L, float l) {
 		int a1 = ARGBColorUtil.getAlpha(color1);
 		int r1 = ARGBColorUtil.getRed(color1);
@@ -344,6 +354,7 @@ public class SpriteUtil {
 	 * @param angle    The rotation angle, in degrees
 	 * @return The rotated image
 	 */
+	@API
 	public static Sprite rotate(Sprite original, double angle) {
 
 		if (angle == 90.0) return SpriteUtil.rotate90(original, Rotation._90);
@@ -410,9 +421,10 @@ public class SpriteUtil {
 	 *
 	 * @param original The sprite to which the border will be added
 	 * @param color    The color of the border (in ARGB format: 0xAARRGGBB)
-	 * @param size     The sice of the border, in pixels
+	 * @param size     The size of the border, in pixels
 	 * @return The sprite with the border
 	 */
+	@API
 	public static Sprite addBorder(Sprite original, int color, int size) {
 		int[] newPix = Arrays.copyOf(original.getPixels(), original.getPixels().length);
 		for (int x = 0; x < original.getWidth(); x++) {

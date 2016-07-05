@@ -672,7 +672,7 @@ public class BDS {
         return takenNames.contains(name);
     }
 
-    private <T> boolean addElement(String name, T value, Map<String, T> map) {
+    private <T> boolean addElement(String name, @Nullable T value, Map<String, T> map) {
         if (value == null) throw new IllegalArgumentException("Cannot add null value");
         if (isTaken(name)) return false;
         takenNames.add(name);
@@ -883,6 +883,7 @@ public class BDS {
      * @param name The name of the byte.
      * @return the byte with the given name. {@code null} means there is no byte with the given name.
      */
+    @Nullable
     public Byte getByte(String name) {
         return this.bytes.get(name);
     }
@@ -893,6 +894,7 @@ public class BDS {
      * @param name The name of the char.
      * @return the char with the given name. {@code null} means there is no char with the given name.
      */
+    @Nullable
     public Character getChar(String name) {
         return this.chars.get(name);
     }
@@ -903,6 +905,7 @@ public class BDS {
      * @param name The name of the short.
      * @return the short with the given name. {@code null} means there is no short with the given name.
      */
+    @Nullable
     public Short getShort(String name) {
         return this.shorts.get(name);
     }
@@ -913,6 +916,7 @@ public class BDS {
      * @param name The name of the int.
      * @return the int with the given name. {@code null} means there is no int with the given name.
      */
+    @Nullable
     public Integer getInt(String name) {
         return this.ints.get(name);
     }
@@ -923,6 +927,7 @@ public class BDS {
      * @param name The name of the long.
      * @return the long with the given name. {@code null} means there is no long with the given name.
      */
+    @Nullable
     public Long getLong(String name) {
         return this.longs.get(name);
     }
@@ -933,6 +938,7 @@ public class BDS {
      * @param name The name of the float.
      * @return the float with the given name. {@code null} means there is no float with the given name.
      */
+    @Nullable
     public Float getFloat(String name) {
         return this.floats.get(name);
     }
@@ -943,6 +949,7 @@ public class BDS {
      * @param name The name of the double.
      * @return the double with the given name. {@code null} means there is no double with the given name.
      */
+    @Nullable
     public Double getDouble(String name) {
         return this.doubles.get(name);
     }
@@ -953,6 +960,7 @@ public class BDS {
      * @param name The name of the string.
      * @return the string with the given name. {@code null} means there is no String with the given name.
      */
+    @Nullable
     public String getString(String name) {
         return this.strings.get(name);
     }
@@ -963,6 +971,7 @@ public class BDS {
      * @param name The name of the nested BDS.
      * @return the nested BDS with the given name. {@code null} means there is no BDS with the given name.
      */
+    @Nullable
     public BDS getBDS(String name) {
         return this.bdss.get(name);
     }
@@ -973,6 +982,7 @@ public class BDS {
      * @param name The name of the array.
      * @return the array with the given name. {@code null} means there is no byte array with the given name.
      */
+    @Nullable
     public byte[] getByteArray(String name) {
         return ArrayUtil.unbox(this.byteArrays.get(name));
     }
@@ -983,6 +993,7 @@ public class BDS {
      * @param name The name of the array.
      * @return the array with the given name. {@code null} means there is no char array with the given name.
      */
+    @Nullable
     public char[] getCharArray(String name) {
         return ArrayUtil.unbox(this.charArrays.get(name));
     }
@@ -993,6 +1004,7 @@ public class BDS {
      * @param name The name of the array.
      * @return the array with the given name. {@code null} means there is no short array with the given name.
      */
+    @Nullable
     public short[] getShortArray(String name) {
         return ArrayUtil.unbox(this.shortArrays.get(name));
     }
@@ -1003,6 +1015,7 @@ public class BDS {
      * @param name The name of the array.
      * @return the array with the given name. {@code null} means there is no int array with the given name.
      */
+    @Nullable
     public int[] getIntArray(String name) {
         return ArrayUtil.unbox(this.intArrays.get(name));
     }
@@ -1013,6 +1026,7 @@ public class BDS {
      * @param name The name of the array.
      * @return the array with the given name. {@code null} means there is no long array with the given name.
      */
+    @Nullable
     public long[] getLongArray(String name) {
         return ArrayUtil.unbox(this.longArrays.get(name));
     }
@@ -1023,6 +1037,7 @@ public class BDS {
      * @param name The name of the array.
      * @return the array with the given name. {@code null} means there is no float array with the given name.
      */
+    @Nullable
     public float[] getFloatArray(String name) {
         return ArrayUtil.unbox(this.floatArrays.get(name));
     }
@@ -1033,6 +1048,7 @@ public class BDS {
      * @param name The name of the array.
      * @return the array with the given name. {@code null} means there is no double array with the given name.
      */
+    @Nullable
     public double[] getDoubleArray(String name) {
         return ArrayUtil.unbox(this.doubleArrays.get(name));
     }
@@ -1043,6 +1059,7 @@ public class BDS {
      * @param name The name of the array.
      * @return the array with the given name. {@code null} means there is no String array with the given name.
      */
+    @Nullable
     public String[] getStringArray(String name) {
         return this.stringArrays.get(name);
     }
@@ -1053,6 +1070,7 @@ public class BDS {
      * @param name The name of the array.
      * @return the array with the given name. {@code null} means there is no BDS Array with the given name.
      */
+    @Nullable
     public BDS[] getBDSArray(String name) {
         return this.bdsArrays.get(name);
     }

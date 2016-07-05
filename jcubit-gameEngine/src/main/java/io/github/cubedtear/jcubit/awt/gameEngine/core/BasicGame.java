@@ -122,6 +122,7 @@ public class BasicGame implements IGameEngine {
 	/**
 	 * @return The target updates per second.
      */
+	@API
 	public int getTargetUps() {
 		return targetUps;
 	}
@@ -130,6 +131,7 @@ public class BasicGame implements IGameEngine {
 	 * Sets the target updates per second (and if frames per second are locked, these too).
 	 * @param targetUps The target UPS.
      */
+	@API
 	public void setTargetUps(int targetUps) {
 		this.targetUps = targetUps;
 	}

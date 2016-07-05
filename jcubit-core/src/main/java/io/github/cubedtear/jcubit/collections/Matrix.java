@@ -16,13 +16,14 @@
 
 package io.github.cubedtear.jcubit.collections;
 
+import io.github.cubedtear.jcubit.util.API;
 import io.github.cubedtear.jcubit.util.Nullable;
 
 import java.lang.reflect.Array;
 import java.util.*;
 
 /**
- * Bidimensional resizable array (Internally {@code ArrayList<ArrayList<E>>}) <br>
+ * Bi-dimensional resizable array (Internally {@code ArrayList<ArrayList<E>>}) <br>
  * which also adds some useful methods e.g. {@link Matrix#runForEach(ParametrizedFunction, Object...)}
  *
  * @author Aritz Lopez
@@ -333,6 +334,7 @@ public class Matrix<E> implements Collection<ArrayList<E>> {
          * Returns the element.
          * @return the element.
          */
+        @API
         public T getElement() {
             return element;
         }
@@ -357,6 +359,7 @@ public class Matrix<E> implements Collection<ArrayList<E>> {
          * Returns the matrix this element is at.
          * @return the matrix this element is at.
          */
+        @API
         public Matrix<E> getMatrix() {
             return Matrix.this;
         }

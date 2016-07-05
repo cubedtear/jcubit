@@ -17,8 +17,9 @@
 package io.github.cubedtear.jcubit.eventBus.logging;
 
 import io.github.cubedtear.jcubit.eventBus.EventBus;
-import io.github.cubedtear.jcubit.logging.StringFormatter;
+import io.github.cubedtear.jcubit.logging.SF;
 import io.github.cubedtear.jcubit.logging.core.LogLevel;
+import io.github.cubedtear.jcubit.util.API;
 import io.github.cubedtear.jcubit.util.Nullable;
 
 /**
@@ -39,7 +40,7 @@ public class LogEvent {
      */
     @Deprecated
     public LogEvent(LogLevel level, String format, Object... args) {
-        this(level, StringFormatter.format(format, args));
+        this(level, SF.f(format, args));
     }
 
     /**
@@ -65,12 +66,13 @@ public class LogEvent {
      */
     @Deprecated
     public LogEvent(LogLevel level, String format, @Nullable Throwable throwable, Object... args) {
-        this(level, StringFormatter.format(format, args), throwable);
+        this(level, SF.f(format, args), throwable);
     }
 
     /**
      * @return the message logged.
      */
+    @API
     public String getMessage() {
         return message;
     }
@@ -78,6 +80,7 @@ public class LogEvent {
     /**
      * @return the level of the logged message.
      */
+    @API
     public LogLevel getLevel() {
         return level;
     }
@@ -85,6 +88,7 @@ public class LogEvent {
     /**
      * @return the throwable to log. May be null.
      */
+    @API
     @Nullable
     public Throwable getThrowable() {
         return throwable;

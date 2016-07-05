@@ -2,15 +2,17 @@ package io.github.cubedtear.jcubit.collections;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.SetMultimap;
+import io.github.cubedtear.jcubit.util.API;
 
 import java.util.Set;
 
 /**
- * Bi-directional multimap based on hashCodes. This means there is a many-many relationship betweem keys and values,
+ * Bi-directional multimap based on hashCodes. This means there is a many-many relationship between keys and values,
  * so for each key, there may be several values, and the map can be inverted so that for each value (now keys) there
  * may be several keys (now values).
  * @author Aritz Lopez
  */
+@API
 public class HashMultiBiMap<K, V> {
 
 	private final SetMultimap<K, V> keysToValues;
@@ -32,6 +34,7 @@ public class HashMultiBiMap<K, V> {
 	 * @param <V> The type of the values of the created map.
      * @return A new empty HashMultiBiMap.
      */
+	@API
 	public static <K, V> HashMultiBiMap<K, V> create() {
 		return new HashMultiBiMap<>();
 	}
@@ -43,6 +46,7 @@ public class HashMultiBiMap<K, V> {
 	 * in the inverse.
 	 * @return The inverse of this map.
 	 */
+	@API
 	public HashMultiBiMap<V, K> inverse() {
 		return new HashMultiBiMap<>(valuesToKeys, keysToValues);
 	}
@@ -81,6 +85,7 @@ public class HashMultiBiMap<K, V> {
 	 * For the set of values, use {@code this.inverse().keys()}.
 	 * @return the set of keys of this map.
      */
+	@API
 	public Set<K> keys() {
 		return keysToValues.keySet();
 	}

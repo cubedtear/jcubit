@@ -1,5 +1,7 @@
 package io.github.cubedtear.jcubit.math;
 
+import io.github.cubedtear.jcubit.util.API;
+
 import java.awt.*;
 
 /**
@@ -7,6 +9,7 @@ import java.awt.*;
  *
  * @author Aritz Lopez
  */
+@API
 public class Vec2i {
 
     public final int x;
@@ -15,6 +18,7 @@ public class Vec2i {
     /**
      * Creates a 0-vector. Equivalent to calling {@code new Vec2i(0, 0)}.
      */
+    @API
     public Vec2i() {
         this.x = this.y = 0;
     }
@@ -36,6 +40,7 @@ public class Vec2i {
      * @param p the point to convert.
      * @return a Vec2i equivalent in coordinates to the given points.
      */
+    @API
     public static Vec2i fromPoint(Point p) {
         return new Vec2i(p.x, p.y);
     }
@@ -45,6 +50,7 @@ public class Vec2i {
      *
      * @return the x coordinate of this vector.
      */
+    @API
     public int getX() {
         return x;
     }
@@ -54,6 +60,7 @@ public class Vec2i {
      *
      * @return the y coordinate of this vector.
      */
+    @API
     public int getY() {
         return y;
     }
@@ -94,6 +101,7 @@ public class Vec2i {
      * @param scalar The scalar to multiply by.
      * @return {@code this} vector multiplied by {@code scalar}.
      */
+    @API
     public Vec2i times(double scalar) {
         return new Vec2i((int) (this.x * scalar), (int) (this.y * scalar));
     }
@@ -102,6 +110,7 @@ public class Vec2i {
      * Returns the vector with the negative coordinates (i.e. {@code new Vec2i(-x, -y)}). Also called the <i>opposite</i>.
      * @return the opposite vector.
      */
+    @API
     public Vec2i negate() {
         return new Vec2i(-this.x, -this.y);
     }
@@ -110,6 +119,7 @@ public class Vec2i {
      * Converts {@code this} vector to a {@link Point java.awt.Point}.
      * @return this vector as a {@code java.awt.Point}.1
      */
+    @API
     public Point toPoint() {
         return new Point(this.x, this.y);
     }
@@ -118,6 +128,7 @@ public class Vec2i {
      * Returns the maximum of the two coordinates.
      * @return max(x, y).
      */
+    @API
     public int max() {
         return Math.max(this.x, this.y);
     }
@@ -126,6 +137,7 @@ public class Vec2i {
      * Returns the minimum of the two coordinates.
      * @return min(x, y).
      */
+    @API
     public int min() {
         return Math.min(this.x, this.y);
     }

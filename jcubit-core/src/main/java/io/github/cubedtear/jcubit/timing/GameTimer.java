@@ -47,7 +47,7 @@ public class GameTimer {
 	}
 
 	/**
-	 * Reinitializes this timer.
+	 * Re-initializes this timer.
 	 */
 	public void init() {
 		this.ups = this.fps = 0;
@@ -59,6 +59,7 @@ public class GameTimer {
 	/**
 	 * This should be called each game update.
 	 */
+	@API
 	public void update() {
 		this.cups++;
 
@@ -91,6 +92,7 @@ public class GameTimer {
 	 * Returns the number of times that the {@link GameTimer#render()} method was called the past second.
 	 * @return the number of frames per second.
      */
+	@API
 	public int getFPS() {
 		return fps;
 	}
@@ -99,6 +101,7 @@ public class GameTimer {
 	 * Returns the number of times that the {@link GameTimer#update()}} method was called the past second.
 	 * @return the number of updates per second.
 	 */
+	@API
 	public int getUPS() {
 		return ups;
 	}
@@ -107,6 +110,7 @@ public class GameTimer {
 	 * Returns the average FPS in 5 seconds.
 	 * @return the average FPS in 5 seconds.
      */
+	@API
 	public int getAverageFPS() {
 		return this.fpss.size() > 0 ? CollectionUtil.integerSum(this.fpss) / this.fpss.size() : this.fps;
 	}
@@ -115,6 +119,7 @@ public class GameTimer {
 	 * Returns the average UPS in 5 seconds.
 	 * @return the average UPS in 5 seconds.
 	 */
+	@API
 	public int getAverageUPS() {
 		return this.upss.size() > 0 ? CollectionUtil.integerSum(this.upss) / this.upss.size() : this.ups;
 	}

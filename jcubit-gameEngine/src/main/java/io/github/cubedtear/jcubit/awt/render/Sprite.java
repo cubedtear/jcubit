@@ -17,6 +17,7 @@
 package io.github.cubedtear.jcubit.awt.render;
 
 import com.google.common.base.Preconditions;
+import io.github.cubedtear.jcubit.util.API;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -73,6 +74,7 @@ public class Sprite {
 	 * @throws IOException If an error occurs reading the file.
 	 * @see ImageIO#read(InputStream)
      */
+	@API
 	public Sprite(String sprite) throws IOException {
 		this(ImageIO.read(Sprite.class.getClassLoader().getResourceAsStream(sprite.trim())));
 	}
@@ -82,6 +84,7 @@ public class Sprite {
 	 * @param file The file to read the sprite from.
 	 * @throws IOException If an error occurs reading the file.
      */
+	@API
 	public Sprite(File file) throws IOException {
 		this(ImageIO.read(file));
 	}
@@ -118,7 +121,7 @@ public class Sprite {
 	}
 
 	/**
-	 * Creates an exact copy of {@code this} sprite. The resultin sprite will be totally independent to {@code this} sprite.
+	 * Creates an exact copy of {@code this} sprite. The resulting sprite will be totally independent to {@code this} sprite.
 	 * @return a copy of {@code this} sprite.
      */
 	public Sprite copy() {

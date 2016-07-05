@@ -16,6 +16,7 @@
 
 package io.github.cubedtear.jcubit.eventBus;
 
+import io.github.cubedtear.jcubit.util.API;
 import io.github.cubedtear.jcubit.util.NotNull;
 
 /**
@@ -38,6 +39,7 @@ public class DeadEvent {
 	/**
 	 * @return the unhandled event.
      */
+	@API
 	public Object getEvent() {
 		return event;
 	}

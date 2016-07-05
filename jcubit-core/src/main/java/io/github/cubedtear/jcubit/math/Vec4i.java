@@ -1,8 +1,11 @@
 package io.github.cubedtear.jcubit.math;
 
+import io.github.cubedtear.jcubit.util.API;
+
 /**
  * @author Aritz Lopez
  */
+@API
 public class Vec4i {
 
 	public final int x, y, z, w;
@@ -10,6 +13,7 @@ public class Vec4i {
 	/**
 	 * Creates a 0-vector. Equivalent to calling {@code new Vec4i(0, 0, 0, 0)}.
 	 */
+	@API
 	public Vec4i() {
 		this.x = this.y = this.z = this.w = 0;
 	}
@@ -34,6 +38,7 @@ public class Vec4i {
 	 *
 	 * @return the x coordinate of this vector.
 	 */
+	@API
 	public int getX() {
 		return x;
 	}
@@ -43,6 +48,7 @@ public class Vec4i {
 	 *
 	 * @return the y coordinate of this vector.
 	 */
+	@API
 	public int getY() {
 		return y;
 	}
@@ -52,6 +58,7 @@ public class Vec4i {
 	 *
 	 * @return the z coordinate of this vector.
 	 */
+	@API
 	public int getZ() {
 		return z;
 	}
@@ -61,6 +68,7 @@ public class Vec4i {
 	 *
 	 * @return the w coordinate of this vector.
 	 */
+	@API
 	public int getW() {
 		return w;
 	}
@@ -100,6 +108,7 @@ public class Vec4i {
 	 * @param scalar The scalar to multiply by.
 	 * @return {@code this} vector multiplied by {@code scalar}.
 	 */
+	@API
 	public Vec4i times(double scalar) {
 		return new Vec4i((int) (this.x * scalar), (int) (this.y * scalar), (int) (this.z * scalar), (int) (this.w * scalar));
 	}
@@ -108,6 +117,7 @@ public class Vec4i {
 	 * Returns the vector with the negative coordinates. Also called the <i>opposite</i>.
 	 * @return the opposite vector.
 	 */
+	@API
 	public Vec4i negate() {
 		return new Vec4i(-this.x, -this.y, -this.z, -this.w);
 	}

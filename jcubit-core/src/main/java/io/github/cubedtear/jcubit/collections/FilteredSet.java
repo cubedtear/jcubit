@@ -2,6 +2,7 @@ package io.github.cubedtear.jcubit.collections;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Sets;
+import io.github.cubedtear.jcubit.util.API;
 import io.github.cubedtear.jcubit.util.NotNull;
 
 import java.util.Collection;
@@ -9,10 +10,11 @@ import java.util.Iterator;
 import java.util.Set;
 
 /**
- * {@link Set Set&lt;E&gt;} whrapper that only adds the elements if the predicate is true for that element.
+ * {@link Set Set&lt;E&gt;} wrapper that only adds the elements if the predicate is true for that element.
  * In addition, if the given set is not empty, all elements that do not meet the predicate are removed.
  * @author Aritz Lopez
  */
+@API
 public class FilteredSet<E> implements Set<E> {
 
 	@NotNull
@@ -38,6 +40,7 @@ public class FilteredSet<E> implements Set<E> {
 	 * @param <T> The type of the elements of the set, and the type accepted by the filter.
      * @return A filtered set wrapped around the given set, and filtered by the given predicate.
      */
+	@API
 	public static <T> FilteredSet<T> newFilteredSetOf(Set<T> other, Predicate<T> filter) {
 		return new FilteredSet<>(other, filter);
 	}
@@ -49,6 +52,7 @@ public class FilteredSet<E> implements Set<E> {
 	 * @param <T> The type of the contents of the set, and the type accepted by the filter.
      * @return A new filtered set wrapped around an empty hash set, filtered by the given predicate.
      */
+	@API
 	public static <T> FilteredSet<T> newFilteredHashSet(Predicate<T> filter) {
 		return new FilteredSet<>(Sets.<T>newHashSet(), filter);
 	}

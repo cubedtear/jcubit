@@ -4,6 +4,7 @@ import com.google.common.collect.Sets;
 import io.github.cubedtear.jcubit.logging.core.ALogger;
 import io.github.cubedtear.jcubit.logging.core.ILogger;
 import io.github.cubedtear.jcubit.logging.core.LogLevel;
+import io.github.cubedtear.jcubit.util.API;
 import io.github.cubedtear.jcubit.util.Nullable;
 
 import java.io.*;
@@ -96,6 +97,7 @@ public class OSLogger extends ALogger {
      * standard output, and messages with level above {@link LogLevel#INFO INFO} to standard error.
      * @return A logger that prints to the standard channels.
      */
+    @API
     public static ILogger getStdLogger() {
         if (STD_LOGGER == null) STD_LOGGER = new OSLogger(System.out, System.err, "");
         return STD_LOGGER;
@@ -108,6 +110,7 @@ public class OSLogger extends ALogger {
      * @param name The name of the logger.
      * @return A logger that prints to the standard channels.
      */
+    @API
     public static ILogger getStdLogger(String name) {
         return new OSLogger(System.out, System.err, name);
     }
@@ -116,6 +119,7 @@ public class OSLogger extends ALogger {
      * Returns a cached logger that prints all the messages to standard output.
      * @return a logger that prints to standard output.
      */
+    @API
     public static ILogger getSysoutLogger() {
         if (OUT_LOGGER == null) OUT_LOGGER = new OSLogger(System.out, "");
         return OUT_LOGGER;
@@ -127,6 +131,7 @@ public class OSLogger extends ALogger {
      * @param name The name of the logger.
      * @return a logger that prints to standard output.
      */
+    @API
     public static ILogger getSysoutLogger(String name) {
         return new OSLogger(System.out, name);
     }
@@ -135,6 +140,7 @@ public class OSLogger extends ALogger {
      * Returns a cached logger that prints all the messages to standard error.
      * @return a logger that prints to standard error.
      */
+    @API
     public static ILogger getSyserrLogger() {
         if (ERR_LOGGER == null) ERR_LOGGER = new OSLogger(System.err, "");
         return ERR_LOGGER;
@@ -146,6 +152,7 @@ public class OSLogger extends ALogger {
      * @param name The name of the logger.
      * @return a logger that prints to standard error.
      */
+    @API
     public static ILogger getSyserrLogger(String name) {
         return new OSLogger(System.err, name);
     }
@@ -155,6 +162,7 @@ public class OSLogger extends ALogger {
      * @param level The level.
      * @return {@code this}, for using the builder pattern.
      */
+    @API
     public OSLogger setLevel(LogLevel level) {
         this.level = level;
         return this;
@@ -231,6 +239,7 @@ public class OSLogger extends ALogger {
     /**
      * Closes the underlying output stream.
      */
+    @API
     public void close() {
         this.close(true);
     }
@@ -257,6 +266,7 @@ public class OSLogger extends ALogger {
          * @param loggerName The name of the logger.
          * @throws FileNotFoundException If the file could not be found.
          */
+        @API
         public Builder(String path, String loggerName) throws FileNotFoundException {
             this(new File(path), loggerName);
         }
@@ -270,6 +280,7 @@ public class OSLogger extends ALogger {
          * @param loggerName The name of the logger
          * @throws FileNotFoundException If any file could not be found.
          */
+        @API
         public Builder(String outputFilePath, String errorFilePath, String loggerName) throws FileNotFoundException {
             this(new File(outputFilePath), new File(errorFilePath), loggerName);
         }

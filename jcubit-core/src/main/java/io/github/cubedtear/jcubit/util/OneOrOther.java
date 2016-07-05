@@ -65,6 +65,7 @@ public class OneOrOther<T, U> {
 	/**
 	 * @return The one that is not null
 	 */
+	@API
 	public Object getNonNull() {
 		return this.isOne() ? one : other;
 	}
@@ -79,6 +80,7 @@ public class OneOrOther<T, U> {
 	/**
 	 * @return whether the object hold is of the second type.
 	 */
+	@API
 	public boolean isOther() {
 		return this.other != null;
 	}
@@ -100,6 +102,7 @@ public class OneOrOther<T, U> {
 	/**
 	 * @return Swaps the first and second types.
      */
+	@API
 	public OneOrOther<U, T> flip() {
 		return new OneOrOther<>(other, one);
 	}

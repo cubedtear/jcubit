@@ -19,13 +19,16 @@ package io.github.cubedtear.jcubit.extensions.events;
 import io.github.cubedtear.jcubit.eventBus.EventBus;
 import io.github.cubedtear.jcubit.extensions.ExtensibleApp;
 import io.github.cubedtear.jcubit.extensions.Extension;
+import io.github.cubedtear.jcubit.util.API;
 
 /**
  * Root for all {@link EventBus} events related to extensions
  *
  * @author Aritz Lopez
  * @see EventBus
+ * @deprecated Use {@link io.github.cubedtear.jcubit.extensions.ExtensionEvent} instead.
  */
+@Deprecated
 public abstract class ExtensionEvent {
 
 	protected final ExtensibleApp app;
@@ -44,6 +47,7 @@ public abstract class ExtensionEvent {
 	/**
 	 * @return The app.
 	 */
+	@API
 	public ExtensibleApp getApp() {
 		return app;
 	}
@@ -51,6 +55,7 @@ public abstract class ExtensionEvent {
 	/**
 	 * @return The extension.
      */
+	@API
 	public Extension getExtension() {
 		return e;
 	}
@@ -72,6 +77,7 @@ public abstract class ExtensionEvent {
 	/**
 	 * Event posted when an extension is getting unloaded.
 	 */
+	@API
 	public static class ExtensionUnloadEvent extends ExtensionEvent {
 
 		/**

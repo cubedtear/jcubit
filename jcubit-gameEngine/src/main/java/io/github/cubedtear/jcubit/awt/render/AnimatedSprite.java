@@ -41,7 +41,7 @@ public class AnimatedSprite {
 	 * NUMBER is a number from 0 to {@code frameCount - 1}.
 	 * @param sprites The spritesheet from which the animation's frames will be taken.
 	 * @param name The base name of the animation. To get each frame an index will be appended to this base name.
-	 * @param frameCount The total number of frames the animation cosnsists of.
+	 * @param frameCount The total number of frames the animation consists of.
 	 * @param delayInMillis The delay between two consecutive frames. In other words, the number of milliseconds each
 	 *                      frame will stay.
      */

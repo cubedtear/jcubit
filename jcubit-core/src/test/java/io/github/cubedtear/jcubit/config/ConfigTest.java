@@ -16,6 +16,7 @@
 
 package io.github.cubedtear.jcubit.config;
 
+import com.google.common.base.Function;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Test;
@@ -77,8 +78,15 @@ public class ConfigTest {
 
 	@Test
 	public void fileReadWriteTest() throws IOException {
-		Configuration c = Configuration.newConfig(configFile);
+		readWriteTest(Configuration.newConfig(configFile), new Function<Void, Configuration>() {
+			@Override
+			public Configuration apply(Void input) {
+				return Configuration.loadConfig(configFile);
+			}
+		});
+	}
 
+	private void readWriteTest(Configuration config, Function<Void, Configuration> configLoader) throws IOException {
 		String cat1 = "Category1";
 
 		String key11 = "Key11", value11 = "Val11",
@@ -91,24 +99,25 @@ public class ConfigTest {
 				key22 = "Key 22", value22 = "Val 22",
 				key23 = "   Key23   ", value23 = "  Val23  ";
 
-		c.setProperty(cat1, key11, value11);
-		c.setProperty(cat1, key12, value12);
-		c.setProperty(cat1, key13, value13);
+		config.setProperty(cat1, key11, value11);
+		config.setProperty(cat1, key12, value12);
+		config.setProperty(cat1, key13, value13);
 
-		c.setProperty(cat2, key21, value21);
-		c.setProperty(cat2, key22, value22);
-		c.setProperty(cat2, key23, value23);
+		config.setProperty(cat2, key21, value21);
+		config.setProperty(cat2, key22, value22);
+		config.setProperty(cat2, key23, value23);
 
-		c.save();
+		config.save();
 
-		c = Configuration.loadConfig(configFile);
+		config = configLoader.apply(null);
+		if (config == null) throw new AssertionError("");
 
-		String afterValue11 = c.getProperty(cat1, key11),
-				afterValue12 = c.getProperty(cat1, key12),
-				afterValue13 = c.getProperty(cat1, key13),
-				afterValue21 = c.getProperty(cat2, key21),
-				afterValue22 = c.getProperty(cat2, key22),
-				afterValue23 = c.getProperty(cat2, key23);
+		String afterValue11 = config.getProperty(cat1, key11),
+				afterValue12 = config.getProperty(cat1, key12),
+				afterValue13 = config.getProperty(cat1, key13),
+				afterValue21 = config.getProperty(cat2, key21),
+				afterValue22 = config.getProperty(cat2, key22),
+				afterValue23 = config.getProperty(cat2, key23);
 
 
 		Assert.assertEquals(value11, afterValue11);
@@ -121,45 +130,11 @@ public class ConfigTest {
 
 	@Test
 	public void pathReadWriteTest() throws IOException {
-		Configuration c = Configuration.newConfig(configPath);
-
-		String cat1 = "Category1";
-
-		String key11 = "Key11", value11 = "Val11",
-				key12 = "Key 12", value12 = "Val 12",
-				key13 = "   Key13   ", value13 = "  Val13  ";
-
-		String cat2 = "Category 2";
-
-		String key21 = "Key21", value21 = "Val21",
-				key22 = "Key 22", value22 = "Val 22",
-				key23 = "   Key23   ", value23 = "  Val23  ";
-
-		c.setProperty(cat1, key11, value11);
-		c.setProperty(cat1, key12, value12);
-		c.setProperty(cat1, key13, value13);
-
-		c.setProperty(cat2, key21, value21);
-		c.setProperty(cat2, key22, value22);
-		c.setProperty(cat2, key23, value23);
-
-		c.save();
-
-		c = Configuration.loadConfig(configPath);
-
-		String afterValue11 = c.getProperty(cat1, key11),
-				afterValue12 = c.getProperty(cat1, key12),
-				afterValue13 = c.getProperty(cat1, key13),
-				afterValue21 = c.getProperty(cat2, key21),
-				afterValue22 = c.getProperty(cat2, key22),
-				afterValue23 = c.getProperty(cat2, key23);
-
-
-		Assert.assertEquals(value11, afterValue11);
-		Assert.assertEquals(value12, afterValue12);
-		Assert.assertEquals(value13.trim(), afterValue13);
-		Assert.assertEquals(value21, afterValue21);
-		Assert.assertEquals(value22, afterValue22);
-		Assert.assertEquals(value23.trim(), afterValue23);
+		readWriteTest(Configuration.newConfig(configPath), new Function<Void, Configuration>() {
+			@Override
+			public Configuration apply(Void input) {
+				return Configuration.loadConfig(configPath);
+			}
+		});
 	}
 }

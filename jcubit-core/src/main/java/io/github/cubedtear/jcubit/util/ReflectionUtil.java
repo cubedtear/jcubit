@@ -183,8 +183,8 @@ public class ReflectionUtil extends SecurityManager {
     public static boolean classHasAnnotation(Class clazz, Class<? extends Annotation> annotation) {
         if (clazz == null || annotation == null) return false;
         if (clazz.isArray()) return classHasAnnotation(clazz.getComponentType(), annotation);
-        for (Annotation anno : clazz.getAnnotations()) {
-            if (anno.annotationType().equals(annotation)) return true;
+        for (Annotation a : clazz.getAnnotations()) {
+            if (a.annotationType().equals(annotation)) return true;
         }
         if (classHasAnnotation(clazz.getSuperclass(), annotation)) return true;
         for (Class inter : clazz.getInterfaces()) {

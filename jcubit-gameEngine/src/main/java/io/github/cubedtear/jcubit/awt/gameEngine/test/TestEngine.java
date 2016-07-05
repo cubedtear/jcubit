@@ -7,6 +7,7 @@ import io.github.cubedtear.jcubit.awt.render.Sprite;
 import io.github.cubedtear.jcubit.awt.gameEngine.core.IGame;
 import io.github.cubedtear.jcubit.logging.core.ILogger;
 import io.github.cubedtear.jcubit.logging.core.NullLogger;
+import io.github.cubedtear.jcubit.util.API;
 import io.github.cubedtear.jcubit.util.Nullable;
 
 import java.util.Map;
@@ -18,14 +19,10 @@ import java.util.Map;
  */
 public class TestEngine implements IGame {
 
-	/**
-	 * @deprecated Use an external logger instead.
-	 */
-	@Deprecated
 	protected final ILogger LOGGER;
 	protected final Map<String, Sprite> sprites;
 	private final CanvasEngine engine;
-	private final IRender render;
+	private final BufferedImageRenderer render;
 	private final IGame game;
 	private final int height, width;
 
@@ -36,6 +33,7 @@ public class TestEngine implements IGame {
 	 * @param width  The width of the game.
 	 * @param height The height of the game.
 	 */
+	@API
 	public TestEngine(AbstractGame game, int width, int height) {
 		this(game, width, height, null, null);
 	}
@@ -66,6 +64,7 @@ public class TestEngine implements IGame {
 	/**
 	 * Starts the game.
 	 */
+	@API
 	public void start() {
 		this.engine.start();
 	}
@@ -73,6 +72,7 @@ public class TestEngine implements IGame {
 	/**
 	 * @return The width of the game window.
      */
+	@API
 	public int getWidth() {
 		return width;
 	}
@@ -80,6 +80,7 @@ public class TestEngine implements IGame {
 	/**
 	 * @return The height of the game window.
      */
+	@API
 	public int getHeight() {
 		return height;
 	}
@@ -133,6 +134,7 @@ public class TestEngine implements IGame {
 	/**
 	 * @return The engine used to run the game.
      */
+	@API
 	public CanvasEngine getEngine() {
 		return engine;
 	}

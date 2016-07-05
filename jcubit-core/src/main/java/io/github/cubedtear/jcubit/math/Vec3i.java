@@ -119,7 +119,7 @@ public class Vec3i {
 	/**
 	 * Returns the cross-product of {@code this} and {@code other}.
 	 *
-	 * The cross-product of two vectors is a vector perpedicular to both of them.
+	 * The cross-product of two vectors is a vector perpendicular to both of them.
 	 * Two vectors are linearly independent if and only if the length of their cross-product is {@code zero}.
 	 * @param other The other vector.
 	 * @return the cross-product of {@code this} and {@code other}.

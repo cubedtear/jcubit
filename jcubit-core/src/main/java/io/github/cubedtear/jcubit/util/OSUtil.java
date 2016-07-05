@@ -37,6 +37,9 @@ public class OSUtil {
 								EnumOS.UNKNOWN;
 	}
 
+	/**
+	 * Enum that represent known operating systems.
+	 */
 	public enum EnumOS {
 		WINDOWS, UNIX, MACOS, UNKNOWN
 	}

@@ -16,6 +16,7 @@
 
 package io.github.cubedtear.jcubit.collections;
 
+import io.github.cubedtear.jcubit.util.Nullable;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -49,11 +50,12 @@ public class MatrixTest {
 		Matrix<Integer> mat = MatrixTest.newMultiplicationTable(10, 10);
 
 		mat.runForEach(new ParametrizedFunction<Matrix<Integer>.MatrixElement<Integer>, Object>() {
+			@Nullable
 			@Override
 			public Object apply(Matrix<Integer>.MatrixElement<Integer> element, Object... args) {
 				int x = element.getX();
 				int y = element.getY();
-				Assert.assertEquals("For coords (" + x + ", " + y + ")", x * y, element.getE().intValue());
+				Assert.assertEquals("For coords (" + x + ", " + y + ")", x * y, element.getElement().intValue());
 				return null;
 			}
 		});

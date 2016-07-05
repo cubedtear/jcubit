@@ -79,6 +79,7 @@ public class Extensions {
 	 * classpath.
 	 * @throws IOException If an error occurs when loading the folder into classpath.
      */
+	@API
 	public void loadExtensionsFromFolder(File extensionsFolder) throws ReflectiveOperationException, IOException {
 		try {
 			Preconditions.checkArgument(extensionsFolder.isDirectory(), "Extensions folder must be a directory");
@@ -151,6 +152,7 @@ public class Extensions {
 	/**
 	 * @return the list of the loaded extensions.
      */
+	@API
 	public List<Extension> getExtensions() {
 		return this.extensions;
 	}

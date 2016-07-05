@@ -14,7 +14,7 @@ public class Set2<T, U> {
 	 * @param t The first object.
 	 * @param u The second object.
      */
-	public Set2(@Nullable T t, @Nullable U u) {
+	public Set2(T t, U u) {
 		this.t = t;
 		this.u = u;
 	}
@@ -23,7 +23,7 @@ public class Set2<T, U> {
 	 * Factory method equivalent to the constructor, for better generic inference.
 	 * @param v The first object.
 	 * @param w The second object.
-	 * @param <V> The type of the first objet.
+	 * @param <V> The type of the first object.
 	 * @param <W> The type of the second object.
      * @return a set containing the two given objects.
      */
@@ -34,7 +34,6 @@ public class Set2<T, U> {
 	/**
 	 * @return the first object of the set.
      */
-	@Nullable
 	public T getT() {
 		return t;
 	}
@@ -42,7 +41,6 @@ public class Set2<T, U> {
 	/**
 	 * @return the second object.
 	 */
-	@Nullable
 	public U getU() {
 		return u;
 	}
@@ -50,6 +48,7 @@ public class Set2<T, U> {
 	/**
 	 * @return a set where the first and second objects of this set are reversed.
 	 */
+	@API
 	public Set2<U, T> inverse() {
 		return new Set2<>(u, t);
 	}

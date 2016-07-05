@@ -16,6 +16,8 @@
 
 package io.github.cubedtear.jcubit.awt.render;
 
+import io.github.cubedtear.jcubit.util.API;
+
 import java.awt.image.BufferedImage;
 
 /**
@@ -62,12 +64,14 @@ public interface IRender {
 	 * @param deltaNS The elapsed nanoseconds since the last frame.
      * @param sprite The animates sprite to be drawn.
      */
+	@API
 	void draw(int x, int y, long deltaNS, AnimatedSprite sprite);
 
 	/**
 	 * Sets whether semi-transparent colors should be blended together. My slow the rendering considerably.
 	 * @param blend {@code true} if blending is desired.
      */
+	@API
 	void setBlend(boolean blend);
 
 	/**
