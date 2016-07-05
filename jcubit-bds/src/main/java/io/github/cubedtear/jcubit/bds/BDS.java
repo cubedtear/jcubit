@@ -6,6 +6,7 @@ import com.google.common.collect.Sets;
 import com.google.common.primitives.*;
 import io.github.cubedtear.jcubit.collections.ArrayUtil;
 import io.github.cubedtear.jcubit.util.NotNull;
+import io.github.cubedtear.jcubit.util.Nullable;
 import io.github.cubedtear.jcubit.util.Set2;
 
 import java.io.ByteArrayOutputStream;
@@ -20,7 +21,7 @@ import java.util.Set;
 /**
  * Binary Data Storage
  * Used to store different data types in byte arrays,
- * write them to a file, and then read them back.
+ * write them somewhere (file, DB, network, etc.), and then read them back.
  *
  * @author Aritz Lopez
  */
@@ -51,22 +52,52 @@ public class BDS {
     private Map<String, BDS> bdss = Maps.newHashMap();
     private Map<String, BDS[]> bdsArrays = Maps.newHashMap();
 
-    private BDS(String name) {
+    /**
+     * Creates an empty BDS with the specified name.
+     * @param name The name of the BDS to create.
+     */
+    public BDS(String name) {
         this.name = name;
     }
 
+    /**
+     * Creates an empty BDS with the specified name.
+     * @param name The name of the BDS to create.
+     * @return A new empty BDS with the given name.
+     * @deprecated Use constructor {@link BDS#BDS(String)} instead.
+     */
+    @Deprecated
     public static BDS createEmpty(String name) {
         return new BDS(name);
     }
 
+    /**
+     * Reads a BDS from the specified file.
+     * @param f The file from which the BDS will be read.
+     * @return The BDS read from the file.
+     * @throws IOException if an I/O error occurs. See {@link com.google.common.io.Files#toByteArray(File)}
+     * @see BDS#load(byte[])
+     */
     public static BDS loadFromFile(File f) throws IOException {
         return BDS.load(com.google.common.io.Files.toByteArray(f));
     }
 
+    /**
+     * Reads a BDS from the specified Path
+     * @param p The path from which the BDS will be read.
+     * @return The BDS read from the Path.
+     * @throws IOException if an I/O error occurs. See {@link java.nio.file.Files#readAllBytes(Path)}
+     * @see BDS#load(byte[])
+     */
     public static BDS loadFromFile(Path p) throws IOException {
         return BDS.load(java.nio.file.Files.readAllBytes(p));
     }
 
+    /**
+     * Reads a BDS from the given binary data.
+     * @param data The data from which the BDS should be parsed.
+     * @return The BDS read from the given data.
+     */
     public static BDS load(byte[] data) {
         if (data.length < SIGNATURE.length + 2)
             throw new IllegalArgumentException("Data is too short, it is not in the correct format!");
@@ -82,7 +113,7 @@ public class BDS {
         if (data[offset] != BDSType.BDS.signature)
             throw new IllegalArgumentException("Given data is not in the appropriate format!");
 
-        BDS bds = BDS.createEmpty("");
+        BDS bds = new BDS("");
 
         Set2<String, Integer> name = parseString(data, offset + 1);
         bds.setName(name.getT());
@@ -637,22 +668,27 @@ public class BDS {
         return newData;
     }
 
+    private boolean isTaken(String name) {
+        return takenNames.contains(name);
+    }
+
+    private <T> boolean addElement(String name, @Nullable T value, Map<String, T> map) {
+        if (value == null) throw new IllegalArgumentException("Cannot add null value");
+        if (isTaken(name)) return false;
+        takenNames.add(name);
+        map.put(name, value);
+        return true;
+    }
+
     /**
      * Adds a string with the given name and value to this BDS.
      *
      * @param name  The name of the string.
-     * @param value The value of the string
+     * @param value The value of the string. Must not be null.
      * @return whether the string was added or not. In case it is false, it will be because the name has already been taken for this BDS.
      */
-    public boolean addString(String name, String value) {
-        if (isTaken(name)) return false;
-        takenNames.add(name);
-        strings.put(name, value);
-        return true;
-    }
-
-    private boolean isTaken(String name) {
-        return takenNames.contains(name);
+    public boolean addString(String name, @NotNull String value) {
+        return addElement(name, value, strings);
     }
 
     /**
@@ -663,10 +699,7 @@ public class BDS {
      * @return whether the byte was added or not. In case it is false, it will be because the name has already been taken for this BDS.
      */
     public boolean addByte(String name, byte value) {
-        if (isTaken(name)) return false;
-        takenNames.add(name);
-        bytes.put(name, value);
-        return true;
+        return addElement(name, value, bytes);
     }
 
     /**
@@ -677,10 +710,7 @@ public class BDS {
      * @return whether the char was added or not. In case it is false, it will be because the name has already been taken for this BDS.
      */
     public boolean addChar(String name, char value) {
-        if (isTaken(name)) return false;
-        takenNames.add(name);
-        chars.put(name, value);
-        return true;
+        return addElement(name, value, chars);
     }
 
     /**
@@ -691,10 +721,7 @@ public class BDS {
      * @return whether the int was added or not. In case it is false, it will be because the name has already been taken for this BDS.
      */
     public boolean addInt(String name, int value) {
-        if (isTaken(name)) return false;
-        takenNames.add(name);
-        ints.put(name, value);
-        return true;
+        return addElement(name, value, ints);
     }
 
     /**
@@ -705,10 +732,7 @@ public class BDS {
      * @return whether the short was added or not. In case it is false, it will be because the name has already been taken for this BDS.
      */
     public boolean addShort(String name, short value) {
-        if (isTaken(name)) return false;
-        takenNames.add(name);
-        shorts.put(name, value);
-        return true;
+        return addElement(name, value, shorts);
     }
 
     /**
@@ -719,10 +743,7 @@ public class BDS {
      * @return whether the long was added or not. In case it is false, it will be because the name has already been taken for this BDS.
      */
     public boolean addLong(String name, long value) {
-        if (isTaken(name)) return false;
-        takenNames.add(name);
-        longs.put(name, value);
-        return true;
+        return addElement(name, value, longs);
     }
 
     /**
@@ -733,10 +754,7 @@ public class BDS {
      * @return whether the float was added or not. In case it is false, it will be because the name has already been taken for this BDS.
      */
     public boolean addFloat(String name, float value) {
-        if (isTaken(name)) return false;
-        takenNames.add(name);
-        floats.put(name, value);
-        return true;
+        return addElement(name, value, floats);
     }
 
     /**
@@ -747,157 +765,125 @@ public class BDS {
      * @return whether the double was added or not. In case it is false, it will be because the name has already been taken for this BDS.
      */
     public boolean addDouble(String name, double value) {
-        if (isTaken(name)) return false;
-        takenNames.add(name);
-        doubles.put(name, value);
-        return true;
+        return addElement(name, value, doubles);
     }
 
     /**
      * Adds a nested BDS to this BDS. The name will be taken from the {@code value} parameter.
      *
-     * @param value The BDS to add.
+     * @param value The BDS to add. Must not be null.
      * @return whether the BDS was added or not. In case it is false, it will be because the name has already been taken for this BDS.
      */
-    public boolean addBDS(BDS value) {
-        if (isTaken(value.name)) return false;
-        takenNames.add(value.name);
-        bdss.put(value.name, value);
-        return true;
+    public boolean addBDS(@NotNull BDS value) {
+        return addElement(name, value, bdss);
     }
 
     /**
      * Adds a string array with the given name to this BDS.
      *
      * @param name   The name of the array.
-     * @param values The array.
+     * @param values The array. Must not be null.
      * @return whether the array was added or not. In case it is false, it will be because the name has already been taken for this BDS.
      */
-    public boolean addStrings(String name, String[] values) {
-        if (isTaken(name)) return false;
-        takenNames.add(name);
-        stringArrays.put(name, values);
-        return true;
+    public boolean addStrings(String name, @NotNull String[] values) {
+        return addElement(name, values, stringArrays);
     }
 
     /**
      * Adds a byte array with the given name to this BDS.
      *
      * @param name   The name of the array.
-     * @param values The array.
+     * @param values The array. Must not be null.
      * @return whether the array was added or not. In case it is false, it will be because the name has already been taken for this BDS.
      */
-    public boolean addBytes(String name, byte[] values) {
-        if (isTaken(name)) return false;
-        takenNames.add(name);
-        byteArrays.put(name, ArrayUtil.box(values));
-        return true;
+    public boolean addBytes(String name, @NotNull byte[] values) {
+        return addElement(name, ArrayUtil.box(values), byteArrays);
     }
 
     /**
      * Adds an int array with the given name to this BDS.
      *
      * @param name   The name of the array.
-     * @param values The array.
+     * @param values The array. Must not be null.
      * @return whether the array was added or not. In case it is false, it will be because the name has already been taken for this BDS.
      */
-    public boolean addInts(String name, int[] values) {
-        if (isTaken(name)) return false;
-        takenNames.add(name);
-        intArrays.put(name, ArrayUtil.box(values));
-        return true;
+    public boolean addInts(String name, @NotNull int[] values) {
+        return addElement(name, ArrayUtil.box(values), intArrays);
     }
 
     /**
      * Adds a char array with the given name to this BDS.
      *
      * @param name   The name of the array.
-     * @param values The array.
+     * @param values The array. Must not be null.
      * @return whether the array was added or not. In case it is false, it will be because the name has already been taken for this BDS.
      */
-    public boolean addChars(String name, char[] values) {
-        if (isTaken(name)) return false;
-        takenNames.add(name);
-        charArrays.put(name, ArrayUtil.box(values));
-        return true;
+    public boolean addChars(String name, @NotNull char[] values) {
+        return addElement(name, ArrayUtil.box(values), charArrays);
     }
 
     /**
      * Adds a short array with the given name to this BDS.
      *
      * @param name   The name of the array.
-     * @param values The array.
+     * @param values The array. Must not be null.
      * @return whether the array was added or not. In case it is false, it will be because the name has already been taken for this BDS.
      */
-    public boolean addShorts(String name, short[] values) {
-        if (isTaken(name)) return false;
-        takenNames.add(name);
-        shortArrays.put(name, ArrayUtil.box(values));
-        return true;
+    public boolean addShorts(String name, @NotNull short[] values) {
+        return addElement(name, ArrayUtil.box(values), shortArrays);
     }
 
     /**
      * Adds a long array with the given name to this BDS.
      *
      * @param name   The name of the array.
-     * @param values The array.
+     * @param values The array. Must not be null.
      * @return whether the array was added or not. In case it is false, it will be because the name has already been taken for this BDS.
      */
-    public boolean addLongs(String name, long[] values) {
-        if (isTaken(name)) return false;
-        takenNames.add(name);
-        longArrays.put(name, ArrayUtil.box(values));
-        return true;
+    public boolean addLongs(String name, @NotNull long[] values) {
+        return addElement(name, ArrayUtil.box(values), longArrays);
     }
 
     /**
      * Adds a float array with the given name to this BDS.
      *
      * @param name   The name of the array.
-     * @param values The array.
+     * @param values The array. Must not be null.
      * @return whether the array was added or not. In case it is false, it will be because the name has already been taken for this BDS.
      */
-    public boolean addFloats(String name, float[] values) {
-        if (isTaken(name)) return false;
-        takenNames.add(name);
-        floatArrays.put(name, ArrayUtil.box(values));
-        return true;
+    public boolean addFloats(String name, @NotNull float[] values) {
+        return addElement(name, ArrayUtil.box(values), floatArrays);
     }
 
     /**
      * Adds a double array with the given name to this BDS.
      *
      * @param name   The name of the array.
-     * @param values The array.
+     * @param values The array. Must not be null.
      * @return whether the array was added or not. In case it is false, it will be because the name has already been taken for this BDS.
      */
-    public boolean addDoubles(String name, double[] values) {
-        if (isTaken(name)) return false;
-        takenNames.add(name);
-        doubleArrays.put(name, ArrayUtil.box(values));
-        return true;
+    public boolean addDoubles(String name, @NotNull double[] values) {
+        return addElement(name, ArrayUtil.box(values), doubleArrays);
     }
 
     /**
      * Adds a nested BDS array with the given name to this BDS.
      *
      * @param name   The name of the array.
-     * @param values The array.
+     * @param values The array. Must not be null.
      * @return whether the array was added or not. In case it is false, it will be because the name has already been taken for this BDS.
      */
-    public boolean addBDSs(String name, BDS[] values) {
-        if (isTaken(name)) return false;
-        takenNames.add(name);
-        bdsArrays.put(name, values);
-        return true;
+    public boolean addBDSs(String name, @NotNull BDS[] values) {
+        return addElement(name, values, bdsArrays);
     }
 
     /**
      * Returns the byte with the given name.
      *
      * @param name The name of the byte.
-     * @return the byte with the given name.
+     * @return the byte with the given name. {@code null} means there is no byte with the given name.
      */
+    @Nullable
     public Byte getByte(String name) {
         return this.bytes.get(name);
     }
@@ -906,8 +892,9 @@ public class BDS {
      * Returns the char with the given name.
      *
      * @param name The name of the char.
-     * @return the char with the given name.
+     * @return the char with the given name. {@code null} means there is no char with the given name.
      */
+    @Nullable
     public Character getChar(String name) {
         return this.chars.get(name);
     }
@@ -916,8 +903,9 @@ public class BDS {
      * Returns the short with the given name.
      *
      * @param name The name of the short.
-     * @return the short with the given name.
+     * @return the short with the given name. {@code null} means there is no short with the given name.
      */
+    @Nullable
     public Short getShort(String name) {
         return this.shorts.get(name);
     }
@@ -926,8 +914,9 @@ public class BDS {
      * Returns the int with the given name.
      *
      * @param name The name of the int.
-     * @return the int with the given name.
+     * @return the int with the given name. {@code null} means there is no int with the given name.
      */
+    @Nullable
     public Integer getInt(String name) {
         return this.ints.get(name);
     }
@@ -936,8 +925,9 @@ public class BDS {
      * Returns the long with the given name.
      *
      * @param name The name of the long.
-     * @return the long with the given name.
+     * @return the long with the given name. {@code null} means there is no long with the given name.
      */
+    @Nullable
     public Long getLong(String name) {
         return this.longs.get(name);
     }
@@ -946,8 +936,9 @@ public class BDS {
      * Returns the float with the given name.
      *
      * @param name The name of the float.
-     * @return the float with the given name.
+     * @return the float with the given name. {@code null} means there is no float with the given name.
      */
+    @Nullable
     public Float getFloat(String name) {
         return this.floats.get(name);
     }
@@ -956,18 +947,20 @@ public class BDS {
      * Returns the double with the given name.
      *
      * @param name The name of the double.
-     * @return the double with the given name.
+     * @return the double with the given name. {@code null} means there is no double with the given name.
      */
+    @Nullable
     public Double getDouble(String name) {
         return this.doubles.get(name);
     }
 
     /**
-     * Returns the string with the given name.
+     * Returns the String with the given name.
      *
      * @param name The name of the string.
-     * @return the string with the given name.
+     * @return the string with the given name. {@code null} means there is no String with the given name.
      */
+    @Nullable
     public String getString(String name) {
         return this.strings.get(name);
     }
@@ -976,8 +969,9 @@ public class BDS {
      * Returns the nested BDS with the given name.
      *
      * @param name The name of the nested BDS.
-     * @return the nested BDS with the given name.
+     * @return the nested BDS with the given name. {@code null} means there is no BDS with the given name.
      */
+    @Nullable
     public BDS getBDS(String name) {
         return this.bdss.get(name);
     }
@@ -986,8 +980,9 @@ public class BDS {
      * Returns the byte array with the given name.
      *
      * @param name The name of the array.
-     * @return the array with the given name.
+     * @return the array with the given name. {@code null} means there is no byte array with the given name.
      */
+    @Nullable
     public byte[] getByteArray(String name) {
         return ArrayUtil.unbox(this.byteArrays.get(name));
     }
@@ -996,8 +991,9 @@ public class BDS {
      * Returns the char array with the given name.
      *
      * @param name The name of the array.
-     * @return the array with the given name.
+     * @return the array with the given name. {@code null} means there is no char array with the given name.
      */
+    @Nullable
     public char[] getCharArray(String name) {
         return ArrayUtil.unbox(this.charArrays.get(name));
     }
@@ -1006,8 +1002,9 @@ public class BDS {
      * Returns the short array with the given name.
      *
      * @param name The name of the array.
-     * @return the array with the given name.
+     * @return the array with the given name. {@code null} means there is no short array with the given name.
      */
+    @Nullable
     public short[] getShortArray(String name) {
         return ArrayUtil.unbox(this.shortArrays.get(name));
     }
@@ -1016,8 +1013,9 @@ public class BDS {
      * Returns the int array with the given name.
      *
      * @param name The name of the array.
-     * @return the array with the given name.
+     * @return the array with the given name. {@code null} means there is no int array with the given name.
      */
+    @Nullable
     public int[] getIntArray(String name) {
         return ArrayUtil.unbox(this.intArrays.get(name));
     }
@@ -1026,8 +1024,9 @@ public class BDS {
      * Returns the long array with the given name.
      *
      * @param name The name of the array.
-     * @return the array with the given name.
+     * @return the array with the given name. {@code null} means there is no long array with the given name.
      */
+    @Nullable
     public long[] getLongArray(String name) {
         return ArrayUtil.unbox(this.longArrays.get(name));
     }
@@ -1036,8 +1035,9 @@ public class BDS {
      * Returns the float array with the given name.
      *
      * @param name The name of the array.
-     * @return the array with the given name.
+     * @return the array with the given name. {@code null} means there is no float array with the given name.
      */
+    @Nullable
     public float[] getFloatArray(String name) {
         return ArrayUtil.unbox(this.floatArrays.get(name));
     }
@@ -1046,18 +1046,20 @@ public class BDS {
      * Returns the double array with the given name.
      *
      * @param name The name of the array.
-     * @return the array with the given name.
+     * @return the array with the given name. {@code null} means there is no double array with the given name.
      */
+    @Nullable
     public double[] getDoubleArray(String name) {
         return ArrayUtil.unbox(this.doubleArrays.get(name));
     }
 
     /**
-     * Returns the string array with the given name.
+     * Returns the String array with the given name.
      *
      * @param name The name of the array.
-     * @return the array with the given name.
+     * @return the array with the given name. {@code null} means there is no String array with the given name.
      */
+    @Nullable
     public String[] getStringArray(String name) {
         return this.stringArrays.get(name);
     }
@@ -1066,80 +1068,171 @@ public class BDS {
      * Returns the nested BDS array with the given name.
      *
      * @param name The name of the array.
-     * @return the array with the given name.
+     * @return the array with the given name. {@code null} means there is no BDS Array with the given name.
      */
+    @Nullable
     public BDS[] getBDSArray(String name) {
         return this.bdsArrays.get(name);
     }
 
+    /**
+     * Returns the set of names of all the longs. That is, for all String {@code e} returned,
+     * {@link BDS#getLong(String) this.getLong(e)} is guaranteed to not return null.
+     * @return the set of names of all the longs.
+     */
     public Set<String> getAllLongs() {
         return longs.keySet();
     }
 
+    /**
+     * Returns the set of names of all the longs. That is, for all String e returned,
+     * {@link BDS#getBDSArray(String)} this.getBDSArray(e)} is guaranteed to not return null.
+     * @return the set of names of all the longs.
+     */
     public Set<String> getAllBDSArrays() {
         return bdsArrays.keySet();
     }
 
+    /**
+     * Returns the set of names of all the nested BDSs. That is, for all String e returned,
+     * {@link BDS#getBDS(String)} this.getBDS(e)} is guaranteed to not return null.
+     * @return the set of names of all the nested BDSs.
+     */
     public Set<String> getAllBDSs() {
         return bdss.keySet();
     }
 
+    /**
+     * Returns the set of names of all the byte arrays. That is, for all String e returned,
+     * {@link BDS#getByteArray(String) this.getByteArray(e)} is guaranteed to not return null.
+     * @return the set of names of all the byte arrays.
+     */
     public Set<String> getAllByteArrays() {
         return byteArrays.keySet();
     }
 
+    /**
+     * Returns the set of names of all the bytes. That is, for all String e returned,
+     * {@link BDS#getByte(String) this.getByte(e)} is guaranteed to not return null.
+     * @return the set of names of all the bytes.
+     */
     public Set<String> getAllBytes() {
         return bytes.keySet();
     }
 
+    /**
+     * Returns the set of names of all the char arrays. That is, for all String e returned,
+     * {@link BDS#getCharArray(String) this.getCharArray(e)} is guaranteed to not return null.
+     * @return the set of names of all the char arrays.
+     */
     public Set<String> getAllCharArrays() {
         return charArrays.keySet();
     }
 
+    /**
+     * Returns the set of names of all the chars. That is, for all String e returned,
+     * {@link BDS#getChar(String) this.getChar(e)} is guaranteed to not return null.
+     * @return the set of names of all the chars.
+     */
     public Set<String> getAllChars() {
         return chars.keySet();
     }
 
+    /**
+     * Returns the set of names of all the longs. That is, for all String e returned,
+     * {@link BDS#getDoubleArray(String)} this.getDoubleArray(e)} is guaranteed to not return null.
+     * @return the set of names of all the longs.
+     */
     public Set<String> getAllDoubleArrays() {
         return doubleArrays.keySet();
     }
 
+    /**
+     * Returns the set of names of all the doubles. That is, for all String e returned,
+     * {@link BDS#getDouble(String) this.getDouble(e)} is guaranteed to not return null.
+     * @return the set of names of all the doubles.
+     */
     public Set<String> getAllDoubles() {
         return doubles.keySet();
     }
 
+    /**
+     * Returns the set of names of all the float arrays. That is, for all String e returned,
+     * {@link BDS#getFloatArray(String) this.getFloatArray(e)} is guaranteed to not return null.
+     * @return the set of names of all the float arrays.
+     */
     public Set<String> getAllFloatArrays() {
         return floatArrays.keySet();
     }
 
+    /**
+     * Returns the set of names of all the floats. That is, for all String e returned,
+     * {@link BDS#getFloat(String) this.getFloat(e)} is guaranteed to not return null.
+     * @return the set of names of all the floats.
+     */
     public Set<String> getAllFloats() {
         return floats.keySet();
     }
 
+    /**
+     * Returns the set of names of all the int arrays. That is, for all String e returned,
+     * {@link BDS#getIntArray(String) this.getIntArray(e)} is guaranteed to not return null.
+     * @return the set of names of all the int arrays.
+     */
     public Set<String> getAllIntArrays() {
         return intArrays.keySet();
     }
 
+    /**
+     * Returns the set of names of all the ints. That is, for all String e returned,
+     * {@link BDS#getInt(String) this.getInt(e)} is guaranteed to not return null.
+     * @return the set of names of all the ints.
+     */
     public Set<String> getAllInts() {
         return ints.keySet();
     }
 
+    /**
+     * Returns the set of names of all the long arrays. That is, for all String e returned,
+     * {@link BDS#getLongArray(String) this.getLongArray(e)} is guaranteed to not return null.
+     * @return the set of names of all the long arrays.
+     */
     public Set<String> getAllLongArrays() {
         return longArrays.keySet();
     }
 
+    /**
+     * Returns the set of names of all the short arrays. That is, for all String e returned,
+     * {@link BDS#getShortArray(String) this.getString(e)} is guaranteed to not return null.
+     * @return the set of names of all the short arrays.
+     */
     public Set<String> getAllShortArrays() {
         return shortArrays.keySet();
     }
 
+    /**
+     * Returns the set of names of all the shorts. That is, for all String e returned,
+     * {@link BDS#getShort(String) this.getShort(e)} is guaranteed to not return null.
+     * @return the set of names of all the shorts.
+     */
     public Set<String> getAllShorts() {
         return shorts.keySet();
     }
 
+    /**
+     * Returns the set of names of all the string arrays. That is, for all String e returned,
+     * {@link BDS#getStringArray(String) this.getStringArray(e)} is guaranteed to not return null.
+     * @return the set of names of all the string arrays.
+     */
     public Set<String> getAllStringArrays() {
         return stringArrays.keySet();
     }
 
+    /**
+     * Returns the set of names of all the strings. That is, for all String e returned,
+     * {@link BDS#getString(String) this.getString(e)} is guaranteed to not return null.
+     * @return the set of names of all the strings.
+     */
     public Set<String> getAllStrings() {
         return strings.keySet();
     }

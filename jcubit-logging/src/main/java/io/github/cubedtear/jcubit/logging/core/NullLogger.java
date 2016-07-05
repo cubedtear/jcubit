@@ -20,6 +20,7 @@ import io.github.cubedtear.jcubit.util.NotNull;
 import io.github.cubedtear.jcubit.util.Nullable;
 
 /**
+ * Logger that does nothing. Useful when nothing wants to be logged.
  * @author Aritz Lopez
  */
 public class NullLogger extends ALogger {

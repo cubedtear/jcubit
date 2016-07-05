@@ -17,28 +17,39 @@
 package io.github.cubedtear.jcubit.awt.render;
 
 /**
+ * Utility class to draw backgrounds that move to the left at a constant speed.
  * @author Aritz Lopez
  */
 public class Background {
 
 	protected final Sprite sprite;
 	protected final boolean alignToBottom;
-	protected final int speed;
+	protected final int period;
 	protected int xPos = 0;
 	protected long delta = 0;
 
+	/**
+	 * Creates a background that will be aligned as said, and will move at the given speed. The speed is in
+	 * pixels per second.
+	 * @param sprite The sprite of the background.
+	 * @param alignToBottom Whether the background should be aligned to the bottom ({@code true}) or the top {@code false} of the screen.
+	 * @param speed The pixels the background should be moved, per second.
+     */
 	public Background(Sprite sprite, boolean alignToBottom, int speed) {
 		this.sprite = sprite;
 		this.alignToBottom = alignToBottom;
-		this.speed = speed;
+		this.period = 1_000_000_000 / speed;
 	}
 
+	/**
+	 * Draw the background into the given renderer.
+	 * @param render The renderer into which the background should be drawn.
+	 * @param deltaNS The number of nanoseconds elapsed since the last call to this method.
+     */
 	public void render(IRender render, long deltaNS) {
 		final int yPos = alignToBottom ? render.getHeight() - this.sprite.getHeight() : 0;
 
 		delta += deltaNS;
-
-		final int period = 100000000 / speed;
 
 		int xPos = this.xPos;
 
@@ -46,7 +57,6 @@ public class Background {
 			delta -= period;
 			xPos--;
 		}
-
 		this.xPos = xPos;
 
 		render.draw(xPos, yPos, sprite);

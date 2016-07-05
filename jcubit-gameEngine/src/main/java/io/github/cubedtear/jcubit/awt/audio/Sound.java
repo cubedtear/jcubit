@@ -17,6 +17,7 @@
 package io.github.cubedtear.jcubit.awt.audio;
 
 import com.google.common.base.Preconditions;
+import io.github.cubedtear.jcubit.util.API;
 
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
@@ -30,6 +31,7 @@ import java.net.URL;
  *
  * @author Aritz Lopez
  */
+@API
 public class Sound {
 
 	private final Clip clip;
@@ -55,6 +57,7 @@ public class Sound {
 	 *
 	 * @see Sound#keepGoing()
 	 */
+	@API
 	public void play() {
 		this.clip.setMicrosecondPosition(0);
 		this.clip.start();
@@ -65,6 +68,7 @@ public class Sound {
 	 *
 	 * @return true if it is playing.
 	 */
+	@API
 	public boolean isPlaying() {
 		return this.clip.isRunning();
 	}
@@ -74,6 +78,7 @@ public class Sound {
 	 *
 	 * @see Sound#keepGoing()
 	 */
+	@API
 	public void stop() {
 		this.clip.stop();
 	}
@@ -81,6 +86,7 @@ public class Sound {
 	/**
 	 * Plays the sound from where it was stopped, or from the beginning if it was just loaded.
 	 */
+	@API
 	public void keepGoing() {
 		this.clip.start();
 	}

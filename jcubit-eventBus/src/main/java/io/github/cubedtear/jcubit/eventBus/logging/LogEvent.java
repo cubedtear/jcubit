@@ -16,48 +16,83 @@
 
 package io.github.cubedtear.jcubit.eventBus.logging;
 
+import io.github.cubedtear.jcubit.eventBus.EventBus;
+import io.github.cubedtear.jcubit.logging.SF;
 import io.github.cubedtear.jcubit.logging.core.LogLevel;
+import io.github.cubedtear.jcubit.util.API;
 import io.github.cubedtear.jcubit.util.Nullable;
-import io.github.cubedtear.jcubit.logging.StringFormatter;
 
 /**
+ * An event posted when something is logged in an {@link EventLogger}
+ *
  * @author Aritz Lopez
+ * @see EventLogger
+ * @see EventBus
  */
 public class LogEvent {
 
-	private final String message;
-	private final LogLevel level;
-	private final Throwable throwable;
+    private final String message;
+    private final LogLevel level;
+    private final Throwable throwable;
 
-	public LogEvent(LogLevel level, String format, Object... args) {
-		this(level, StringFormatter.format(format, args));
-	}
+    /**
+     * @deprecated Should have been protected.
+     */
+    @Deprecated
+    public LogEvent(LogLevel level, String format, Object... args) {
+        this(level, SF.f(format, args));
+    }
 
-	public LogEvent(LogLevel level, String message) {
-		this(level, message, (Throwable) null);
-	}
+    /**
+     * @deprecated Should have been protected.
+     */
+    @Deprecated
+    public LogEvent(LogLevel level, String message) {
+        this(level, message, (Throwable) null);
+    }
 
-	public LogEvent(LogLevel level, String message, @Nullable Throwable throwable) {
-		this.level = level;
-		this.throwable = throwable;
-		this.message = message;
-	}
+    /**
+     * @deprecated Should have been protected.
+     */
+    @Deprecated
+    public LogEvent(LogLevel level, String message, @Nullable Throwable throwable) {
+        this.level = level;
+        this.throwable = throwable;
+        this.message = message;
+    }
 
-	public LogEvent(LogLevel level, String format, @Nullable Throwable throwable, Object... args) {
-		this(level, StringFormatter.format(format, args), throwable);
-	}
+    /**
+     * @deprecated Should have been protected.
+     */
+    @Deprecated
+    public LogEvent(LogLevel level, String format, @Nullable Throwable throwable, Object... args) {
+        this(level, SF.f(format, args), throwable);
+    }
 
-	public String getMessage() {
-		return message;
-	}
+    /**
+     * @return the message logged.
+     */
+    @API
+    public String getMessage() {
+        return message;
+    }
 
-	public LogLevel getLevel() {
-		return level;
-	}
+    /**
+     * @return the level of the logged message.
+     */
+    @API
+    public LogLevel getLevel() {
+        return level;
+    }
 
-	public Throwable getThrowable() {
-		return throwable;
-	}
+    /**
+     * @return the throwable to log. May be null.
+     */
+    @API
+    @Nullable
+    public Throwable getThrowable() {
+        return throwable;
+    }
 }
 
 

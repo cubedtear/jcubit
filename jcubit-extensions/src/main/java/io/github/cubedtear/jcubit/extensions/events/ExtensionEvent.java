@@ -19,40 +19,71 @@ package io.github.cubedtear.jcubit.extensions.events;
 import io.github.cubedtear.jcubit.eventBus.EventBus;
 import io.github.cubedtear.jcubit.extensions.ExtensibleApp;
 import io.github.cubedtear.jcubit.extensions.Extension;
+import io.github.cubedtear.jcubit.util.API;
 
 /**
  * Root for all {@link EventBus} events related to extensions
  *
  * @author Aritz Lopez
+ * @see EventBus
+ * @deprecated Use {@link io.github.cubedtear.jcubit.extensions.ExtensionEvent} instead.
  */
+@Deprecated
 public abstract class ExtensionEvent {
 
 	protected final ExtensibleApp app;
 	protected final Extension e;
 
+	/**
+	 * Creates an ExtensionEvent from the given App and Extension.
+	 * @param app The application that can be extended.
+	 * @param e The extension that generated or is the target of the event.
+     */
 	public ExtensionEvent(ExtensibleApp app, Extension e) {
-		super();
 		this.app = app;
 		this.e = e;
 	}
 
+	/**
+	 * @return The app.
+	 */
+	@API
 	public ExtensibleApp getApp() {
 		return app;
 	}
 
+	/**
+	 * @return The extension.
+     */
+	@API
 	public Extension getExtension() {
 		return e;
 	}
 
+	/**
+	 * Event posted when an extension is getting loaded.
+	 */
 	public static class ExtensionLoadEvent extends ExtensionEvent {
 
+		/**
+		 * @deprecated Should have never been public.
+         */
+		@Deprecated
 		public ExtensionLoadEvent(ExtensibleApp app, Extension e) {
 			super(app, e);
 		}
 	}
 
+	/**
+	 * Event posted when an extension is getting unloaded.
+	 */
+	@API
 	public static class ExtensionUnloadEvent extends ExtensionEvent {
 
+		/**
+		 * @deprecated Should have never been public
+         */
+		@Deprecated
 		public ExtensionUnloadEvent(ExtensibleApp app, Extension e) {
 			super(app, e);
 		}

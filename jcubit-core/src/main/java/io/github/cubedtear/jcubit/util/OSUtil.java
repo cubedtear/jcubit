@@ -24,6 +24,9 @@ public class OSUtil {
 
 	private static EnumOS OS = null;
 
+	/**
+	 * @return the current operating system.
+     */
 	public static EnumOS getOs() {
 		if (OSUtil.OS != null) return OS;
 
@@ -34,6 +37,9 @@ public class OSUtil {
 								EnumOS.UNKNOWN;
 	}
 
+	/**
+	 * Enum that represent known operating systems.
+	 */
 	public enum EnumOS {
 		WINDOWS, UNIX, MACOS, UNKNOWN
 	}

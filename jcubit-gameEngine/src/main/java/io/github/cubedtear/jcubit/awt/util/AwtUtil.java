@@ -16,14 +16,23 @@
 
 package io.github.cubedtear.jcubit.awt.util;
 
+import io.github.cubedtear.jcubit.util.API;
+
 import javax.swing.*;
 import java.awt.*;
 
 /**
  * @author Aritz Lopez
  */
+@API
 public class AwtUtil {
 
+	/**
+	 * Returns the window that holds the given component.
+	 * @param component The component.
+	 * @return The window the component is into.
+     */
+	@API
 	public static Window getWindow(Component component) {
 		if (component == null) return JOptionPane.getRootFrame();
 		else if (component instanceof Window) return (Window) component;

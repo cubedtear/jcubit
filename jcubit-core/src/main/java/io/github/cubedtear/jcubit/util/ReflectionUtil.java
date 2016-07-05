@@ -28,11 +28,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.nio.file.FileVisitResult;
-import java.nio.file.FileVisitor;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.SimpleFileVisitor;
+import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Arrays;
 import java.util.Collections;
@@ -68,6 +64,11 @@ public class ReflectionUtil extends SecurityManager {
         return INSTANCE.getClassContext()[OFFSET + depth];
     }
 
+    /**
+     * Checks if the given class is somewhere in the current stack trace.
+     * @param clazz The class to find in the stack trace.
+     * @return whether the given class is somewhere in the current stack trace.
+     */
     public static boolean isCalledByClass(Class<?> clazz) {
         Class<?>[] classes = INSTANCE.getClassContext();
         for (int i = OFFSET + 1; i < classes.length; i++) {
@@ -124,11 +125,24 @@ public class ReflectionUtil extends SecurityManager {
         return ret;
     }
 
+    /**
+     * Adds the given path as a folder recursively to the classpath, accepting all files with .zip and .jar extension.
+     * @param folder The folder to add to the classpath.
+     * @return A map of the paths that raised an exception to their exception.
+     * @throws NoSuchMethodException when the system classloader does not have an "addUrl" method.
+     */
     public static Map<Path, Exception> addFolderToClasspath(Path folder) throws ReflectiveOperationException {
         return ReflectionUtil.addFolderToClasspath(folder, jarAndZips);
     }
 
-    public static Map<Path, Exception> addFolderToClasspath(Path folder, final FileFilter fileFilter) throws ReflectiveOperationException {
+    /**
+     * Adds the given path as a folder recursively to the classpath, accepting all files accepted by the file filter.
+     * @param folder The folder to add to the classpath.
+     * @param fileFilter The files under the given folder accepted by this filter will be added to the classpath.
+     * @return A map of the paths that raised an exception to their exception.
+     * @throws NoSuchMethodException when the system classloader does not have an "addUrl" method.
+     */
+    public static Map<Path, Exception> addFolderToClasspath(Path folder, final FileFilter fileFilter) throws NoSuchMethodException {
         final Map<Path, Exception> ret = Maps.newHashMap();
 
         final URLClassLoader sysURLClassLoader = (URLClassLoader) ClassLoader.getSystemClassLoader();
@@ -169,8 +183,8 @@ public class ReflectionUtil extends SecurityManager {
     public static boolean classHasAnnotation(Class clazz, Class<? extends Annotation> annotation) {
         if (clazz == null || annotation == null) return false;
         if (clazz.isArray()) return classHasAnnotation(clazz.getComponentType(), annotation);
-        for (Annotation anno : clazz.getAnnotations()) {
-            if (anno.annotationType().equals(annotation)) return true;
+        for (Annotation a : clazz.getAnnotations()) {
+            if (a.annotationType().equals(annotation)) return true;
         }
         if (classHasAnnotation(clazz.getSuperclass(), annotation)) return true;
         for (Class inter : clazz.getInterfaces()) {
@@ -194,6 +208,11 @@ public class ReflectionUtil extends SecurityManager {
         return ret;
     }
 
+    /**
+     * Gets the set of all fields, including the inherited ones.
+     * @param c The type for which the fields have to be returned.
+     * @return a set containing all the fields of the given class.
+     */
     public static Set<Field> getAllFields(Class c) {
         Set<Field> res = Sets.newHashSet();
         Collections.addAll(res, c.getDeclaredFields());

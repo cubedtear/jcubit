@@ -1,6 +1,10 @@
 package io.github.cubedtear.jcubit.collections;
 
+import io.github.cubedtear.jcubit.util.API;
+import io.github.cubedtear.jcubit.util.Nullable;
+
 /**
+ * Collection of utility methods related to arrays.
  * @author Aritz Lopez
  */
 public enum ArrayUtil {
@@ -16,6 +20,7 @@ public enum ArrayUtil {
 	 */
 	@SafeVarargs
 	@SuppressWarnings("unchecked")
+	@API
 	public static <T> T[] append(T[] arr, T... lastElements) {
 		T[] ret = (T[]) new Object[arr.length + lastElements.length];
 		System.arraycopy(lastElements, 0, ret, arr.length, lastElements.length);
@@ -33,6 +38,7 @@ public enum ArrayUtil {
 	 */
 	@SafeVarargs
 	@SuppressWarnings("unchecked")
+	@API
 	public static <T> T[] prepend(T[] arr, T... firstElements) {
 		T[] ret = (T[]) new Object[arr.length + firstElements.length];
 		System.arraycopy(firstElements, 0, ret, 0, firstElements.length);
@@ -181,6 +187,7 @@ public enum ArrayUtil {
 	 * @param bytes The primitive array.
 	 * @return the primitive array converted to a wrapper array, or {@code null} if the input was {@code null}.
 	 */
+	@Nullable
 	public static Byte[] box(byte[] bytes) {
 		if (bytes == null) return null;
 		Byte[] nBytes = new Byte[bytes.length];
@@ -193,6 +200,7 @@ public enum ArrayUtil {
 	 * @param chars The primitive array.
 	 * @return the primitive array converted to a wrapper array, or {@code null} if the input was {@code null}.
 	 */
+	@Nullable
 	public static Character[] box(char[] chars) {
 		if (chars == null) return null;
 		Character[] nChars = new Character[chars.length];
@@ -205,6 +213,7 @@ public enum ArrayUtil {
 	 * @param shorts The primitive array.
 	 * @return the primitive array converted to a wrapper array, or {@code null} if the input was {@code null}.
 	 */
+	@Nullable
 	public static Short[] box(short[] shorts) {
 		if (shorts == null) return null;
 		Short[] nShorts = new Short[shorts.length];
@@ -217,6 +226,7 @@ public enum ArrayUtil {
 	 * @param ints The primitive array.
 	 * @return the primitive array converted to a wrapper array, or {@code null} if the input was {@code null}.
 	 */
+	@Nullable
 	public static Integer[] box(int[] ints) {
 		if (ints == null) return null;
 		Integer[] nInts = new Integer[ints.length];
@@ -229,6 +239,7 @@ public enum ArrayUtil {
 	 * @param longs The primitive array.
 	 * @return the primitive array converted to a wrapper array, or {@code null} if the input was {@code null}.
 	 */
+	@Nullable
 	public static Long[] box(long[] longs) {
 		if (longs == null) return null;
 		Long[] nLongs = new Long[longs.length];
@@ -241,6 +252,7 @@ public enum ArrayUtil {
 	 * @param floats The primitive array.
 	 * @return the primitive array converted to a wrapper array, or {@code null} if the input was {@code null}.
 	 */
+	@Nullable
 	public static Float[] box(float[] floats) {
 		if (floats == null) return null;
 		Float[] nFloats = new Float[floats.length];
@@ -253,6 +265,7 @@ public enum ArrayUtil {
 	 * @param doubles The primitive array.
 	 * @return the primitive array converted to a wrapper array, or {@code null} if the input was {@code null}.
 	 */
+	@Nullable
 	public static Double[] box(double[] doubles) {
 		if (doubles == null) return null;
 		Double[] nDoubles = new Double[doubles.length];
@@ -266,6 +279,7 @@ public enum ArrayUtil {
 	 * @return the wrapper array converted to a primitive array, or {@code null} if the input was {@code null}.
 	 * @throws NullPointerException If one of the values is null.
 	 */
+	@Nullable
 	public static byte[] unbox(Byte[] bytes) {
 		if (bytes == null) return null;
 		byte[] nBytes = new byte[bytes.length];
@@ -279,6 +293,7 @@ public enum ArrayUtil {
 	 * @return the wrapper array converted to a primitive array, or {@code null} if the input was {@code null}.
 	 * @throws NullPointerException If one of the values is null.
 	 */
+	@Nullable
 	public static char[] unbox(Character[] chars) {
 		if (chars == null) return null;
 		char[] nChars = new char[chars.length];
@@ -292,6 +307,7 @@ public enum ArrayUtil {
 	 * @return the wrapper array converted to a primitive array, or {@code null} if the input was {@code null}.
 	 * @throws NullPointerException If one of the values is null.
 	 */
+	@Nullable
 	public static short[] unbox(Short[] shorts) {
 		if (shorts == null) return null;
 		short[] nShorts = new short[shorts.length];
@@ -305,6 +321,7 @@ public enum ArrayUtil {
 	 * @return the wrapper array converted to a primitive array, or {@code null} if the input was {@code null}.
 	 * @throws NullPointerException If one of the values is null.
 	 */
+	@Nullable
 	public static int[] unbox(Integer[] ints) {
 		if (ints == null) return null;
 		int[] nInts = new int[ints.length];
@@ -318,6 +335,7 @@ public enum ArrayUtil {
 	 * @return the wrapper array converted to a primitive array, or {@code null} if the input was {@code null}.
 	 * @throws NullPointerException If one of the values is null.
 	 */
+	@Nullable
 	public static long[] unbox(Long[] longs) {
 		if (longs == null) return null;
 		long[] nLongs = new long[longs.length];
@@ -331,6 +349,7 @@ public enum ArrayUtil {
 	 * @return the wrapper array converted to a primitive array, or {@code null} if the input was {@code null}.
 	 * @throws NullPointerException If one of the values is null.
 	 */
+	@Nullable
 	public static float[] unbox(Float[] floats) {
 		if (floats == null) return null;
 		float[] nFloats = new float[floats.length];
@@ -344,6 +363,7 @@ public enum ArrayUtil {
 	 * @return the wrapper array converted to a primitive array, or {@code null} if the input was {@code null}.
 	 * @throws NullPointerException If one of the values is null.
 	 */
+	@Nullable
 	public static double[] unbox(Double[] doubles) {
 		if (doubles == null) return null;
 		double[] nDoubles = new double[doubles.length];

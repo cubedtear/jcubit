@@ -1,5 +1,3 @@
-version '6.0.0'
-
 dependencies {
     compile project(':jcubit-eventBus')
 	compile project(':jcubit-core')

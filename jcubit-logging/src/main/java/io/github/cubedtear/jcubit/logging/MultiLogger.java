@@ -16,33 +16,57 @@
 
 package io.github.cubedtear.jcubit.logging;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import io.github.cubedtear.jcubit.logging.core.ALogger;
 import io.github.cubedtear.jcubit.logging.core.ILogger;
+import io.github.cubedtear.jcubit.util.API;
 
 import java.util.Set;
 
 /**
+ * Logger that takes together different loggers. Useful for things like logging everything to the console,
+ * but only warnings and errors to a file.
  * @author Aritz Lopez
  */
+@API
 public class MultiLogger extends ALogger {
 
 	private final Set<ILogger> loggers;
 
+	/**
+	 * Creates a multi-logger from the given loggers. Note: These loggers may be MultiLogger-s themselves.
+	 * @param loggers The loggers.
+     */
+	@API
 	public MultiLogger(ILogger... loggers) {
 		this.loggers = Sets.newHashSet(loggers);
 	}
 
+	/**
+	 * Adds another logger to this multi-logger.
+	 * @param logger The logger to add.
+     */
+	@API
 	public void addLogger(ILogger logger) {
 		this.loggers.add(logger);
 	}
 
+	/**
+	 * Ads the given logger to this multi-logger.
+	 * @param loggers The loggers to add.
+     */
+	@API
 	public void addLoggers(ILogger... loggers) {
 		this.loggers.addAll(Sets.newHashSet(loggers));
 	}
 
+	/**
+	 * @return an immutable copy of the loggers this multi-logger logs to.
+     */
+	@API
 	public Set<ILogger> getLoggers() {
-		return loggers;
+		return ImmutableSet.copyOf(loggers);
 	}
 
 	@Override

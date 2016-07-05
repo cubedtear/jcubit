@@ -22,6 +22,7 @@ import io.github.cubedtear.jcubit.awt.gameEngine.core.IGame;
 import io.github.cubedtear.jcubit.awt.gameEngine.input.InputHandler;
 import io.github.cubedtear.jcubit.logging.core.ILogger;
 import io.github.cubedtear.jcubit.logging.core.NullLogger;
+import io.github.cubedtear.jcubit.util.API;
 import io.github.cubedtear.jcubit.util.Nullable;
 
 import javax.swing.*;
@@ -55,6 +56,7 @@ public class CanvasEngine extends BasicGame {
 	 * @param width  The width of the game
 	 * @param height The height of the game
 	 */
+	@API
 	public CanvasEngine(IGame game, int width, int height) {
 		this(game, width, height, false, null);
 	}
@@ -108,6 +110,11 @@ public class CanvasEngine extends BasicGame {
 		});
 	}
 
+	/**
+	 * Sets the title of the window.
+	 * @param title The title.
+     */
+	@API
 	public void setTitle(String title) {
 		if (this.hasFrame) this.frame.setTitle(title);
 	}
@@ -181,6 +188,7 @@ public class CanvasEngine extends BasicGame {
 	 *
 	 * @return the {@link InputHandler} used by this game.
 	 */
+	@API
 	public InputHandler getInputHandler() {
 		return inputHandler;
 	}
@@ -190,6 +198,7 @@ public class CanvasEngine extends BasicGame {
 	 *
 	 * @return the size of the game.
 	 */
+	@API
 	public Dimension getSize() {
 		return size;
 	}

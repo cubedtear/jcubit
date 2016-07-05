@@ -14,18 +14,20 @@ import static org.junit.Assert.assertEquals;
 /**
  * @author Aritz Lopez
  */
+@SuppressWarnings("JavaDoc")
 @Category(BDS.class)
 public class BDSTest {
 
     private final File file = new File("test.txt");
 
+    @SuppressWarnings("ConstantConditions")
     @Test
     public void testBDS() throws Exception {
 
-        BDS bds1 = BDS.createEmpty("Parent");
+        BDS bds1 = new BDS("Parent");
 
-        BDS nested1 = BDS.createEmpty("Nested1");
-        BDS nested2 = BDS.createEmpty("Nested2");
+        BDS nested1 = new BDS("Nested1");
+        BDS nested2 = new BDS("Nested2");
         bds1.addBDSs("BDS Array", new BDS[]{nested1, nested2});
 
         final byte bite = (byte) -35;

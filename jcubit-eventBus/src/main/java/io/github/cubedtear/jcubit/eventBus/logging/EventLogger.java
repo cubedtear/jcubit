@@ -19,69 +19,83 @@ package io.github.cubedtear.jcubit.eventBus.logging;
 import io.github.cubedtear.jcubit.eventBus.EventBus;
 import io.github.cubedtear.jcubit.logging.core.ALogger;
 import io.github.cubedtear.jcubit.logging.core.LogLevel;
+import io.github.cubedtear.jcubit.util.API;
 
 /**
+ * Logger implementation that works by posting {@link LogEvent LogEvents} in an {@link EventBus}.
+ *
  * @author Aritz Lopez
+ * @see LogEvent
+ * @see EventBus
  */
+@API
 public class EventLogger extends ALogger {
 
-	private final EventBus bus;
+    private final EventBus bus;
 
-	public EventLogger(EventBus bus) {
-		this.bus = bus;
-	}
+    /**
+     * Creates an EventLogger that will post the events in the given bus.
+     * @param bus The bus into which the events should be posted.
+     */
+    public EventLogger(EventBus bus) {
+        this.bus = bus;
+    }
 
-	public EventBus getEventBus() {
-		return bus;
-	}
+    /**
+     * Get the event bus this logger is posting to.
+     * @return the event bus of this logger.
+     */
+    public EventBus getEventBus() {
+        return bus;
+    }
 
-	@Override
-	public void t(String msg) {
-		this.bus.post(new LogEvent(LogLevel.TRACE, msg));
-	}
+    @Override
+    public void t(String msg) {
+        this.bus.post(new LogEvent(LogLevel.TRACE, msg));
+    }
 
-	@Override
-	public void t(String msg, Throwable t) {
-		this.bus.post(new LogEvent(LogLevel.TRACE, msg, t));
-	}
+    @Override
+    public void t(String msg, Throwable t) {
+        this.bus.post(new LogEvent(LogLevel.TRACE, msg, t));
+    }
 
-	@Override
-	public void d(String msg) {
-		this.bus.post(new LogEvent(LogLevel.DEBUG, msg));
-	}
+    @Override
+    public void d(String msg) {
+        this.bus.post(new LogEvent(LogLevel.DEBUG, msg));
+    }
 
-	@Override
-	public void d(String msg, Throwable t) {
-		this.bus.post(new LogEvent(LogLevel.DEBUG, msg, t));
-	}
+    @Override
+    public void d(String msg, Throwable t) {
+        this.bus.post(new LogEvent(LogLevel.DEBUG, msg, t));
+    }
 
-	@Override
-	public void i(String msg) {
-		this.bus.post(new LogEvent(LogLevel.INFO, msg));
-	}
+    @Override
+    public void i(String msg) {
+        this.bus.post(new LogEvent(LogLevel.INFO, msg));
+    }
 
-	@Override
-	public void i(String msg, Throwable t) {
-		this.bus.post(new LogEvent(LogLevel.INFO, msg, t));
-	}
+    @Override
+    public void i(String msg, Throwable t) {
+        this.bus.post(new LogEvent(LogLevel.INFO, msg, t));
+    }
 
-	@Override
-	public void w(String msg) {
-		this.bus.post(new LogEvent(LogLevel.WARN, msg));
-	}
+    @Override
+    public void w(String msg) {
+        this.bus.post(new LogEvent(LogLevel.WARN, msg));
+    }
 
-	@Override
-	public void w(String msg, Throwable t) {
-		this.bus.post(new LogEvent(LogLevel.WARN, msg, t));
-	}
+    @Override
+    public void w(String msg, Throwable t) {
+        this.bus.post(new LogEvent(LogLevel.WARN, msg, t));
+    }
 
-	@Override
-	public void e(String msg) {
-		this.bus.post(new LogEvent(LogLevel.ERROR, msg));
-	}
+    @Override
+    public void e(String msg) {
+        this.bus.post(new LogEvent(LogLevel.ERROR, msg));
+    }
 
-	@Override
-	public void e(String msg, Throwable t) {
-		this.bus.post(new LogEvent(LogLevel.ERROR, msg, t));
-	}
+    @Override
+    public void e(String msg, Throwable t) {
+        this.bus.post(new LogEvent(LogLevel.ERROR, msg, t));
+    }
 }

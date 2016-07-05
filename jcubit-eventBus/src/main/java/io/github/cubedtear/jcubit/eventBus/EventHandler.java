@@ -33,7 +33,9 @@ public class EventHandler {
 	 *
 	 * @param listener The object that will handle the events, and which contains the method {@code handler}.
 	 * @param handler  The method of the object {@code listener} which will be called to handle the method.
+	 * @deprecated Should have never been public.
 	 */
+	@Deprecated
 	public EventHandler(Object listener, Method handler) {
 		this.listener = listener;
 		this.handler = handler;

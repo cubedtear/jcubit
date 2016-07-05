@@ -17,13 +17,21 @@
 package io.github.cubedtear.jcubit.awt.render;
 
 import com.google.common.base.Preconditions;
+import io.github.cubedtear.jcubit.util.API;
 
 /**
+ * Collection of {@link Background Backgrounds}, used to only have to draw the whole background once.
  * @author Aritz Lopez
  */
+@API
 public class ParallaxBG {
 	private final Background[] backgrounds;
 
+	/**
+	 * Creates the collection of backgrounds. They will be drawn in the order given, which means
+	 * the first background will be the one in the back, and the last one the one in the front.
+	 * @param backgrounds The background that will be drawn.
+     */
 	public ParallaxBG(Background... backgrounds) {
 		Preconditions.checkArgument(backgrounds != null, "Background list cannot be null!");
 		Preconditions.checkArgument(backgrounds.length != 0, "Background list cannot be empty!");
@@ -31,6 +39,11 @@ public class ParallaxBG {
 		this.backgrounds = backgrounds;
 	}
 
+	/**
+	 * Draw all the backgrounds.
+	 * @param render The renderer into which the background will be rendered.
+	 * @param deltaNS The nanoseconds elapsed since the last frame.
+     */
 	public void render(IRender render, long deltaNS) {
 		for (Background b : this.backgrounds) {
 			b.render(render, deltaNS);

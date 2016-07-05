@@ -2,150 +2,137 @@ import org.gradle.internal.jvm.Jvm
 
 def javaV = Jvm.current().javaVersion
 if (!javaV.java7Compatible) {
-	throw new GradleException('Gradle is not running with a Java 7-compatible JDK')
+    throw new GradleException('Gradle is not running with a Java 7-compatible JDK')
 }
+
+def majorConf = new ConfigSlurper().parse(new File(project.projectDir, "version.groovy").toURI().toURL());
+ext.majorVersion = majorConf.major as String;
 
 subprojects {
 
-	group 'io.github.cubedtear'
+    apply plugin: 'java'
 
-	apply plugin: 'java'
+    def versionConfig = new ConfigSlurper().parse(new File(project.projectDir, "version.groovy").toURI().toURL());
+    project.version = "${parent.majorVersion}.${versionConfig.minor}.${versionConfig.build}"
 
-	sourceCompatibility = 1.7
-	targetCompatibility = 1.7
+    group 'io.github.cubedtear'
 
-	repositories {
-		mavenCentral()
-	}
+    sourceCompatibility = 1.7
+    targetCompatibility = 1.7
 
-	if (System.getenv('TRAVIS') == null) {
-		apply plugin: 'signing'
-		apply plugin: 'maven'
+    repositories {
+        mavenCentral()
+    }
 
-		uploadArchives.mustRunAfter build
+    if (System.getenv('CI') == null) {
+        apply plugin: 'signing'
+        apply plugin: 'maven'
 
-		task sourceJar(type: Jar, dependsOn: classes) {
-			classifier = 'sources'
-			from sourceSets.main.allSource
-		}
+        uploadArchives.mustRunAfter build
 
-		task javadocJar(type: Jar, dependsOn: javadoc) {
-			classifier = 'javadoc'
-			from javadoc.destinationDir
-		}
+        task sourceJar(type: Jar, dependsOn: classes) {
+            classifier = 'sources'
+            from sourceSets.main.allSource
+        }
 
-		artifacts {
-			archives jar
-			archives sourceJar
-			archives javadocJar
-		}
+        task javadocJar(type: Jar, dependsOn: javadoc) {
+            classifier = 'javadoc'
+            from javadoc.destinationDir
+        }
 
-		signing {
-			required { gradle.taskGraph.hasTask("uploadArchives") }
-			sign configurations.archives
-		}
+        artifacts {
+            archives jar
+            archives sourceJar
+            archives javadocJar
+        }
 
-		uploadArchives {
-			repositories {
-				mavenDeployer {
-					beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+        signing {
+            required { gradle.taskGraph.hasTask("uploadArchives") }
+            sign configurations.archives
+        }
 
-					repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
-						authentication(userName: ossrhUsername, password: ossrhPassword)
-					}
+        uploadArchives.repositories.mavenDeployer {
+            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
 
-					snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
-						authentication(userName: ossrhUsername, password: ossrhPassword)
-					}
+            repository {
+                url = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+                authentication(userName: ossrhUsername, password: ossrhPassword)
+            }
 
-					pom.project {
-						name project.name
-						packaging 'jar'
-						artifactId project.name
-						description 'Utility library to help making any kind of app or game.'
-						url 'https://github.com/cubedtear/jcubit'
+            snapshotRepository {
+                url = "https://oss.sonatype.org/content/repositories/snapshots/"
+                authentication(userName: ossrhUsername, password: ossrhPassword)
+            }
 
-						scm {
-							connection 'scm:git:git@github.com:cubedtear/jcubit.git'
-							developerConnection 'scm:git:git@github.com:cubedtear/jcubit.git'
-							url 'https://github.com/cubedtear/jcubit'
-						}
+            pom.project {
+                name = project.name
+                packaging 'jar'
+                artifactId project.name
+                description = 'Utility library to help making any kind of app or game.'
+                url 'https://github.com/cubedtear/jcubit'
 
-						licenses {
-							license {
-								name 'The Apache License, Version 2.0'
-								url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-							}
-						}
+                scm {
+                    connection 'scm:git:git@github.com:cubedtear/jcubit.git'
+                    developerConnection 'scm:git:git@github.com:cubedtear/jcubit.git'
+                    url 'https://github.com/cubedtear/jcubit'
+                }
 
-						developers {
-							developer {
-								id 'cubedtear'
-								name 'Aritz Lopez'
-								email 'cubedtear@gmail.com'
-							}
-						}
-					}
-				}
-			}
-		}
-	}
+                licenses {
+                    license {
+                        name = 'The Apache License, Version 2.0'
+                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id 'cubedtear'
+                        name = 'Aritz Lopez'
+                        email 'cubedtear@gmail.com'
+                    }
+                }
+            }
+        }
+    }
 }
 
 buildscript {
-	repositories {
-		mavenCentral()
-		//Needed only for SNAPSHOT versions
-		//maven { url "http://oss.sonatype.org/content/repositories/snapshots/" }
-	}
-	dependencies {
-		classpath "io.codearte.gradle.nexus:gradle-nexus-staging-plugin:0.5.3"
-	}
+    repositories {
+        mavenCentral()
+        //Needed only for SNAPSHOT versions
+        //maven { url "http://oss.sonatype.org/content/repositories/snapshots/" }
+    }
+    dependencies {
+        classpath "io.codearte.gradle.nexus:gradle-nexus-staging-plugin:0.5.3"
+    }
 }
 
-if (System.getenv('TRAVIS') == null) {
-	apply plugin: 'io.codearte.nexus-staging'
-	apply plugin: 'maven'
+if (System.getenv('CI') == null) {
+    apply plugin: 'io.codearte.nexus-staging'
+    apply plugin: 'maven'
 
-	nexusStaging {
-		packageGroup = "io.github.cubedtear"
-	}
+    nexusStaging {
+        packageGroup = "io.github.cubedtear"
+    }
 
-	uploadArchives {
-		repositories {
-			mavenDeployer {
-				beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+    closeAndPromoteRepository {}.mustRunAfter subprojects.uploadArchives
 
-				repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
-					authentication(userName: ossrhUsername, password: ossrhPassword)
-				}
+    task buildAndDeploy {
+        dependsOn = [subprojects.build, subprojects.uploadArchives, closeAndPromoteRepository]
+        group = BasePlugin.UPLOAD_GROUP
+        description = "Builds and deploys to Maven Central, and closes and promotes the repository"
+    }
 
-				snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
-					authentication(userName: ossrhUsername, password: ossrhPassword)
-				}
-			}
-		}
-	}
-
-	closeAndPromoteRepository {}.mustRunAfter subprojects.uploadArchives
-
-	task buildAndDeploy(dependsOn: [subprojects.build, subprojects.uploadArchives, closeAndPromoteRepository])
-
-	configure(buildAndDeploy) {
-		group = 'upload'
-		description = 'Builds and deploys to Maven Central, and closes and promotes the repository'
-	}
-
-	gradle.taskGraph.addTaskExecutionGraphListener { graph ->
-		Task uploadTask = graph.allTasks.find { t -> t.name.equalsIgnoreCase('uploadArchives') }
-		if (uploadTask != null && (!properties.containsKey('ossrhUsername') || !properties.containsKey('ossrhPassword'))) {
-			ext.ossrhUsername = ''
-			ext.ossrhPassword = ''
-			throw new GradleException("You don't have OSS credentials in your gradle.properties")
-		}
-		Task signTask = graph.allTasks.find { t -> t.name.equalsIgnoreCase('signArchives') }
-		if (signTask != null && (!properties.containsKey('signing.keyId') || !properties.containsKey('signing.password') || !properties.containsKey('signing.secretKeyRingFile'))) {
-			throw new GradleException("You want to sign, but have not specified the required properties!")
-		}
-	}
+    gradle.taskGraph.addTaskExecutionGraphListener { graph ->
+        Task uploadTask = graph.allTasks.find { t -> t.name.equalsIgnoreCase('uploadArchives') }
+        if (uploadTask != null && (!properties.containsKey('ossrhUsername') || !properties.containsKey('ossrhPassword'))) {
+            ext.ossrhUsername = ''
+            ext.ossrhPassword = ''
+            throw new GradleException("You don't have OSS credentials in your gradle.properties")
+        }
+        Task signTask = graph.allTasks.find { t -> t.name.equalsIgnoreCase('signArchives') }
+        if (signTask != null && (!properties.containsKey('signing.keyId') || !properties.containsKey('signing.password') || !properties.containsKey('signing.secretKeyRingFile'))) {
+            throw new GradleException("You want to sign, but have not specified the required properties!")
+        }
+    }
 }
