@@ -6,4 +6,5 @@ include 'jcubit-bds'
 include 'jcubit-eventBus'
 include 'jcubit-extensions'
 include 'jcubit-annotations'
+include 'jcubit-net'
 
