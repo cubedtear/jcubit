@@ -38,6 +38,7 @@ public class BufferedImageRenderer implements IRender {
 	private final Map<String, Sprite> sprites;
 	private final int[] pixels;
 	private boolean blend = false;
+	private int backgroundColor = 0xFF_00_00_00;
 
 	/**
 	 * Creates a renderer with the given size, and no spritesheet.
@@ -72,14 +73,13 @@ public class BufferedImageRenderer implements IRender {
 
 	@Override
 	public void clear() {
-		Arrays.fill(this.pixels, 0xFF_00_00_00);
+		Arrays.fill(this.pixels, this.backgroundColor);
 	}
 
 	@Override
 	public void draw(int x, int y, int width, int height, int[] colors) {
 		int maxX = Math.min(this.width - x, width);
 		int maxY = Math.min(this.height - y, height);
-
 
 		for (int yp = 0; yp < maxY; yp++) {
 			final int beforeY = yp + y;
@@ -88,9 +88,10 @@ public class BufferedImageRenderer implements IRender {
 				final int beforeX = xp + x;
 				if (beforeX < 0) continue;
 				int color = colors[xp + yp * width];
-				if (ARGBColorUtil.getAlpha(color) == 0) continue;
+				int alpha = ARGBColorUtil.getAlpha(color);
+				if (alpha == 0) continue;
 				final int index = beforeX + beforeY * this.width;
-				if (!blend) this.pixels[(index)] = color;
+				if (!blend || alpha == 0xFF) this.pixels[(index)] = color;
 				else this.pixels[(index)] = ARGBColorUtil.composite(color, this.pixels[(index)]);
 			}
 		}
@@ -124,5 +125,13 @@ public class BufferedImageRenderer implements IRender {
 	@Override
 	public int getHeight() {
 		return height;
+	}
+
+	/**
+	 * Sets the background color to use when {@link BufferedImageRenderer#clear() clear()} is called.
+	 * @param backgroundColor The background color to use.
+     */
+	public void setBackgroundColor(int backgroundColor) {
+		this.backgroundColor = backgroundColor;
 	}
 }
