@@ -1,1 +1,1 @@
-major=6
+major=7
