@@ -18,7 +18,6 @@ package io.github.cubedtear.jcubit.extensions;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
-import io.github.cubedtear.jcubit.extensions.events.ExtensionEvent;
 import io.github.cubedtear.jcubit.logging.core.ILogger;
 import io.github.cubedtear.jcubit.logging.core.NullLogger;
 import io.github.cubedtear.jcubit.util.API;

@@ -112,10 +112,4 @@ public class SpriteSheetLoader {
 		int[] pixels = image.getRGB(x, y, w, h, null, 0, w);
 		return new Sprite(w, h, pixels);
 	}
-
-	/**
-	 * @deprecated Use {@code HashMap<String, Sprite>} instead.
-	 */
-	@Deprecated
-	public static class SpriteSheet extends HashMap<String, Sprite> {}
 }

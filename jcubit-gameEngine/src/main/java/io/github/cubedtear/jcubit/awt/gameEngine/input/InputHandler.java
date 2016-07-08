@@ -187,11 +187,7 @@ public class InputHandler implements KeyListener, FocusListener, MouseInputListe
 	public enum MouseButton {
 		LEFT, MIDDLE, RIGHT, NONE;
 
-		/**
-		 * @deprecated Should never have been public.
-         */
-		@Deprecated
-		public static MouseButton getFromEvent(int eventButton) {
+		protected static MouseButton getFromEvent(int eventButton) {
 			switch (eventButton) {
 				case MouseEvent.BUTTON1:
 					return LEFT;
@@ -220,21 +216,13 @@ public class InputHandler implements KeyListener, FocusListener, MouseInputListe
 		private final MouseAction action;
 		private final Point position;
 
-		/**
-		 * @deprecated Should never have been public.
-         */
-		@Deprecated
-		public MouseInputEvent(MouseButton button, MouseAction action, Point position) {
+		protected MouseInputEvent(MouseButton button, MouseAction action, Point position) {
 			this.button = button;
 			this.action = action;
 			this.position = position;
 		}
 
-		/**
-		 * @deprecated Should never have been public.
-         */
-		@Deprecated
-		public static MouseInputEvent fromMouseEvent(MouseAction action, MouseEvent e) {
+		protected static MouseInputEvent fromMouseEvent(MouseAction action, MouseEvent e) {
 			return new MouseInputEvent(MouseButton.getFromEvent(e.getButton()), action, new Point(e.getX(), e.getY()));
 		}
 

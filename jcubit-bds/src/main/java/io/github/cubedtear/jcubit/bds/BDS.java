@@ -61,17 +61,6 @@ public class BDS {
     }
 
     /**
-     * Creates an empty BDS with the specified name.
-     * @param name The name of the BDS to create.
-     * @return A new empty BDS with the given name.
-     * @deprecated Use constructor {@link BDS#BDS(String)} instead.
-     */
-    @Deprecated
-    public static BDS createEmpty(String name) {
-        return new BDS(name);
-    }
-
-    /**
      * Reads a BDS from the specified file.
      * @param f The file from which the BDS will be read.
      * @return The BDS read from the file.
@@ -775,7 +764,7 @@ public class BDS {
      * @return whether the BDS was added or not. In case it is false, it will be because the name has already been taken for this BDS.
      */
     public boolean addBDS(@NotNull BDS value) {
-        return addElement(name, value, bdss);
+        return addElement(value.getName(), value, bdss);
     }
 
     /**

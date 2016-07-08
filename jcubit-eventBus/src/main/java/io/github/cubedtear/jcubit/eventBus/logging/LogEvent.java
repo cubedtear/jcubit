@@ -35,37 +35,21 @@ public class LogEvent {
     private final LogLevel level;
     private final Throwable throwable;
 
-    /**
-     * @deprecated Should have been protected.
-     */
-    @Deprecated
-    public LogEvent(LogLevel level, String format, Object... args) {
+    protected LogEvent(LogLevel level, String format, Object... args) {
         this(level, SF.f(format, args));
     }
 
-    /**
-     * @deprecated Should have been protected.
-     */
-    @Deprecated
-    public LogEvent(LogLevel level, String message) {
+    protected LogEvent(LogLevel level, String message) {
         this(level, message, (Throwable) null);
     }
 
-    /**
-     * @deprecated Should have been protected.
-     */
-    @Deprecated
-    public LogEvent(LogLevel level, String message, @Nullable Throwable throwable) {
+    protected LogEvent(LogLevel level, String message, @Nullable Throwable throwable) {
         this.level = level;
         this.throwable = throwable;
         this.message = message;
     }
 
-    /**
-     * @deprecated Should have been protected.
-     */
-    @Deprecated
-    public LogEvent(LogLevel level, String format, @Nullable Throwable throwable, Object... args) {
+   protected LogEvent(LogLevel level, String format, @Nullable Throwable throwable, Object... args) {
         this(level, SF.f(format, args), throwable);
     }
 

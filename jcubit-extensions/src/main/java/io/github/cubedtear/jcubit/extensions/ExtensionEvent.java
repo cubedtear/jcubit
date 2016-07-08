@@ -62,11 +62,7 @@ public abstract class ExtensionEvent {
 	@API
 	public static class ExtensionLoadEvent extends ExtensionEvent {
 
-		/**
-		 * @deprecated Should have never been public.
-         */
-		@Deprecated
-		public ExtensionLoadEvent(ExtensibleApp app, Extension e) {
+		protected ExtensionLoadEvent(ExtensibleApp app, Extension e) {
 			super(app, e);
 		}
 	}
@@ -77,11 +73,7 @@ public abstract class ExtensionEvent {
 	@API
 	public static class ExtensionUnloadEvent extends ExtensionEvent {
 
-		/**
-		 * @deprecated Should have never been public
-         */
-		@Deprecated
-		public ExtensionUnloadEvent(ExtensibleApp app, Extension e) {
+		protected ExtensionUnloadEvent(ExtensibleApp app, Extension e) {
 			super(app, e);
 		}
 	}

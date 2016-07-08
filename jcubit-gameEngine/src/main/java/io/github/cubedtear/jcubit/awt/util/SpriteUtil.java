@@ -365,8 +365,8 @@ public class SpriteUtil {
 		final double cos = Math.cos(radians);
 		final double sin = Math.sin(radians);
 
-		int newWidth = (int) (cos * original.getWidth() + sin * original.getHeight());
-		int newHeight = (int) (cos * original.getHeight() + sin * original.getWidth());
+		int newWidth = (int) (Math.abs(cos * original.getWidth()) + Math.abs(sin * original.getHeight()));
+		int newHeight = (int) (Math.abs(cos * original.getHeight()) + Math.abs(sin * original.getWidth()));
 
 		int xDelta = (newWidth - original.getWidth()) / 2;
 		int yDelta = (newHeight - original.getHeight()) / 2;
