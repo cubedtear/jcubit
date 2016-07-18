@@ -117,7 +117,7 @@ if (System.getenv('CI') == null) {
 
     closeAndPromoteRepository {}.mustRunAfter subprojects.uploadArchives
 
-    task buildAndDeploy {
+    task buildDeployAndRelease {
         dependsOn = [subprojects.build, subprojects.uploadArchives, closeAndPromoteRepository]
         group = BasePlugin.UPLOAD_GROUP
         description = "Builds and deploys to Maven Central, and closes and promotes the repository"
