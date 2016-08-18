@@ -31,7 +31,6 @@ public class BDS {
     private final static byte[] SIGNATURE = ".BDS\r\n".getBytes(StandardCharsets.UTF_8);
     private final static byte[] NEW_LINE = "\r\n".getBytes(StandardCharsets.UTF_8);
 
-    private String name;
     private transient Set<String> takenNames = Sets.newHashSet();
     private Map<String, String> strings = Maps.newHashMap();
     private Map<String, Integer> ints = Maps.newHashMap();
@@ -53,15 +52,14 @@ public class BDS {
     private Map<String, BDS[]> bdsArrays = Maps.newHashMap();
 
     /**
-     * Creates an empty BDS with the specified name.
-     * @param name The name of the BDS to create.
+     * Creates an empty BDS.
      */
-    public BDS(String name) {
-        this.name = name;
+    public BDS() {
     }
 
     /**
      * Reads a BDS from the specified file.
+     *
      * @param f The file from which the BDS will be read.
      * @return The BDS read from the file.
      * @throws IOException if an I/O error occurs. See {@link com.google.common.io.Files#toByteArray(File)}
@@ -73,6 +71,7 @@ public class BDS {
 
     /**
      * Reads a BDS from the specified Path
+     *
      * @param p The path from which the BDS will be read.
      * @return The BDS read from the Path.
      * @throws IOException if an I/O error occurs. See {@link java.nio.file.Files#readAllBytes(Path)}
@@ -84,6 +83,7 @@ public class BDS {
 
     /**
      * Reads a BDS from the given binary data.
+     *
      * @param data The data from which the BDS should be parsed.
      * @return The BDS read from the given data.
      */
@@ -102,10 +102,9 @@ public class BDS {
         if (data[offset] != BDSType.BDS.signature)
             throw new IllegalArgumentException("Given data is not in the appropriate format!");
 
-        BDS bds = new BDS("");
+        BDS bds = new BDS();
 
         Set2<String, Integer> name = parseString(data, offset + 1);
-        bds.setName(name.getT());
 
         int i = name.getU();
 
@@ -137,8 +136,9 @@ public class BDS {
                     i = bds.parseBDSString(data, i);
                     break;
                 case BDS:
-                    Set2<BDS, Integer> bds1 = parseBDS(data, i);
-                    bds.addBDS(bds1.getT());
+                    Set2<String, Integer> bdsName = parseString(data, i);
+                    Set2<BDS, Integer> bds1 = parseBDS(data, bdsName.getU());
+                    bds.addBDS(bdsName.getT(), bds1.getT());
                     i = bds1.getU();
                     break;
                 case LIST:
@@ -482,30 +482,12 @@ public class BDS {
         }
     }
 
-    /**
-     * Returns the name of this BDS.
-     *
-     * @return the name of this BDS.
-     */
-    public String getName() {
-        return name;
-    }
-
-    /**
-     * Sets the name of this BDS.
-     *
-     * @param name The name.
-     */
-    public void setName(String name) {
-        this.name = name;
-    }
-
     private byte[] writeInternal() {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
         baos.write(BDSType.BDS.signature);
 
-        writeString(this.name, baos);
+        writeString("", baos);
 
         for (Map.Entry<String, Byte> bite : bytes.entrySet()) {
             baos.write(BDSType.BYTE.signature);
@@ -763,8 +745,8 @@ public class BDS {
      * @param value The BDS to add. Must not be null.
      * @return whether the BDS was added or not. In case it is false, it will be because the name has already been taken for this BDS.
      */
-    public boolean addBDS(@NotNull BDS value) {
-        return addElement(value.getName(), value, bdss);
+    public boolean addBDS(String name, @NotNull BDS value) {
+        return addElement(name, value, bdss);
     }
 
     /**
@@ -1067,6 +1049,7 @@ public class BDS {
     /**
      * Returns the set of names of all the longs. That is, for all String {@code e} returned,
      * {@link BDS#getLong(String) this.getLong(e)} is guaranteed to not return null.
+     *
      * @return the set of names of all the longs.
      */
     public Set<String> getAllLongs() {
@@ -1076,6 +1059,7 @@ public class BDS {
     /**
      * Returns the set of names of all the longs. That is, for all String e returned,
      * {@link BDS#getBDSArray(String)} this.getBDSArray(e)} is guaranteed to not return null.
+     *
      * @return the set of names of all the longs.
      */
     public Set<String> getAllBDSArrays() {
@@ -1085,6 +1069,7 @@ public class BDS {
     /**
      * Returns the set of names of all the nested BDSs. That is, for all String e returned,
      * {@link BDS#getBDS(String)} this.getBDS(e)} is guaranteed to not return null.
+     *
      * @return the set of names of all the nested BDSs.
      */
     public Set<String> getAllBDSs() {
@@ -1094,6 +1079,7 @@ public class BDS {
     /**
      * Returns the set of names of all the byte arrays. That is, for all String e returned,
      * {@link BDS#getByteArray(String) this.getByteArray(e)} is guaranteed to not return null.
+     *
      * @return the set of names of all the byte arrays.
      */
     public Set<String> getAllByteArrays() {
@@ -1103,6 +1089,7 @@ public class BDS {
     /**
      * Returns the set of names of all the bytes. That is, for all String e returned,
      * {@link BDS#getByte(String) this.getByte(e)} is guaranteed to not return null.
+     *
      * @return the set of names of all the bytes.
      */
     public Set<String> getAllBytes() {
@@ -1112,6 +1099,7 @@ public class BDS {
     /**
      * Returns the set of names of all the char arrays. That is, for all String e returned,
      * {@link BDS#getCharArray(String) this.getCharArray(e)} is guaranteed to not return null.
+     *
      * @return the set of names of all the char arrays.
      */
     public Set<String> getAllCharArrays() {
@@ -1121,6 +1109,7 @@ public class BDS {
     /**
      * Returns the set of names of all the chars. That is, for all String e returned,
      * {@link BDS#getChar(String) this.getChar(e)} is guaranteed to not return null.
+     *
      * @return the set of names of all the chars.
      */
     public Set<String> getAllChars() {
@@ -1130,6 +1119,7 @@ public class BDS {
     /**
      * Returns the set of names of all the longs. That is, for all String e returned,
      * {@link BDS#getDoubleArray(String)} this.getDoubleArray(e)} is guaranteed to not return null.
+     *
      * @return the set of names of all the longs.
      */
     public Set<String> getAllDoubleArrays() {
@@ -1139,6 +1129,7 @@ public class BDS {
     /**
      * Returns the set of names of all the doubles. That is, for all String e returned,
      * {@link BDS#getDouble(String) this.getDouble(e)} is guaranteed to not return null.
+     *
      * @return the set of names of all the doubles.
      */
     public Set<String> getAllDoubles() {
@@ -1148,6 +1139,7 @@ public class BDS {
     /**
      * Returns the set of names of all the float arrays. That is, for all String e returned,
      * {@link BDS#getFloatArray(String) this.getFloatArray(e)} is guaranteed to not return null.
+     *
      * @return the set of names of all the float arrays.
      */
     public Set<String> getAllFloatArrays() {
@@ -1157,6 +1149,7 @@ public class BDS {
     /**
      * Returns the set of names of all the floats. That is, for all String e returned,
      * {@link BDS#getFloat(String) this.getFloat(e)} is guaranteed to not return null.
+     *
      * @return the set of names of all the floats.
      */
     public Set<String> getAllFloats() {
@@ -1166,6 +1159,7 @@ public class BDS {
     /**
      * Returns the set of names of all the int arrays. That is, for all String e returned,
      * {@link BDS#getIntArray(String) this.getIntArray(e)} is guaranteed to not return null.
+     *
      * @return the set of names of all the int arrays.
      */
     public Set<String> getAllIntArrays() {
@@ -1175,6 +1169,7 @@ public class BDS {
     /**
      * Returns the set of names of all the ints. That is, for all String e returned,
      * {@link BDS#getInt(String) this.getInt(e)} is guaranteed to not return null.
+     *
      * @return the set of names of all the ints.
      */
     public Set<String> getAllInts() {
@@ -1184,6 +1179,7 @@ public class BDS {
     /**
      * Returns the set of names of all the long arrays. That is, for all String e returned,
      * {@link BDS#getLongArray(String) this.getLongArray(e)} is guaranteed to not return null.
+     *
      * @return the set of names of all the long arrays.
      */
     public Set<String> getAllLongArrays() {
@@ -1193,6 +1189,7 @@ public class BDS {
     /**
      * Returns the set of names of all the short arrays. That is, for all String e returned,
      * {@link BDS#getShortArray(String) this.getString(e)} is guaranteed to not return null.
+     *
      * @return the set of names of all the short arrays.
      */
     public Set<String> getAllShortArrays() {
@@ -1202,6 +1199,7 @@ public class BDS {
     /**
      * Returns the set of names of all the shorts. That is, for all String e returned,
      * {@link BDS#getShort(String) this.getShort(e)} is guaranteed to not return null.
+     *
      * @return the set of names of all the shorts.
      */
     public Set<String> getAllShorts() {
@@ -1211,6 +1209,7 @@ public class BDS {
     /**
      * Returns the set of names of all the string arrays. That is, for all String e returned,
      * {@link BDS#getStringArray(String) this.getStringArray(e)} is guaranteed to not return null.
+     *
      * @return the set of names of all the string arrays.
      */
     public Set<String> getAllStringArrays() {
@@ -1220,6 +1219,7 @@ public class BDS {
     /**
      * Returns the set of names of all the strings. That is, for all String e returned,
      * {@link BDS#getString(String) this.getString(e)} is guaranteed to not return null.
+     *
      * @return the set of names of all the strings.
      */
     public Set<String> getAllStrings() {
@@ -1233,7 +1233,7 @@ public class BDS {
 
         BDS bds = (BDS) o;
 
-        return name.equals(bds.name) && strings.equals(bds.strings) && ints.equals(bds.ints) &&
+        return strings.equals(bds.strings) && ints.equals(bds.ints) &&
                 bytes.equals(bds.bytes) && chars.equals(bds.chars) && longs.equals(bds.longs) &&
                 shorts.equals(bds.shorts) && floats.equals(bds.floats) && doubles.equals(bds.doubles) &&
                 stringArrays.equals(bds.stringArrays) && intArrays.equals(bds.intArrays) &&
@@ -1247,7 +1247,7 @@ public class BDS {
     @Override
     public int hashCode() {
         return 31 * (31 * (31 * (31 * (31 * (31 * (31 * (31 * (31 * (31 * (31 * (31 * (31 * (31 * (31 * (31 * (31 *
-                (31 * name.hashCode() + strings.hashCode()) + ints.hashCode()) + bytes.hashCode()) + chars.hashCode()) +
+                (strings.hashCode()) + ints.hashCode()) + bytes.hashCode()) + chars.hashCode()) +
                 longs.hashCode()) + shorts.hashCode()) + floats.hashCode()) + doubles.hashCode()) +
                 stringArrays.hashCode()) + intArrays.hashCode()) + byteArrays.hashCode()) + charArrays.hashCode()) +
                 longArrays.hashCode()) + shortArrays.hashCode()) + floatArrays.hashCode()) + doubleArrays.hashCode()) +
