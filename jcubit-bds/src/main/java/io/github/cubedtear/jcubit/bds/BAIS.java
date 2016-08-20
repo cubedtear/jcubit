@@ -1,39 +1,45 @@
 package io.github.cubedtear.jcubit.bds;
 
 import java.io.IOException;
-import java.io.OutputStream;
+import java.io.InputStream;
 
 /**
  * @author Aritz Lopez
  */
-public class BAOS extends OutputStream {
+public class BAIS extends InputStream {
 
     private final byte[] data;
     private final int length;
     private int index = 0;
 
-    public BAOS(byte[] data) {
+    public BAIS(byte[] data) {
         this(data, 0, data.length);
     }
 
-    public BAOS(byte[] data, int offset) {
+    public BAIS(byte[] data, int offset) {
         this(data, offset, data.length - offset);
     }
 
-    public BAOS(byte[] data, int offset, int length) {
+    public BAIS(byte[] data, int offset, int length) {
         if (length < 0)
             throw new IllegalArgumentException("Length cannot be negative!");
-        else if (data == null && length != 0)
+        if (data == null && length != 0)
             throw new IllegalArgumentException("Data cannot be null, unless length is 0");
-        else if (data != null && offset + length > data.length)
+        if (data != null && offset + length > data.length)
             throw new IllegalArgumentException("Offset + length (" + (offset + length) + ") > data.length (" + data.length + ")");
         this.data = data;
         this.length = length;
     }
 
+
     @Override
-    public void write(int b) throws IOException {
-        if (index >= length) throw new ArrayIndexOutOfBoundsException("OutputStream size exceeded!");
-        data[index++] = (byte) b;
+    public int read() throws IOException {
+        if (index >= length)
+            throw new ArrayIndexOutOfBoundsException("OutputStream size exceeded!");
+        return data[index++] & 0xFF;
+    }
+
+    public int getLeft() {
+        return length - index;
     }
 }
