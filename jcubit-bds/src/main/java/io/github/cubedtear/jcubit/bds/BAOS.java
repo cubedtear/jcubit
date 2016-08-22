@@ -1,5 +1,7 @@
 package io.github.cubedtear.jcubit.bds;
 
+import io.github.cubedtear.jcubit.util.NotNull;
+
 import java.io.IOException;
 import java.io.OutputStream;
 
@@ -33,7 +35,13 @@ public class BAOS extends OutputStream {
 
     @Override
     public void write(int b) throws IOException {
-        if (index >= length) throw new ArrayIndexOutOfBoundsException("OutputStream size exceeded!");
         data[index++] = (byte) b;
+    }
+
+    @Override
+    public void write(@NotNull byte[] b, int off, int len) throws IOException {
+        if (len == 0) return;
+        System.arraycopy(b, off, this.data, index, len);
+        this.index += len;
     }
 }

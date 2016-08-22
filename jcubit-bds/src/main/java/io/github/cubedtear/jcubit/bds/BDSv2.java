@@ -2,15 +2,15 @@ package io.github.cubedtear.jcubit.bds;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 import io.github.cubedtear.jcubit.collections.ArrayUtil;
+import io.github.cubedtear.jcubit.util.Set2;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * @author Aritz Lopez
@@ -21,8 +21,8 @@ public class BDSv2 {
 
     // region ... Collection of elements ...
 
-    private transient Set<String> takenNames = Sets.newHashSet();
-    private Map<String, String> strings = Maps.newHashMap();
+    private transient Map<String, byte[]> takenNames = Maps.newHashMap();
+    private Map<String, Set2<String, byte[]>> strings = Maps.newHashMap();
     private Map<String, Integer> ints = Maps.newHashMap();
     private Map<String, Byte> bytes = Maps.newHashMap();
     private Map<String, Character> chars = Maps.newHashMap();
@@ -30,7 +30,7 @@ public class BDSv2 {
     private Map<String, Short> shorts = Maps.newHashMap();
     private Map<String, Float> floats = Maps.newHashMap();
     private Map<String, Double> doubles = Maps.newHashMap();
-    private Map<String, String[]> stringArrays = Maps.newHashMap();
+    private Map<String, Set2<String, byte[]>[]> stringArrays = Maps.newHashMap();
     private Map<String, Integer[]> intArrays = Maps.newHashMap();
     private Map<String, Byte[]> byteArrays = Maps.newHashMap();
     private Map<String, Character[]> charArrays = Maps.newHashMap();
@@ -62,9 +62,13 @@ public class BDSv2 {
     }
 
     private void checkAndAddName(String name) {
-        if (takenNames.contains(name)) throw new IllegalArgumentException("Name \"" + name + "\" is already taken!");
-        takenNames.add(name);
-        this.size += name.getBytes(StandardCharsets.UTF_8).length + 4;
+        if (takenNames.containsKey(name)) throw new IllegalArgumentException("Name \"" + name + "\" is already taken!");
+        try {
+            byte[] bytes = name.getBytes("UTF-8");
+            takenNames.put(name, bytes);
+            this.size += bytes.length + 4;
+        } catch (UnsupportedEncodingException e) {
+        }
     }
 
     // region ... Adders ...
@@ -113,9 +117,14 @@ public class BDSv2 {
     }
 
     public void addString(String name, String s) {
-        checkAndAddName(name);
-        strings.put(name, s);
-        this.size += s.getBytes(StandardCharsets.UTF_8).length + 4 + 1;
+        try {
+            checkAndAddName(name);
+            byte[] bytes = s.getBytes("UTF-8");
+            strings.put(name, Set2.of(s, bytes));
+            this.size += bytes.length + 4 + 1;
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
     }
 
     public void addBDS(String name, BDSv2 s) {
@@ -170,8 +179,18 @@ public class BDSv2 {
 
     public void addStrings(String name, String[] s) {
         checkAndAddName(name);
-        stringArrays.put(name, s);
-        for (String ss : s) this.size += ss.getBytes(StandardCharsets.UTF_8).length;
+        Set2<String, byte[]>[] array = new Set2[s.length];
+        for (int i = 0; i < s.length; i++) {
+            try {
+                String ss = s[i];
+                byte[] bytes = ss.getBytes("UTF-8");
+                array[i] = Set2.of(ss, bytes);
+                this.size += bytes.length + 4;
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+        }
+        stringArrays.put(name, array);
         this.size += 1 + 4;
     }
 
@@ -217,7 +236,7 @@ public class BDSv2 {
     }
 
     public String getString(String name) {
-        return this.strings.get(name);
+        return this.strings.get(name).getT();
     }
 
     public BDSv2 getBDS(String name) {
@@ -257,7 +276,13 @@ public class BDSv2 {
     }
 
     public String[] getStrings(String name) {
-        return this.stringArrays.get(name);
+        Set2<String, byte[]>[] strs = this.stringArrays.get(name);
+        if (strs == null) return null;
+        String[] strings = new String[strs.length];
+        for (int i = 0; i < strings.length; i++) {
+            strings[i] = strs[i].getT();
+        }
+        return strings;
     }
 
     public BDSv2[] getBDSs(String name) {
@@ -326,10 +351,10 @@ public class BDSv2 {
             writeString(os, e.getKey());
             writeDouble(os, e.getValue());
         }
-        for (Map.Entry<String, String> e : this.strings.entrySet()) {
+        for (Map.Entry<String, Set2<String, byte[]>> e : this.strings.entrySet()) {
             writeByte(os, BDSv2Type.STRING.getSignature(false));
             writeString(os, e.getKey());
-            writeString(os, e.getValue());
+            writeString(os, e.getValue().getU());
         }
         for (Map.Entry<String, BDSv2> e : this.bdss.entrySet()) {
             writeByte(os, BDSv2Type.BDS.getSignature(false));
@@ -383,11 +408,11 @@ public class BDSv2 {
             writeInt(os, e.getValue().length);
             for (Double b : e.getValue()) writeDouble(os, b);
         }
-        for (Map.Entry<String, String[]> e : this.stringArrays.entrySet()) {
+        for (Map.Entry<String, Set2<String, byte[]>[]> e : this.stringArrays.entrySet()) {
             writeByte(os, BDSv2Type.STRING.getSignature(true));
             writeString(os, e.getKey());
             writeInt(os, e.getValue().length);
-            for (String b : e.getValue()) writeString(os, b);
+            for (Set2<String, byte[]> b : e.getValue()) writeString(os, b.getU());
         }
         for (Map.Entry<String, BDSv2[]> e : this.bdsArrays.entrySet()) {
             writeByte(os, BDSv2Type.BDS.getSignature(true));
@@ -401,9 +426,12 @@ public class BDSv2 {
 
     // region ... Internal writers ...
     private static void writeString(OutputStream os, String s) throws IOException {
-        byte[] bytes = s.getBytes(StandardCharsets.UTF_8);
-        writeInt(os, bytes.length);
-        os.write(bytes);
+        writeString(os, s.getBytes("UTF-8"));
+    }
+
+    private static void writeString(OutputStream os, byte[] data) throws IOException {
+        writeInt(os, data.length);
+        os.write(data);
     }
 
     private static void writeByte(OutputStream os, byte s) throws IOException {
@@ -466,10 +494,19 @@ public class BDSv2 {
         return parseStreamInternal(is);
     }
 
+    private static BAIS getBAIS(InputStream is, int length) throws IOException {
+        if (is instanceof BAIS) {
+            BAIS bais = (BAIS) is;
+            BAIS result = new BAIS(bais.getData(), bais.getIndex(), length);
+            bais.skip(length);
+            return result;
+        } else return new BAIS(readBytes(is, length));
+    }
+
     private static BDSv2 parseStreamInternal(InputStream is) throws IOException, SerializationException {
         BDSv2 bds = new BDSv2();
         int length = parseInt(is);
-        BAIS dis = new BAIS(readBytes(is, length));
+        BAIS dis = getBAIS(is, length);
 
         while (dis.getLeft() > 0) {
             byte signature = (byte) dis.read();
@@ -622,7 +659,14 @@ public class BDSv2 {
     }
 
     private static String parseString(InputStream is) throws IOException {
-        return new String(readBytes(is, parseInt(is)), StandardCharsets.UTF_8);
+        int length = parseInt(is);
+        if (is instanceof BAIS) {
+            BAIS bais = (BAIS) is;
+            String s = new String(bais.getData(), bais.getIndex(), length, "UTF-8");
+            bais.skip(length);
+            return s;
+        }
+        return new String(readBytes(is, length), "UTF-8");
     }
 
     private static byte[] readBytes(InputStream is, int bytes) throws IOException {
