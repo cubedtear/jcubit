@@ -54,13 +54,11 @@ subprojects {
         uploadArchives.repositories.mavenDeployer {
             beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
 
-            repository {
-                url = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+            repository(url: 'https://oss.sonatype.org/service/local/staging/deploy/maven2/') {
                 authentication(userName: ossrhUsername, password: ossrhPassword)
             }
 
-            snapshotRepository {
-                url = "https://oss.sonatype.org/content/repositories/snapshots/"
+            snapshotRepository(url: 'https://oss.sonatype.org/content/repositories/snapshots/') {
                 authentication(userName: ossrhUsername, password: ossrhPassword)
             }
 
@@ -111,13 +109,15 @@ if (System.getenv('CI') == null) {
     apply plugin: 'io.codearte.nexus-staging'
     apply plugin: 'maven'
 
+
+
     nexusStaging {
         packageGroup = "io.github.cubedtear"
     }
 
     closeAndPromoteRepository {}.mustRunAfter subprojects.uploadArchives
 
-    task buildAndDeploy {
+    task buildDeployAndRelease {
         dependsOn = [subprojects.build, subprojects.uploadArchives, closeAndPromoteRepository]
         group = BasePlugin.UPLOAD_GROUP
         description = "Builds and deploys to Maven Central, and closes and promotes the repository"
