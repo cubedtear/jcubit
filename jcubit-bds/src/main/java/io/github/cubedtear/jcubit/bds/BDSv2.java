@@ -2,11 +2,9 @@ package io.github.cubedtear.jcubit.bds;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
-import io.github.cubedtear.jcubit.collections.ArrayUtil;
 import io.github.cubedtear.jcubit.util.Set2;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
@@ -31,13 +29,13 @@ public class BDSv2 {
     private Map<String, Float> floats = Maps.newHashMap();
     private Map<String, Double> doubles = Maps.newHashMap();
     private Map<String, Set2<String, byte[]>[]> stringArrays = Maps.newHashMap();
-    private Map<String, Integer[]> intArrays = Maps.newHashMap();
-    private Map<String, Byte[]> byteArrays = Maps.newHashMap();
-    private Map<String, Character[]> charArrays = Maps.newHashMap();
-    private Map<String, Long[]> longArrays = Maps.newHashMap();
-    private Map<String, Short[]> shortArrays = Maps.newHashMap();
-    private Map<String, Float[]> floatArrays = Maps.newHashMap();
-    private Map<String, Double[]> doubleArrays = Maps.newHashMap();
+    private Map<String, int[]> intArrays = Maps.newHashMap();
+    private Map<String, byte[]> byteArrays = Maps.newHashMap();
+    private Map<String, char[]> charArrays = Maps.newHashMap();
+    private Map<String, long[]> longArrays = Maps.newHashMap();
+    private Map<String, short[]> shortArrays = Maps.newHashMap();
+    private Map<String, float[]> floatArrays = Maps.newHashMap();
+    private Map<String, double[]> doubleArrays = Maps.newHashMap();
     private Map<String, BDSv2> bdss = Maps.newHashMap();
     private Map<String, BDSv2[]> bdsArrays = Maps.newHashMap();
 
@@ -67,7 +65,8 @@ public class BDSv2 {
             byte[] bytes = name.getBytes("UTF-8");
             takenNames.put(name, bytes);
             this.size += bytes.length + 4;
-        } catch (UnsupportedEncodingException e) {
+        } catch (UnsupportedEncodingException ignored) {
+            throw new AssertionError("UTF-8 encoding is not found!");
         }
     }
 
@@ -137,43 +136,43 @@ public class BDSv2 {
     // region ... Array adders ...
     public void addBytes(String name, byte[] s) {
         checkAndAddName(name);
-        byteArrays.put(name, ArrayUtil.box(s));
+        byteArrays.put(name, s);
         this.size += s.length + 1 + 4;
     }
 
     public void addShorts(String name, short[] s) {
         checkAndAddName(name);
-        shortArrays.put(name, ArrayUtil.box(s));
+        shortArrays.put(name, s);
         this.size += 2 * s.length + 1 + 4;
     }
 
     public void addChars(String name, char[] s) {
         checkAndAddName(name);
-        charArrays.put(name, ArrayUtil.box(s));
+        charArrays.put(name, s);
         this.size += 2 * s.length + 1 + 4;
     }
 
     public void addInts(String name, int[] s) {
         checkAndAddName(name);
-        intArrays.put(name, ArrayUtil.box(s));
+        intArrays.put(name, s);
         this.size += 4 * s.length + 1 + 4;
     }
 
     public void addLongs(String name, long[] s) {
         checkAndAddName(name);
-        longArrays.put(name, ArrayUtil.box(s));
+        longArrays.put(name, s);
         this.size += 8 * s.length + 1 + 4;
     }
 
     public void addFloats(String name, float[] s) {
         checkAndAddName(name);
-        floatArrays.put(name, ArrayUtil.box(s));
+        floatArrays.put(name, s);
         this.size += 4 * s.length + 1 + 4;
     }
 
     public void addDoubles(String name, double[] s) {
         checkAndAddName(name);
-        doubleArrays.put(name, ArrayUtil.box(s));
+        doubleArrays.put(name, s);
         this.size += 8 * s.length + 1 + 4;
     }
 
@@ -247,31 +246,31 @@ public class BDSv2 {
 
     // region ... Array getters ...
 
-    public Byte[] getBytes(String name) {
+    public byte[] getBytes(String name) {
         return this.byteArrays.get(name);
     }
 
-    public Character[] getChars(String name) {
+    public char[] getChars(String name) {
         return this.charArrays.get(name);
     }
 
-    public Short[] getShorts(String name) {
+    public short[] getShorts(String name) {
         return this.shortArrays.get(name);
     }
 
-    public Integer[] getInts(String name) {
+    public int[] getInts(String name) {
         return this.intArrays.get(name);
     }
 
-    public Long[] getLongs(String name) {
+    public long[] getLongs(String name) {
         return this.longArrays.get(name);
     }
 
-    public Float[] getFloats(String name) {
+    public float[] getFloats(String name) {
         return this.floatArrays.get(name);
     }
 
-    public Double[] getDoubles(String name) {
+    public double[] getDoubles(String name) {
         return this.doubleArrays.get(name);
     }
 
@@ -365,48 +364,48 @@ public class BDSv2 {
         // endregion
         // region ... Array types ...
 
-        for (Map.Entry<String, Byte[]> e : this.byteArrays.entrySet()) {
+        for (Map.Entry<String, byte[]> e : this.byteArrays.entrySet()) {
             writeByte(os, BDSv2Type.BYTE.getSignature(true));
             writeString(os, e.getKey());
             writeInt(os, e.getValue().length);
-            for (Byte b : e.getValue()) writeByte(os, b);
+            for (byte b : e.getValue()) writeByte(os, b);
         }
 
-        for (Map.Entry<String, Short[]> e : this.shortArrays.entrySet()) {
+        for (Map.Entry<String, short[]> e : this.shortArrays.entrySet()) {
             writeByte(os, BDSv2Type.SHORT.getSignature(true));
             writeString(os, e.getKey());
             writeInt(os, e.getValue().length);
-            for (Short b : e.getValue()) writeShort(os, b);
+            for (short b : e.getValue()) writeShort(os, b);
         }
-        for (Map.Entry<String, Character[]> e : this.charArrays.entrySet()) {
+        for (Map.Entry<String, char[]> e : this.charArrays.entrySet()) {
             writeByte(os, BDSv2Type.CHAR.getSignature(true));
             writeString(os, e.getKey());
             writeInt(os, e.getValue().length);
-            for (Character b : e.getValue()) writeChar(os, b);
+            for (char b : e.getValue()) writeChar(os, b);
         }
-        for (Map.Entry<String, Integer[]> e : this.intArrays.entrySet()) {
+        for (Map.Entry<String, int[]> e : this.intArrays.entrySet()) {
             writeByte(os, BDSv2Type.INT.getSignature(true));
             writeString(os, e.getKey());
             writeInt(os, e.getValue().length);
-            for (Integer b : e.getValue()) writeInt(os, b);
+            for (int b : e.getValue()) writeInt(os, b);
         }
-        for (Map.Entry<String, Long[]> e : this.longArrays.entrySet()) {
+        for (Map.Entry<String, long[]> e : this.longArrays.entrySet()) {
             writeByte(os, BDSv2Type.LONG.getSignature(true));
             writeString(os, e.getKey());
             writeInt(os, e.getValue().length);
-            for (Long b : e.getValue()) writeLong(os, b);
+            for (long b : e.getValue()) writeLong(os, b);
         }
-        for (Map.Entry<String, Float[]> e : this.floatArrays.entrySet()) {
+        for (Map.Entry<String, float[]> e : this.floatArrays.entrySet()) {
             writeByte(os, BDSv2Type.FLOAT.getSignature(true));
             writeString(os, e.getKey());
             writeInt(os, e.getValue().length);
-            for (Float b : e.getValue()) writeFloat(os, b);
+            for (float b : e.getValue()) writeFloat(os, b);
         }
-        for (Map.Entry<String, Double[]> e : this.doubleArrays.entrySet()) {
+        for (Map.Entry<String, double[]> e : this.doubleArrays.entrySet()) {
             writeByte(os, BDSv2Type.DOUBLE.getSignature(true));
             writeString(os, e.getKey());
             writeInt(os, e.getValue().length);
-            for (Double b : e.getValue()) writeDouble(os, b);
+            for (double b : e.getValue()) writeDouble(os, b);
         }
         for (Map.Entry<String, Set2<String, byte[]>[]> e : this.stringArrays.entrySet()) {
             writeByte(os, BDSv2Type.STRING.getSignature(true));
@@ -481,146 +480,146 @@ public class BDSv2 {
     // region ... Parsers ...
 
     public static BDSv2 parse(byte[] data) throws SerializationException {
+        return BDSv2.parse(data, 0);
+    }
+
+    public static BDSv2 parse(byte[] data, int offset) throws SerializationException {
         try {
-            return parseStream(new BAIS(data));
+            for (byte b : SIGNATURE) {
+                if (data[offset++] != b)
+                    throw new SerializationException("BDSv2 signature not present, or incorrect!");
+            }
+            return parseInternal(data, new int[]{offset});
         } catch (IOException e) {
             throw new AssertionError("BAIS never throws an IO Exception");
         }
     }
 
+    /*
     public static BDSv2 parseStream(InputStream is) throws IOException, SerializationException {
         for (byte b : SIGNATURE)
             if ((byte) is.read() != b) throw new SerializationException("BDSv2 signature not present, or incorrect!");
-        return parseStreamInternal(is);
-    }
+        return parseInternal(is);
+    }*/
 
-    private static BAIS getBAIS(InputStream is, int length) throws IOException {
-        if (is instanceof BAIS) {
-            BAIS bais = (BAIS) is;
-            BAIS result = new BAIS(bais.getData(), bais.getIndex(), length);
-            bais.skip(length);
-            return result;
-        } else return new BAIS(readBytes(is, length));
-    }
-
-    private static BDSv2 parseStreamInternal(InputStream is) throws IOException, SerializationException {
+    private static BDSv2 parseInternal(byte[] is, int[] offset) throws IOException, SerializationException {
         BDSv2 bds = new BDSv2();
-        int length = parseInt(is);
-        BAIS dis = getBAIS(is, length);
+        int initialOffset = offset[0];
+        int length = parseInt(is, offset);
 
-        while (dis.getLeft() > 0) {
-            byte signature = (byte) dis.read();
-            String name = parseString(dis);
+        while (initialOffset + length > offset[0]) {
+            byte signature = is[offset[0]++];
+            String name = parseString(is, offset);
             BDSv2Type type = BDSv2Type.fromSignature(signature);
             if (type == null)
                 throw new SerializationException("Unknown type signature: " + Integer.toHexString(signature & 0xFF));
             switch (type) {
                 case BYTE:
                     if (BDSv2Type.isArray(signature)) {
-                        int arrayLength = parseInt(dis);
+                        int arrayLength = parseInt(is, offset);
                         byte[] array = new byte[arrayLength];
                         for (int i = 0; i < arrayLength; i++) {
-                            array[i] = parseByte(dis);
+                            array[i] = parseByte(is, offset);
                         }
                         bds.addBytes(name, array);
                     } else {
-                        bds.addByte(name, parseByte(dis));
+                        bds.addByte(name, parseByte(is, offset));
                     }
                     break;
                 case CHAR:
                     if (BDSv2Type.isArray(signature)) {
-                        int arrayLength = parseInt(dis);
+                        int arrayLength = parseInt(is, offset);
                         char[] array = new char[arrayLength];
                         for (int i = 0; i < arrayLength; i++) {
-                            array[i] = parseChar(dis);
+                            array[i] = parseChar(is, offset);
                         }
                         bds.addChars(name, array);
                     } else {
-                        bds.addChar(name, parseChar(dis));
+                        bds.addChar(name, parseChar(is, offset));
                     }
                     break;
                 case SHORT:
                     if (BDSv2Type.isArray(signature)) {
-                        int arrayLength = parseInt(dis);
+                        int arrayLength = parseInt(is, offset);
                         short[] array = new short[arrayLength];
                         for (int i = 0; i < arrayLength; i++) {
-                            array[i] = parseShort(dis);
+                            array[i] = parseShort(is, offset);
                         }
                         bds.addShorts(name, array);
                     } else {
-                        bds.addShort(name, parseShort(dis));
+                        bds.addShort(name, parseShort(is, offset));
                     }
                     break;
                 case INT:
                     if (BDSv2Type.isArray(signature)) {
-                        int arrayLength = parseInt(dis);
+                        int arrayLength = parseInt(is, offset);
                         int[] array = new int[arrayLength];
                         for (int i = 0; i < arrayLength; i++) {
-                            array[i] = parseInt(dis);
+                            array[i] = parseInt(is, offset);
                         }
                         bds.addInts(name, array);
                     } else {
-                        bds.addInt(name, parseInt(dis));
+                        bds.addInt(name, parseInt(is, offset));
                     }
                     break;
                 case LONG:
                     if (BDSv2Type.isArray(signature)) {
-                        int arrayLength = parseInt(dis);
+                        int arrayLength = parseInt(is, offset);
                         long[] array = new long[arrayLength];
                         for (int i = 0; i < arrayLength; i++) {
-                            array[i] = parseLong(dis);
+                            array[i] = parseLong(is, offset);
                         }
                         bds.addLongs(name, array);
                     } else {
-                        bds.addLong(name, parseLong(dis));
+                        bds.addLong(name, parseLong(is, offset));
                     }
                     break;
                 case FLOAT:
                     if (BDSv2Type.isArray(signature)) {
-                        int arrayLength = parseInt(dis);
+                        int arrayLength = parseInt(is, offset);
                         float[] array = new float[arrayLength];
                         for (int i = 0; i < arrayLength; i++) {
-                            array[i] = parseFloat(dis);
+                            array[i] = parseFloat(is, offset);
                         }
                         bds.addFloats(name, array);
                     } else {
-                        bds.addFloat(name, parseFloat(dis));
+                        bds.addFloat(name, parseFloat(is, offset));
                     }
                     break;
                 case DOUBLE:
                     if (BDSv2Type.isArray(signature)) {
-                        int arrayLength = parseInt(dis);
+                        int arrayLength = parseInt(is, offset);
                         double[] array = new double[arrayLength];
                         for (int i = 0; i < arrayLength; i++) {
-                            array[i] = parseDouble(dis);
+                            array[i] = parseDouble(is, offset);
                         }
                         bds.addDoubles(name, array);
                     } else {
-                        bds.addDouble(name, parseDouble(dis));
+                        bds.addDouble(name, parseDouble(is, offset));
                     }
                     break;
                 case BDS:
                     if (BDSv2Type.isArray(signature)) {
-                        int arrayLength = parseInt(dis);
+                        int arrayLength = parseInt(is, offset);
                         BDSv2[] array = new BDSv2[arrayLength];
                         for (int i = 0; i < arrayLength; i++) {
-                            array[i] = parseStreamInternal(dis);
+                            array[i] = parseInternal(is, offset);
                         }
                         bds.addBDSs(name, array);
                     } else {
-                        bds.addBDS(name, BDSv2.parseStreamInternal(dis));
+                        bds.addBDS(name, BDSv2.parseInternal(is, offset));
                     }
                     break;
                 case STRING:
                     if (BDSv2Type.isArray(signature)) {
-                        int arrayLength = parseInt(dis);
+                        int arrayLength = parseInt(is, offset);
                         String[] array = new String[arrayLength];
                         for (int i = 0; i < arrayLength; i++) {
-                            array[i] = parseString(dis);
+                            array[i] = parseString(is, offset);
                         }
                         bds.addStrings(name, array);
                     } else {
-                        bds.addString(name, parseString(dis));
+                        bds.addString(name, parseString(is, offset));
                     }
                     break;
             }
@@ -630,56 +629,40 @@ public class BDSv2 {
 
     // region ... Internal parsers ...
 
-    private static byte parseByte(InputStream is) throws IOException {
-        return (byte) is.read();
+    private static byte parseByte(byte[] is, int[] offset) throws IOException {
+        return is[offset[0]++];
     }
 
-    private static char parseChar(InputStream is) throws IOException {
-        return (char) (is.read() << 8 | (is.read() & 0xFF));
+    private static char parseChar(byte[] is, int[] offset) throws IOException {
+        return (char) (is[offset[0]++] << 8 | (is[offset[0]++] & 0xFF));
     }
 
-    private static short parseShort(InputStream is) throws IOException {
-        return (short) (is.read() << 8 | (is.read() & 0xFF));
+    private static short parseShort(byte[] is, int[] offset) throws IOException {
+        return (short) (is[offset[0]++] << 8 | (is[offset[0]++] & 0xFF));
     }
 
-    private static int parseInt(InputStream is) throws IOException {
-        return is.read() << 24 | (is.read() & 0xFF) << 16 | (is.read() & 0xFF) << 8 | (is.read() & 0xFF);
+    private static int parseInt(byte[] is, int[] offset) throws IOException {
+        return is[offset[0]++] << 24 | (is[offset[0]++] & 0xFF) << 16 | (is[offset[0]++] & 0xFF) << 8 | (is[offset[0]++] & 0xFF);
     }
 
-    private static long parseLong(InputStream is) throws IOException {
-        return ((long) is.read()) << 56L | (is.read() & 0xFFL) << 48L | (is.read() & 0xFFL) << 40L | (is.read() & 0xFFL) << 32 | (is.read() & 0xFFL) << 24 | (is.read() & 0xFFL) << 16 | (is.read() & 0xFFL) << 8 | (is.read() & 0xFFL);
+    private static long parseLong(byte[] is, int[] offset) throws IOException {
+        return ((long) is[offset[0]++]) << 56L | (is[offset[0]++] & 0xFFL) << 48L | (is[offset[0]++] & 0xFFL) << 40L | (is[offset[0]++] & 0xFFL) << 32 |
+                (is[offset[0]++] & 0xFFL) << 24 | (is[offset[0]++] & 0xFFL) << 16 | (is[offset[0]++] & 0xFFL) << 8 | (is[offset[0]++] & 0xFFL);
     }
 
-    private static float parseFloat(InputStream is) throws IOException {
-        return Float.intBitsToFloat(parseInt(is));
+    private static float parseFloat(byte[] is, int[] offset) throws IOException {
+        return Float.intBitsToFloat(parseInt(is, offset));
     }
 
-    private static double parseDouble(InputStream is) throws IOException {
-        return Double.longBitsToDouble(parseLong(is));
+    private static double parseDouble(byte[] is, int[] offset) throws IOException {
+        return Double.longBitsToDouble(parseLong(is, offset));
     }
 
-    private static String parseString(InputStream is) throws IOException {
-        int length = parseInt(is);
-        if (is instanceof BAIS) {
-            BAIS bais = (BAIS) is;
-            String s = new String(bais.getData(), bais.getIndex(), length, "UTF-8");
-            bais.skip(length);
-            return s;
-        }
-        return new String(readBytes(is, length), "UTF-8");
-    }
-
-    private static byte[] readBytes(InputStream is, int bytes) throws IOException {
-        byte[] data = new byte[bytes];
-        int written = 0;
-        while (written < bytes) {
-            int read = is.read(data, written, bytes - written);
-            if (read == -1) {
-                throw new IOException("Error reading from stream!");
-            }
-            written += read;
-        }
-        return data;
+    private static String parseString(byte[] is, int[] offset) throws IOException, SerializationException {
+        int length = parseInt(is, offset);
+        String s = new String(is, offset[0], length, StandardCharsets.UTF_8);
+        offset[0] += length;
+        return s;
     }
 
     // endregion
