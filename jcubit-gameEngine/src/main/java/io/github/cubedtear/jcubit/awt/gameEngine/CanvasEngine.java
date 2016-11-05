@@ -202,4 +202,20 @@ public class CanvasEngine extends BasicGame {
 	public Dimension getSize() {
 		return size;
 	}
+
+	/**
+	 * Returns the canvas where the game is drawn
+	 * @return the canvas where the game is drawn
+	 */
+	public Canvas getCanvas() {
+		return canvas;
+	}
+
+	/**
+	 * Returns the JFrame that contains the Canvas
+	 * @return the JFrame that contains the Canvas
+	 */
+	public JFrame getFrame() {
+		return frame;
+	}
 }
