@@ -73,6 +73,7 @@ public class BDS {
 
     /**
      * Reads a BDS from the specified Path
+     *
      * @param p The path from which the BDS will be read.
      * @return The BDS read from the Path.
      * @throws IOException if an I/O error occurs. See {@link java.nio.file.Files#readAllBytes(Path)}
@@ -84,6 +85,7 @@ public class BDS {
 
     /**
      * Reads a BDS from the given binary data.
+     *
      * @param data The data from which the BDS should be parsed.
      * @return The BDS read from the given data.
      */
@@ -1085,6 +1087,7 @@ public class BDS {
     /**
      * Returns the set of names of all the nested BDSs. That is, for all String e returned,
      * {@link BDS#getBDS(String)} this.getBDS(e)} is guaranteed to not return null.
+     *
      * @return the set of names of all the nested BDSs.
      */
     public Set<String> getAllBDSs() {
@@ -1094,6 +1097,7 @@ public class BDS {
     /**
      * Returns the set of names of all the byte arrays. That is, for all String e returned,
      * {@link BDS#getByteArray(String) this.getByteArray(e)} is guaranteed to not return null.
+     *
      * @return the set of names of all the byte arrays.
      */
     public Set<String> getAllByteArrays() {
@@ -1103,6 +1107,7 @@ public class BDS {
     /**
      * Returns the set of names of all the bytes. That is, for all String e returned,
      * {@link BDS#getByte(String) this.getByte(e)} is guaranteed to not return null.
+     *
      * @return the set of names of all the bytes.
      */
     public Set<String> getAllBytes() {
@@ -1112,6 +1117,7 @@ public class BDS {
     /**
      * Returns the set of names of all the char arrays. That is, for all String e returned,
      * {@link BDS#getCharArray(String) this.getCharArray(e)} is guaranteed to not return null.
+     *
      * @return the set of names of all the char arrays.
      */
     public Set<String> getAllCharArrays() {
@@ -1121,6 +1127,7 @@ public class BDS {
     /**
      * Returns the set of names of all the chars. That is, for all String e returned,
      * {@link BDS#getChar(String) this.getChar(e)} is guaranteed to not return null.
+     *
      * @return the set of names of all the chars.
      */
     public Set<String> getAllChars() {
@@ -1130,6 +1137,7 @@ public class BDS {
     /**
      * Returns the set of names of all the longs. That is, for all String e returned,
      * {@link BDS#getDoubleArray(String)} this.getDoubleArray(e)} is guaranteed to not return null.
+     *
      * @return the set of names of all the longs.
      */
     public Set<String> getAllDoubleArrays() {
@@ -1139,6 +1147,7 @@ public class BDS {
     /**
      * Returns the set of names of all the doubles. That is, for all String e returned,
      * {@link BDS#getDouble(String) this.getDouble(e)} is guaranteed to not return null.
+     *
      * @return the set of names of all the doubles.
      */
     public Set<String> getAllDoubles() {
@@ -1148,6 +1157,7 @@ public class BDS {
     /**
      * Returns the set of names of all the float arrays. That is, for all String e returned,
      * {@link BDS#getFloatArray(String) this.getFloatArray(e)} is guaranteed to not return null.
+     *
      * @return the set of names of all the float arrays.
      */
     public Set<String> getAllFloatArrays() {
@@ -1157,6 +1167,7 @@ public class BDS {
     /**
      * Returns the set of names of all the floats. That is, for all String e returned,
      * {@link BDS#getFloat(String) this.getFloat(e)} is guaranteed to not return null.
+     *
      * @return the set of names of all the floats.
      */
     public Set<String> getAllFloats() {
@@ -1166,6 +1177,7 @@ public class BDS {
     /**
      * Returns the set of names of all the int arrays. That is, for all String e returned,
      * {@link BDS#getIntArray(String) this.getIntArray(e)} is guaranteed to not return null.
+     *
      * @return the set of names of all the int arrays.
      */
     public Set<String> getAllIntArrays() {
@@ -1175,6 +1187,7 @@ public class BDS {
     /**
      * Returns the set of names of all the ints. That is, for all String e returned,
      * {@link BDS#getInt(String) this.getInt(e)} is guaranteed to not return null.
+     *
      * @return the set of names of all the ints.
      */
     public Set<String> getAllInts() {
@@ -1184,6 +1197,7 @@ public class BDS {
     /**
      * Returns the set of names of all the long arrays. That is, for all String e returned,
      * {@link BDS#getLongArray(String) this.getLongArray(e)} is guaranteed to not return null.
+     *
      * @return the set of names of all the long arrays.
      */
     public Set<String> getAllLongArrays() {
@@ -1193,6 +1207,7 @@ public class BDS {
     /**
      * Returns the set of names of all the short arrays. That is, for all String e returned,
      * {@link BDS#getShortArray(String) this.getString(e)} is guaranteed to not return null.
+     *
      * @return the set of names of all the short arrays.
      */
     public Set<String> getAllShortArrays() {
@@ -1202,6 +1217,7 @@ public class BDS {
     /**
      * Returns the set of names of all the shorts. That is, for all String e returned,
      * {@link BDS#getShort(String) this.getShort(e)} is guaranteed to not return null.
+     *
      * @return the set of names of all the shorts.
      */
     public Set<String> getAllShorts() {
@@ -1211,6 +1227,7 @@ public class BDS {
     /**
      * Returns the set of names of all the string arrays. That is, for all String e returned,
      * {@link BDS#getStringArray(String) this.getStringArray(e)} is guaranteed to not return null.
+     *
      * @return the set of names of all the string arrays.
      */
     public Set<String> getAllStringArrays() {
@@ -1220,6 +1237,7 @@ public class BDS {
     /**
      * Returns the set of names of all the strings. That is, for all String e returned,
      * {@link BDS#getString(String) this.getString(e)} is guaranteed to not return null.
+     *
      * @return the set of names of all the strings.
      */
     public Set<String> getAllStrings() {
