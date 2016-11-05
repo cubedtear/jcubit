@@ -93,5 +93,32 @@ public class BDSv2Test {
 
         assertEquals(WORKS_BYTE_VALUE, (byte) parsed1.getByte("works"));
 
+        BDSv2 parsedTopStream = BDSv2.parseStream(new BAIS(serialized));
+
+        BDSv2 parsed0Stream = parsedTopStream.getBDSs("bds")[0];
+        BDSv2 parsed1Stream = parsedTopStream.getBDSs("bds")[1];
+
+        assertEquals(NICE_INT_VALUE, (int) parsedTopStream.getInt("nice"));
+        assertEquals(BYTE_VALUE, (byte) parsed0Stream.getByte("byte"));
+        assertEquals(SHORT_VALUE, (short) parsed0Stream.getShort("short"));
+        assertEquals(CHAR_VALUE, (char) parsed0Stream.getChar("char"));
+        assertEquals(INT_VALUE, (int) parsed0Stream.getInt("int"));
+        assertEquals(LONG_VALUE, (long) parsed0Stream.getLong("long"));
+        // Delta is 0 because the number should be restored exactly the same
+        assertEquals(FLOAT_VALUE, parsed0Stream.getFloat("float"), 0);
+        assertEquals(DOUBLE_VALUE, parsed0Stream.getDouble("double"), 0);
+        assertEquals(STRING_VALUE, parsed0Stream.getString("string"));
+
+        assertArrayEquals(BYTE_ARRAY, parsed0Stream.getBytes("bytes"));
+        assertArrayEquals(SHORT_ARRAY, parsed0Stream.getShorts("shorts"));
+        assertArrayEquals(CHAR_ARRAY, parsed0Stream.getChars("chars"));
+        assertArrayEquals(INT_ARRAY, parsed0Stream.getInts("ints"));
+        assertArrayEquals(LONG_ARRAY, parsed0Stream.getLongs("longs"));
+        assertArrayEquals(FLOAT_ARRAY, parsed0Stream.getFloats("floats"), 0);
+        assertArrayEquals(DOUBLE_ARRAY, parsed0Stream.getDoubles("doubles"), 0);
+        assertArrayEquals(STRING_ARRAY, parsed0Stream.getStrings("strings"));
+
+        assertEquals(WORKS_BYTE_VALUE, (byte) parsed1Stream.getByte("works"));
+
     }
 }

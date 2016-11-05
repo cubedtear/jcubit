@@ -5,6 +5,7 @@ import com.google.common.collect.Maps;
 import io.github.cubedtear.jcubit.util.Set2;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
@@ -495,12 +496,27 @@ public class BDSv2 {
         }
     }
 
-    /*
     public static BDSv2 parseStream(InputStream is) throws IOException, SerializationException {
         for (byte b : SIGNATURE)
             if ((byte) is.read() != b) throw new SerializationException("BDSv2 signature not present, or incorrect!");
-        return parseInternal(is);
-    }*/
+        int length = 0;
+        for (int i = 0; i < 4; i++) {
+            final byte read = (byte) (is.read() & 0xFF);
+            length = (length << 8) | read & 0xFF;
+        }
+        byte[] data = new byte[length + 4];
+
+        data[0] = (byte) ((length & 0xFF000000) >> 24);
+        data[1] = (byte) ((length & 0xFF0000) >> 16);
+        data[2] = (byte) ((length & 0xFF00) >> 8);
+        data[3] = (byte) (length & 0xFF);
+
+        for (int i = 0; i < length; i++) {
+            data[i + 4] = (byte) is.read();
+        }
+
+        return parseInternal(data, new int[]{0});
+    }
 
     private static BDSv2 parseInternal(byte[] is, int[] offset) throws IOException, SerializationException {
         BDSv2 bds = new BDSv2();
