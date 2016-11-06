@@ -68,6 +68,25 @@ public interface IRender {
 	void draw(int x, int y, long deltaNS, AnimatedSprite sprite);
 
 	/**
+	 * Sets the clipping region to be used from now on. Subsequent calls to any of the {@code draw} methods
+	 * will be clipped to only draw inside the given region.
+	 * Can be reset by using calling this method with a region that includes the whole rendering region,
+	 * or simply by calling {@link IRender#doNotClip()}.
+	 * @param x The x coordinate of the top-left corner of the clipping region.
+	 * @param y The y coordinate of the top-left corner of the clipping region.
+	 * @param width The width of the clipping region.
+	 * @param height The height of the clipping region.
+	 */
+	@API
+	void setClipping(int x, int y, int width, int height);
+
+	/**
+	 * Removes the clipping. Subsequent calls to any of the {@code draw} methods will only clip to the whole rendering
+	 * region.
+	 */
+	void doNotClip();
+
+	/**
 	 * Sets whether semi-transparent colors should be blended together. My slow the rendering considerably.
 	 * @param blend {@code true} if blending is desired.
      */
