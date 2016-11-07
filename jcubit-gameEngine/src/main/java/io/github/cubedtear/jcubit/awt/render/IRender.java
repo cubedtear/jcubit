@@ -102,4 +102,11 @@ public interface IRender {
 	 * @return the height of this renderer (i.e. The width of the area that can be drawn onto).
 	 */
 	int getHeight();
+
+	/**
+	 * Sets the color to use when {@link IRender#clear() clear()} is called.
+	 *
+	 * @param clearColor The background color to use.
+	 */
+	void setClearColor(int clearColor);
 }
