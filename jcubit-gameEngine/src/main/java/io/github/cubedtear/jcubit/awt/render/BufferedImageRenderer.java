@@ -145,12 +145,8 @@ public class BufferedImageRenderer implements IRender {
         this.clip = new Vec4i(0, 0, width, height);
     }
 
-    /**
-     * Sets the background color to use when {@link BufferedImageRenderer#clear() clear()} is called.
-     *
-     * @param backgroundColor The background color to use.
-     */
-    public void setBackgroundColor(int backgroundColor) {
-        this.backgroundColor = backgroundColor;
+    @Override
+    public void setClearColor(int clearColor) {
+        this.backgroundColor = clearColor;
     }
 }
