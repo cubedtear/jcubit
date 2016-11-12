@@ -68,22 +68,31 @@ public interface IRender {
 	void draw(int x, int y, long deltaNS, AnimatedSprite sprite);
 
 	/**
-	 * Sets the clipping region to be used from now on. Subsequent calls to any of the {@code draw} methods
-	 * will be clipped to only draw inside the given region.
-	 * Can be reset by using calling this method with a region that includes the whole rendering region,
-	 * or simply by calling {@link IRender#doNotClip()}.
-	 * @param x The x coordinate of the top-left corner of the clipping region.
-	 * @param y The y coordinate of the top-left corner of the clipping region.
+	 * Sets the intersecting region between the current clipping region and the one
+	 * given in the parameters as the new clipping region to be used from now on.
+	 * Subsequent calls to any of the {@code draw} methods will be clipped to only draw
+	 * inside the given region.
+	 * Can be reset by calling {@link IRender#doNotClip()}.
+	 * @param x The x coordinate of the top-left corner of the clipping region. (Relative to the whole render region).
+	 * @param y The y coordinate of the top-left corner of the clipping region. (Relative to the whole render region).
 	 * @param width The width of the clipping region.
 	 * @param height The height of the clipping region.
 	 */
 	@API
-	void setClipping(int x, int y, int width, int height);
+	void pushClipping(int x, int y, int width, int height);
+
+	/**
+	 * Remove the last added clipping.
+	 */
+	@API
+	void popClipping();
+
 
 	/**
 	 * Removes the clipping. Subsequent calls to any of the {@code draw} methods will only clip to the whole rendering
 	 * region.
 	 */
+	@API
 	void doNotClip();
 
 	/**

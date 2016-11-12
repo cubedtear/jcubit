@@ -26,6 +26,7 @@ import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
 import java.util.Arrays;
 import java.util.Map;
+import java.util.Stack;
 
 /**
  * Renders to a BufferedImage, which may then be stored as a file, or drawn into a {@link Canvas}
@@ -39,7 +40,7 @@ public class BufferedImageRenderer implements IRender {
     private final int height;
     private final Map<String, Sprite> sprites;
     private final int[] pixels;
-    private Vec4i clip;
+    private Stack<Vec4i> clippings;
     private boolean blend = false;
     private int backgroundColor = 0xFF_00_00_00;
 
@@ -70,7 +71,7 @@ public class BufferedImageRenderer implements IRender {
 
         this.image = new BufferedImage(this.width, this.height, BufferedImage.TYPE_INT_ARGB);
         this.pixels = ((DataBufferInt) this.image.getRaster().getDataBuffer()).getData();
-        this.clip = new Vec4i(0, 0, width, height);
+        this.clippings = new Stack<>();
     }
 
     public void setBlend(boolean blend) {
@@ -84,10 +85,15 @@ public class BufferedImageRenderer implements IRender {
 
     @Override
     public void draw(int x, int y, int width, int height, int[] colors) {
-        int maxX = Math.min(this.clip.z - x, width);
-        int maxY = Math.min(this.clip.w - y, height);
-        int minX = Math.max(this.clip.x - x, 0);
-        int minY = Math.max(this.clip.y - y, 0);
+        Vec4i clip;
+        if (this.clippings.isEmpty()) {
+            clip = new Vec4i(0, 0, width, height);
+        } else clip = clippings.pop();
+
+        int maxX = Math.min(clip.z - x, width);
+        int maxY = Math.min(clip.w - y, height);
+        int minX = Math.max(clip.x - x, 0);
+        int minY = Math.max(clip.y - y, 0);
 
         for (int yp = minY; yp < maxY; yp++) {
             final int beforeY = yp + y;
@@ -136,13 +142,25 @@ public class BufferedImageRenderer implements IRender {
     }
 
     @Override
-    public void setClipping(int x, int y, int width, int height) {
-        this.clip = new Vec4i(x, y, width, height);
+    public void pushClipping(int x, int y, int width, int height) {
+        if (this.clippings.isEmpty()) this.clippings.push(new Vec4i(x, y, width, height));
+        else {
+            final Vec4i top = this.clippings.pop();
+            Rectangle prev = new Rectangle(top.x, top.y, top.z, top.w);
+            Rectangle next = new Rectangle(x, y, width, height);
+            Rectangle intersection = next.intersection(prev);
+            this.clippings.push(new Vec4i(intersection.x, intersection.y, intersection.width, intersection.height));
+        }
+    }
+
+    @Override
+    public void popClipping() {
+        if (!this.clippings.isEmpty()) this.clippings.pop();
     }
 
     @Override
     public void doNotClip() {
-        this.clip = new Vec4i(0, 0, width, height);
+        this.clippings.clear();
     }
 
     @Override
