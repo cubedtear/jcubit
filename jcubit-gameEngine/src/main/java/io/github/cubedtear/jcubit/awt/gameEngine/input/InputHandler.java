@@ -36,7 +36,7 @@ public class InputHandler implements KeyListener, FocusListener, MouseInputListe
     private final boolean[] keys = new boolean[65536];
     private final List<Integer> checked = new ArrayList<>();
     private final Queue<MouseInputEvent> mouseEvents = new LinkedList<>();
-    private final Queue<WheelEvent> wheelEvents= new LinkedList<>();
+    private final Queue<WheelEvent> wheelEvents = new LinkedList<>();
     private boolean focus;
     private Point lastMousePos = new Point();
 
@@ -225,7 +225,14 @@ public class InputHandler implements KeyListener, FocusListener, MouseInputListe
         private final MouseAction action;
         private final Point position;
 
-        protected MouseInputEvent(MouseButton button, MouseAction action, Point position) {
+        /**
+         * Creates a MouseInputEvent that represents the given parameters.
+         *
+         * @param button   The mouse button that has fired the event.
+         * @param action   The mouse action that happened.
+         * @param position The position of the mouse when the action happened.
+         */
+        public MouseInputEvent(MouseButton button, MouseAction action, Point position) {
             this.button = button;
             this.action = action;
             this.position = position;
@@ -258,6 +265,23 @@ public class InputHandler implements KeyListener, FocusListener, MouseInputListe
         public Point getPosition() {
             return position;
         }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            MouseInputEvent that = (MouseInputEvent) o;
+            return button == that.button && action == that.action && (position != null ? position.equals(that.position) : that.position == null);
+        }
+
+        @Override
+        public int hashCode() {
+            int result = button != null ? button.hashCode() : 0;
+            result = 31 * result + (action != null ? action.hashCode() : 0);
+            result = 31 * result + (position != null ? position.hashCode() : 0);
+            return result;
+        }
     }
 
     public static class WheelEvent {
@@ -267,6 +291,7 @@ public class InputHandler implements KeyListener, FocusListener, MouseInputListe
             this.scrollAmount = scrollAmount;
         }
 
+        @API
         public int getScrollAmount() {
             return scrollAmount;
         }

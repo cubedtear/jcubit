@@ -12,7 +12,14 @@ import java.awt.*;
 @API
 public class Vec2i {
 
+    /**
+     * The x coordinate of the vector.
+     */
     public final int x;
+
+    /**
+     * The y coordinate of the vector.
+     */
     public final int y;
 
     /**
@@ -29,6 +36,7 @@ public class Vec2i {
      * @param x The x coordinate.
      * @param y The y coordinate.
      */
+    @API
     public Vec2i(int x, int y) {
         this.x = x;
         this.y = y;
@@ -68,20 +76,36 @@ public class Vec2i {
     /**
      * Returns the result of adding two vectors.
      * The result is a vector with each coordinate being the sum of the coordinates of {@code this} vector and {@code other}.
+     *
      * @param other The other vector to sum with.
      * @return The result of adding {@code this} with {@code other}
      */
+    @API
     public Vec2i add(Vec2i other) {
         return new Vec2i(this.x + other.x, this.y + other.y);
+    }
+
+    /**
+     * Returns the result of subtracting a vector from this vector.
+     * The result is a vector with each coordinate being the subtraction of the coordinates of the {@code other} vector from {@code this}.
+     *
+     * @param other The vector to subtract.
+     * @return The result of subtracting {@code other} from {@code this}
+     */
+    @API
+    public Vec2i subtract(Vec2i other) {
+        return new Vec2i(this.x - other.x, this.y - other.y);
     }
 
     /**
      * Returns the result of the dot-product between {@code this} and {@code other}.
      * The dot-product of two vectors is the sum of the products of their coordinates
      * (i.e. {@code this.x*other.x + this.y*other.y}).
+     *
      * @param other The other vector.
      * @return The dot-product of {@code this} and {@code other}.
      */
+    @API
     public int dot(Vec2i other) {
         return this.x * other.x + this.y * other.y;
     }
@@ -89,8 +113,10 @@ public class Vec2i {
     /**
      * Returns the length of this vector, calculated as the square root of the sum of the coordinates squared
      * (i.e. {@code Math.sqrt(x*x + y*y)}.
+     *
      * @return the length of this vector.
      */
+    @API
     public double length() {
         return Math.sqrt(this.dot(this));
     }
@@ -98,6 +124,7 @@ public class Vec2i {
     /**
      * Multiplies {@code this} vector by a scalar. Equivalent to the vector resulting of multiplying each coordinate
      * by the scalar. Be careful, the resulting coordinates are casted to ints.
+     *
      * @param scalar The scalar to multiply by.
      * @return {@code this} vector multiplied by {@code scalar}.
      */
@@ -108,6 +135,7 @@ public class Vec2i {
 
     /**
      * Returns the vector with the negative coordinates (i.e. {@code new Vec2i(-x, -y)}). Also called the <i>opposite</i>.
+     *
      * @return the opposite vector.
      */
     @API
@@ -117,6 +145,7 @@ public class Vec2i {
 
     /**
      * Converts {@code this} vector to a {@link Point java.awt.Point}.
+     *
      * @return this vector as a {@code java.awt.Point}.1
      */
     @API
@@ -126,6 +155,7 @@ public class Vec2i {
 
     /**
      * Returns the maximum of the two coordinates.
+     *
      * @return max(x, y).
      */
     @API
@@ -135,6 +165,7 @@ public class Vec2i {
 
     /**
      * Returns the minimum of the two coordinates.
+     *
      * @return min(x, y).
      */
     @API
