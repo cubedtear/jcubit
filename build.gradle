@@ -5,8 +5,8 @@ if (!javaV.java7Compatible) {
     throw new GradleException('Gradle is not running with a Java 7-compatible JDK')
 }
 
-def majorConf = new ConfigSlurper().parse(new File(project.projectDir, "version.groovy").toURI().toURL());
-ext.majorVersion = majorConf.major as String;
+def majorConf = new ConfigSlurper().parse(new File(project.projectDir, "version.groovy").toURI().toURL())
+ext.majorVersion = majorConf.major as String
 
 subprojects {
 
@@ -97,19 +97,16 @@ subprojects {
 buildscript {
     repositories {
         mavenCentral()
-        //Needed only for SNAPSHOT versions
-        //maven { url "http://oss.sonatype.org/content/repositories/snapshots/" }
     }
     dependencies {
         classpath "io.codearte.gradle.nexus:gradle-nexus-staging-plugin:0.5.3"
     }
 }
 
+apply plugin: 'io.codearte.nexus-staging'
+apply plugin: 'maven'
+
 if (System.getenv('CI') == null) {
-    apply plugin: 'io.codearte.nexus-staging'
-    apply plugin: 'maven'
-
-
 
     nexusStaging {
         packageGroup = "io.github.cubedtear"

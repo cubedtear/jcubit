@@ -79,6 +79,7 @@ public class BufferedImageRenderer implements IRender {
         this.translations = new Stack<>();
     }
 
+    @Override
     public void setBlend(boolean blend) {
         this.blend = blend;
     }
@@ -92,16 +93,17 @@ public class BufferedImageRenderer implements IRender {
     public void draw(int x, int y, int width, int height, int[] colors) {
         Rectangle clipped = new Rectangle(x, y, width, height);
 
-        if (!this.translations.empty()) clipped = clipped.move(this.translations.peek());
+        if (!this.translations.isEmpty()) clipped = clipped.move(this.translations.peek());
         if (!this.clippings.isEmpty()) clipped = clipped.intersection(this.clippings.peek());
-        clipped = this.bounds.intersection(clipped);
+        else clipped = this.bounds.intersection(clipped);
+
+        Vec2i offset = clipped.getTopLeft().subtract(new Vec2i(x, y));
+        if (!this.translations.isEmpty()) offset = offset.subtract(this.translations.peek());
 
         for (int yp = clipped.y; yp < clipped.getY2(); yp++) {
-            final int spriteY = yp - clipped.y;
-            if (spriteY < 0) continue; // If the sprite's top left is outside the screen
+            final int spriteY = yp - clipped.y + offset.y;
             for (int xp = clipped.x; xp < clipped.getX2(); xp++) {
-                final int spriteX = xp - clipped.x;
-                if (spriteX < 0) continue;
+                final int spriteX = xp - clipped.x + offset.x;
                 int color = colors[spriteX + spriteY * width];
                 int alpha = ARGBColorUtil.getAlpha(color);
                 if (alpha == 0) continue;
@@ -147,12 +149,14 @@ public class BufferedImageRenderer implements IRender {
         this.pushClipping(new Rectangle(x, y, width, height));
     }
 
+    @Override
     public void pushClipping(Rectangle rect) {
         if (this.clippings.isEmpty()) {
             if (!this.translations.empty()) this.clippings.push(rect.move(this.translations.peek()));
             else this.clippings.push(rect);
         } else {
-            if (!this.translations.empty()) this.clippings.push(rect.move(this.translations.peek()).intersection(this.clippings.peek()));
+            if (!this.translations.empty())
+                this.clippings.push(rect.move(this.translations.peek()).intersection(this.clippings.peek()));
             else this.clippings.push(rect.intersection(this.clippings.peek()));
         }
     }
@@ -172,19 +176,27 @@ public class BufferedImageRenderer implements IRender {
         this.backgroundColor = clearColor;
     }
 
+    @Override
     public void pushTranslation(Vec2i delta) {
         if (!this.translations.empty()) this.translations.push(delta.add(this.translations.peek()));
         else this.translations.push(delta);
     }
 
+    @Override
     public void popTranslation() {
         if (!this.translations.empty()) this.translations.pop();
     }
 
+    @Override
     public void drawBorder(Rectangle rect, int size, int color) {
         if (!this.translations.empty()) rect = rect.move(this.translations.peek());
-        for (int x = rect.x; x < rect.width + rect.x; x++) {
-            for (int y = rect.y; y < rect.height + rect.y; y++) {
+
+        Rectangle drawBounds;
+        if (!this.clippings.empty()) drawBounds = rect.intersection(this.clippings.peek());
+        else drawBounds = rect.intersection(this.bounds);
+
+        for (int x = drawBounds.x; x < drawBounds.getX2(); x++) {
+            for (int y = drawBounds.y; y < drawBounds.getY2(); y++) {
                 if (x < size + rect.x || x >= rect.width - size + rect.x || y < size + rect.y || y >= rect.height - size + rect.y) {
                     this.pixels[x + y * this.width] = color;
                 }

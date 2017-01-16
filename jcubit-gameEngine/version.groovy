@@ -1,2 +1,2 @@
 minor=0
-build=6
+build=7
