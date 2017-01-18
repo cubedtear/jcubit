@@ -33,7 +33,7 @@ import java.util.Queue;
  */
 public class InputHandler implements KeyListener, FocusListener, MouseInputListener, MouseWheelListener {
 
-    private final boolean[] keys = new boolean[65536];
+    private final boolean[] keys = new boolean[KeyEvent.KEY_LAST+1];
     private final List<Integer> checked = new ArrayList<>();
     private final Queue<MouseInputEvent> mouseEvents = new LinkedList<>();
     private final Queue<WheelEvent> wheelEvents = new LinkedList<>();
