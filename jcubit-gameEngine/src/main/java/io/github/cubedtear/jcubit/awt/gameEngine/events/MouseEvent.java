@@ -10,7 +10,7 @@ public abstract class MouseEvent extends Event {
     protected final Vec2i pos;
     protected final MouseButton button;
 
-    protected MouseEvent(Vec2i pos, MouseButton button) {
+    public MouseEvent(Vec2i pos, MouseButton button) {
         this.pos = pos;
         this.button = button;
     }

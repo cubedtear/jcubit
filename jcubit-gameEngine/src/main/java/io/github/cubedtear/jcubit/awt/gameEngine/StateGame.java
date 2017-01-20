@@ -1,6 +1,8 @@
 package io.github.cubedtear.jcubit.awt.gameEngine;
 
+import io.github.cubedtear.jcubit.awt.gameEngine.events.Event;
 import io.github.cubedtear.jcubit.awt.render.BufferedImageRenderer;
+import io.github.cubedtear.jcubit.math.Vec2i;
 
 import javax.swing.*;
 import java.awt.*;
@@ -24,6 +26,7 @@ public class StateGame {
     private String title;
     private boolean running;
     private int fps, ups;
+    private final InputAdapter inputAdapter;
 
     public StateGame(int width, int height, IGameState initialState, String title, int targetUps) {
         this.targetUps = targetUps;
@@ -63,7 +66,7 @@ public class StateGame {
         this.frame.setVisible(false);
 
         // TODO Class that converts AWT events, to "Event" events.
-        InputAdapter inputAdapter = new InputAdapter(this);
+        this.inputAdapter = new InputAdapter(this);
 
         canvas.addKeyListener(inputAdapter);
         canvas.addFocusListener(inputAdapter);
@@ -139,12 +142,8 @@ public class StateGame {
         bs.show();
     }
 
-    public void setState(IGameState state) {
-        this.state = state;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
+    public void onEvent(Event event) {
+        this.state.onEvent(event, this);
     }
 
     public Dimension getSize() {
@@ -155,11 +154,27 @@ public class StateGame {
         return state;
     }
 
+    public void setState(IGameState state) {
+        this.state = state;
+    }
+
     public String getTitle() {
         return title;
     }
 
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
     public int getFps() {
         return fps;
+    }
+
+    public Vec2i getMousePosition() {
+        return this.inputAdapter.getMousePos();
+    }
+
+    public boolean isKeyDown(int keyCode) {
+        return this.inputAdapter.isKeyDown(keyCode);
     }
 }
