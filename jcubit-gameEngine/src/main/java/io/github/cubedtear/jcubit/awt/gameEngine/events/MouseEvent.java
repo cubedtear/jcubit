@@ -22,4 +22,6 @@ public abstract class MouseEvent extends Event {
     public MouseButton getButton() {
         return button;
     }
+
+    public abstract MouseEvent move(Vec2i delta);
 }

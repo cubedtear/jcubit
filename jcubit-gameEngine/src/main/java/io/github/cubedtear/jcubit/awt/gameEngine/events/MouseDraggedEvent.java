@@ -10,4 +10,9 @@ public class MouseDraggedEvent extends MouseEvent {
     public MouseDraggedEvent(Vec2i pos, MouseButton button) {
         super(pos, button);
     }
+
+    @Override
+    public MouseEvent move(Vec2i delta) {
+        return new MouseDraggedEvent(pos.add(delta), button);
+    }
 }

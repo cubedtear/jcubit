@@ -22,8 +22,10 @@ import io.github.cubedtear.jcubit.util.API;
 import io.github.cubedtear.jcubit.util.ARGBColorUtil;
 import io.github.cubedtear.jcubit.util.Set2;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -483,6 +485,54 @@ public class SpriteUtil {
     @API
     public static Sprite increaseSizeCentered(Sprite original, int newWidth, int newHeight) {
         return increaseSize(original, newWidth, newHeight, (newWidth - original.getWidth()) / 2, (newHeight - original.getHeight()) / 2);
+    }
+
+    @API
+    public static Sprite replaceColor(Sprite s, int original, int toReplace) {
+        int[] newPix = new int[s.getWidth() * s.getHeight()];
+        for (int i = 0; i < newPix.length; i++) {
+            newPix[i] = s.getPixels()[i] == original ? toReplace : s.getPixels()[i];
+        }
+        return new Sprite(s.getWidth(), s.getHeight(), newPix);
+    }
+
+    @API
+    public static Sprite replaceColorIgnoreAlpha(Sprite s, int original, int toReplace) {
+        int[] newPix = new int[s.getWidth() * s.getHeight()];
+        for (int i = 0; i < newPix.length; i++) {
+            newPix[i] = (s.getPixels()[i] & 0x00FFFFFF) == (original & 0x00FFFFFF) ? ((toReplace & 0x00FFFFFF) | (s.getPixels()[i] & 0xFF000000)) : s.getPixels()[i];
+        }
+        return new Sprite(s.getWidth(), s.getHeight(), newPix);
+    }
+
+    @API
+    public static Sprite getSpriteFromClasspath(String path) {
+        try {
+            return new Sprite(ImageIO.read(SpriteUtil.class.getClassLoader().getResourceAsStream(path)));
+        } catch (IOException e) {
+            return null;
+        }
+    }
+
+    @API
+    public static Sprite compose(Sprite top, Sprite bot, boolean blend) {
+        final int width = top.getWidth();
+        final int height = top.getHeight();
+        if (width != bot.getWidth() || height != bot.getHeight())
+            throw new IllegalArgumentException("Sprites sizes must be equal!");
+
+        int[] pixels = new int[width * height];
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                if (blend)
+                    pixels[x + y * width] = ARGBColorUtil.composite(top.getPixels()[x + y * width], bot.getPixels()[x + y * width]);
+                else {
+                    Sprite s = ARGBColorUtil.getAlpha(top.getPixels()[x + y * width]) != 0 ? top : bot;
+                    pixels[x + y * width] = s.getPixels()[x + y * width];
+                }
+            }
+        }
+        return new Sprite(width, height, pixels);
     }
 
     /**

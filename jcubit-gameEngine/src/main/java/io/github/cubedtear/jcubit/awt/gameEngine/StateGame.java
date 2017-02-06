@@ -1,6 +1,9 @@
 package io.github.cubedtear.jcubit.awt.gameEngine;
 
+import io.github.cubedtear.jcubit.awt.gameEngine.events.CloseEvent;
 import io.github.cubedtear.jcubit.awt.gameEngine.events.Event;
+import io.github.cubedtear.jcubit.awt.gameEngine.events.OnStartEvent;
+import io.github.cubedtear.jcubit.awt.gameEngine.events.WindowCloseEvent;
 import io.github.cubedtear.jcubit.awt.render.BufferedImageRenderer;
 import io.github.cubedtear.jcubit.math.Vec2i;
 
@@ -24,7 +27,7 @@ public class StateGame {
 
     private IGameState state;
     private String title;
-    private boolean running;
+    private volatile boolean running;
     private int fps, ups;
     private final InputAdapter inputAdapter;
 
@@ -65,7 +68,6 @@ public class StateGame {
 
         this.frame.setVisible(false);
 
-        // TODO Class that converts AWT events, to "Event" events.
         this.inputAdapter = new InputAdapter(this);
 
         canvas.addKeyListener(inputAdapter);
@@ -73,6 +75,7 @@ public class StateGame {
         canvas.addMouseListener(inputAdapter);
         canvas.addMouseMotionListener(inputAdapter);
         canvas.addMouseWheelListener(inputAdapter);
+        frame.addWindowListener(inputAdapter);
     }
 
     public synchronized void start() {
@@ -81,7 +84,14 @@ public class StateGame {
     }
 
     public synchronized void stop() {
-        // TODO Add onClose Event, and send it to the current state.
+        this.running = false;
+        this.state.onEvent(CloseEvent.INSTANCE, this);
+        while (this.thread.isAlive()) {
+            try {
+                this.thread.join();
+            } catch (InterruptedException ignored) {
+            }
+        }
     }
 
     private void run() {
@@ -93,7 +103,7 @@ public class StateGame {
         long lastNano = System.nanoTime();
         long lastMillis = System.currentTimeMillis();
 
-        // TODO Post onStart event.
+        this.state.onEvent(OnStartEvent.INSTANCE, this);
 
         this.running = true;
 
@@ -134,6 +144,7 @@ public class StateGame {
         g.setColor(Color.BLACK);
         g.fillRect(0, 0, this.size.width, this.size.height);
 
+        render.clear();
         this.state.draw(render);
 
         g.drawImage(this.render.getImage(), 0, 0, size.width, size.height, null);
@@ -170,11 +181,19 @@ public class StateGame {
         return fps;
     }
 
+    public int getUps() {
+        return ups;
+    }
+
     public Vec2i getMousePosition() {
         return this.inputAdapter.getMousePos();
     }
 
     public boolean isKeyDown(int keyCode) {
         return this.inputAdapter.isKeyDown(keyCode);
+    }
+
+    public void setCursor(Cursor cursor) {
+        this.canvas.setCursor(cursor);
     }
 }

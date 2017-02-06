@@ -11,7 +11,7 @@ import java.awt.event.MouseWheelEvent;
 /**
  * @author Aritz Lopez
  */
-public class InputAdapter implements KeyListener, FocusListener, MouseListener, MouseMotionListener, MouseWheelListener {
+public class InputAdapter implements KeyListener, FocusListener, MouseListener, MouseMotionListener, MouseWheelListener, WindowListener {
 
     private final boolean[] keys = new boolean[KeyEvent.KEY_LAST + 1];
     private final StateGame game;
@@ -108,6 +108,45 @@ public class InputAdapter implements KeyListener, FocusListener, MouseListener, 
     @Override
     public void mouseWheelMoved(MouseWheelEvent e) {
         this.game.onEvent(new io.github.cubedtear.jcubit.awt.gameEngine.events.MouseWheelEvent(e.getPreciseWheelRotation()));
+    }
+
+    // endregion
+
+    // region ...Window Listener methods...
+
+    @Override
+    public void windowOpened(WindowEvent e) {
+
+    }
+
+    @Override
+    public void windowClosing(WindowEvent e) {
+        this.game.onEvent(WindowCloseEvent.INSTANCE);
+    }
+
+    @Override
+    public void windowClosed(WindowEvent e) {
+
+    }
+
+    @Override
+    public void windowIconified(WindowEvent e) {
+
+    }
+
+    @Override
+    public void windowDeiconified(WindowEvent e) {
+
+    }
+
+    @Override
+    public void windowActivated(WindowEvent e) {
+
+    }
+
+    @Override
+    public void windowDeactivated(WindowEvent e) {
+
     }
 
     // endregion
