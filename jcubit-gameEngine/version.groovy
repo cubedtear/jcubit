@@ -1,2 +1,2 @@
 minor=0
-build=7
+build="0-beta"
